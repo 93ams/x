@@ -31,7 +31,10 @@ var (
 )
 
 // Execute runs Command
-func Execute() error { return RootCmd.Execute() }
+func Execute() error {
+	//return GenDocument(RootCmd, "./cmd")
+	return RootCmd.Execute()
+}
 
 func boot(*cobra.Command, []string) {
 	session = lo.Must(cql.NewSession(cql.NewCluster(gocql.Consistency(consistency), keyspace, hosts...)))
