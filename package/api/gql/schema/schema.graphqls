@@ -1,0 +1,12 @@
+
+
+
+type Query {
+    select(query: String): String
+}
+
+type Mutation {
+    insert(query: String): String
+    update(query: String): String
+    delete(query: String): String
+}

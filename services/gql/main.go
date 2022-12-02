@@ -3,8 +3,8 @@ package main
 import (
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
-	"gql/package/exec"
-	"gql/package/resolver"
+	"github.com/tilau2328/cql/package/api/gql/exec"
+	"github.com/tilau2328/cql/package/api/gql/resolver"
 	"log"
 	"net/http"
 )
