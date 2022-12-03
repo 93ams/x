@@ -9,7 +9,7 @@ type (
 	KeySpace            struct {
 		KeySpaceKey
 		Durable     bool
-		Replication map[string]string
+		Replication Replication
 	}
 )
 

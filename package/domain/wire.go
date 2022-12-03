@@ -6,13 +6,8 @@ import (
 	"github.com/tilau2328/cql/package/domain/service"
 )
 
-var (
-	Set = wire.NewSet(
-		wire.Bind(new(provider.DDL), new(service.Ddl)),
-		wire.Bind(new(provider.DML), new(service.Dml)),
-	)
-	MockSet = wire.NewSet(
-		wire.Bind(new(provider.DDL), new(service.Ddl)),
-		wire.Bind(new(provider.DML), new(service.Dml)),
-	)
+var Set = wire.NewSet(
+	service.NewDDL, service.NewDML,
+	wire.Bind(new(provider.DDL), new(*service.DDLService)),
+	wire.Bind(new(provider.DML), new(*service.DMLService)),
 )

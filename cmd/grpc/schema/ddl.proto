@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package cql.grpc.v1;
+
+option go_package = "./model";
+
+service DDL {
+
+}

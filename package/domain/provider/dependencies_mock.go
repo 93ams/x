@@ -94,10 +94,10 @@ func (mr *MockKeySpaceProviderMockRecorder) Get(arg0, arg1 interface{}) *gomock.
 }
 
 // List mocks base method.
-func (m *MockKeySpaceProvider) List(arg0 Context, arg1 KeySpace) (KeySpace, error) {
+func (m *MockKeySpaceProvider) List(arg0 Context, arg1 KeySpace) ([]KeySpace, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "List", arg0, arg1)
-	ret0, _ := ret[0].(KeySpace)
+	ret0, _ := ret[0].([]KeySpace)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -201,4 +201,83 @@ func (m *MockTableProvider) List(arg0 Context, arg1 Table) ([]Table, error) {
 func (mr *MockTableProviderMockRecorder) List(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockTableProvider)(nil).List), arg0, arg1)
+}
+
+// MockCrudProvider is a mock of CrudProvider interface.
+type MockCrudProvider struct {
+	ctrl     *gomock.Controller
+	recorder *MockCrudProviderMockRecorder
+}
+
+// MockCrudProviderMockRecorder is the mock recorder for MockCrudProvider.
+type MockCrudProviderMockRecorder struct {
+	mock *MockCrudProvider
+}
+
+// NewMockCrudProvider creates a new mock instance.
+func NewMockCrudProvider(ctrl *gomock.Controller) *MockCrudProvider {
+	mock := &MockCrudProvider{ctrl: ctrl}
+	mock.recorder = &MockCrudProviderMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockCrudProvider) EXPECT() *MockCrudProviderMockRecorder {
+	return m.recorder
+}
+
+// Delete mocks base method.
+func (m *MockCrudProvider) Delete(arg0 Context) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Delete", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Delete indicates an expected call of Delete.
+func (mr *MockCrudProviderMockRecorder) Delete(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Delete", reflect.TypeOf((*MockCrudProvider)(nil).Delete), arg0)
+}
+
+// Insert mocks base method.
+func (m *MockCrudProvider) Insert(arg0 Context) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Insert", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Insert indicates an expected call of Insert.
+func (mr *MockCrudProviderMockRecorder) Insert(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Insert", reflect.TypeOf((*MockCrudProvider)(nil).Insert), arg0)
+}
+
+// Select mocks base method.
+func (m *MockCrudProvider) Select(arg0 Context) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Select", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Select indicates an expected call of Select.
+func (mr *MockCrudProviderMockRecorder) Select(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Select", reflect.TypeOf((*MockCrudProvider)(nil).Select), arg0)
+}
+
+// Update mocks base method.
+func (m *MockCrudProvider) Update(arg0 Context) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Update", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Update indicates an expected call of Update.
+func (mr *MockCrudProviderMockRecorder) Update(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Update", reflect.TypeOf((*MockCrudProvider)(nil).Update), arg0)
 }

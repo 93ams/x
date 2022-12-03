@@ -2,6 +2,10 @@ go 1.19
 
 use (
 	.
-	./cmd/gql
-	./cmd/http
+	cmd/cli
+	cmd/gql
+	cmd/grpc
+	cmd/http
+	package/adaptor/data/cql
+	package/domain
 )

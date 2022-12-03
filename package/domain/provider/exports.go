@@ -6,10 +6,9 @@ import (
 	. "github.com/tilau2328/cql/package/shared/patch"
 )
 
-//go:generate mockgen -source=exports.go -destination=exports_mock.go -package=provider
 type (
 	DDL interface {
-		ListKeySpace(Context, KeySpace) (KeySpace, error)
+		ListKeySpace(Context, KeySpace) ([]KeySpace, error)
 		GetKeySpace(Context, KeySpaceKey) (KeySpace, error)
 		CreateKeySpace(Context, KeySpace) error
 		AlterKeySpace(Context, KeySpaceKey, []Patch) error
@@ -20,7 +19,6 @@ type (
 		AlterTable(Context, TableKey, []Patch) error
 		DropTable(Context, TableKey) error
 	}
-
 	DML interface {
 		Select(Context) error
 		Insert(Context) error

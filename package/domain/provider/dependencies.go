@@ -9,7 +9,7 @@ import (
 //go:generate mockgen -source=dependencies.go -destination=dependencies_mock.go -package=provider
 type (
 	KeySpaceProvider interface {
-		List(Context, KeySpace) (KeySpace, error)
+		List(Context, KeySpace) ([]KeySpace, error)
 		Get(Context, KeySpaceKey) (KeySpace, error)
 		Create(Context, KeySpace) error
 		Alter(Context, KeySpaceKey, []Patch) error
@@ -21,5 +21,11 @@ type (
 		Create(Context, Table) error
 		Alter(Context, TableKey, []Patch) error
 		Drop(Context, TableKey) error
+	}
+	CrudProvider interface {
+		Select(Context) error
+		Insert(Context) error
+		Update(Context) error
+		Delete(Context) error
 	}
 )
