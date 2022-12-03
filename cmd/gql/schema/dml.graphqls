@@ -1,0 +1,8 @@
+extend type Query {
+    select(query: String): String
+}
+extend type Mutation {
+    insert(query: String): String
+    update(query: String): String
+    delete(query: String): String
+}

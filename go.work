@@ -2,6 +2,6 @@ go 1.19
 
 use (
 	.
-	./services/gql
-	services/http
+	./cmd/gql
+	./cmd/http
 )

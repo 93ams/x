@@ -1,0 +1,54 @@
+enum ReplicationStrategy {
+    SimpleStrategy
+    NetworkTopologyStrategy
+}
+interface Replication {
+    class: ReplicationStrategy
+}
+type SimpleReplication implements Replication{
+    class: ReplicationStrategy
+    replication_factor: Int!
+}
+type Datacenter {
+    name: String!
+    replication_factor: Int!
+}
+type NetworkTopologyReplication implements Replication{
+    class: ReplicationStrategy
+    datacenters: [Datacenter!]
+}
+type KeySpace {
+    name: String!
+    tables: [Table!]
+    durable: Boolean
+    replication: Replication
+}
+type Table {
+    id: ID!
+    name: String!
+}
+extend type Query {
+    table(name: String!): Table!
+    tables(keyspace: String!): [Table!]!
+    keyspace(name: String): KeySpace!
+    keyspaces: [KeySpace!]!
+}
+input NewReplication {
+    strategy: ReplicationStrategy
+}
+input NewKeyspace {
+    name: String!
+    replication: NewReplication!
+}
+input NewTable {
+    name: String!
+    params: [String]!
+}
+extend type Mutation {
+    createKeySpace(in: NewKeyspace!): KeySpace!
+    alterKeySpace(in: NewKeyspace!): KeySpace!
+    dropKeySpace(in: String!): Boolean!
+    createTable(in: NewTable!): Table!
+    alterTable(in: NewTable!): Table!
+    dropTable(in: String!): Boolean!
+}
