@@ -1,0 +1,6 @@
+get:
+  summary: ''
+  operationId: list-keyspaces
+  responses:
+    '200':
+      description: OK

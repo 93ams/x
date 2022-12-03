@@ -1,0 +1,11 @@
+openapi: 3.0.2
+info:
+  title: CQL
+  version: '1.0'
+servers:
+  - url: 'http://localhost:8888/'
+paths:
+  /keyspaces:
+    $ref: ./domain/ddl/paths/keyspaces.yaml
+  /tables:
+    $ref: ./domain/ddl/paths/tables.yaml

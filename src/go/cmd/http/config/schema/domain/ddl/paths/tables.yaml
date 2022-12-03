@@ -1,0 +1,11 @@
+paths:
+  /keyspaces:
+    get:
+      responses:
+        '200':
+          description: OK
+  /tables:
+    get:
+      responses:
+        '200':
+          description: OK

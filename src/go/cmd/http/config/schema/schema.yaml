@@ -1,0 +1,26 @@
+openapi: 3.0.2
+info:
+  title: CQL
+  version: '1.0'
+servers:
+  - url: 'http://localhost:8888/'
+paths:
+  /keyspaces:
+    get:
+      summary: ''
+      operationId: list-keyspaces
+      responses:
+        '200':
+          description: OK
+  /tables:
+    paths:
+      /keyspaces:
+        get:
+          responses:
+            '200':
+              description: OK
+      /tables:
+        get:
+          responses:
+            '200':
+              description: OK
