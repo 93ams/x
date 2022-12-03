@@ -1,4 +1,4 @@
-module gql
+module github.com/tilau2328/cql/cmd/gql
 
 go 1.19
 

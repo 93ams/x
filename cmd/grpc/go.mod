@@ -1,4 +1,4 @@
-module grpc
+module github.com/tilau2328/cql/cmd/grpc
 
 go 1.19
 

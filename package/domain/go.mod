@@ -1,4 +1,4 @@
-module domain
+module github.com/tilau2328/cql/package/domain
 
 go 1.19
 

@@ -7,7 +7,7 @@ import (
 	. "github.com/tilau2328/cql/package/adaptor/data/cql/repo/ddl"
 	. "github.com/tilau2328/cql/package/shared/cmd"
 	. "github.com/tilau2328/cql/package/shared/cmd/flags"
-	. "github.com/tilau2328/cql/package/shared/cql"
+	. "github.com/tilau2328/cql/package/shared/data/cql"
 )
 
 var (

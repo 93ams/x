@@ -1,8 +1,8 @@
 package handler
 
 import (
+	"github.com/tilau2328/cql/cmd/grpc/package/model"
 	"github.com/tilau2328/cql/package/domain/provider"
-	"grpc/package/model"
 )
 
 type (

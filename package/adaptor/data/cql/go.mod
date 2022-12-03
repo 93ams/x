@@ -1,4 +1,4 @@
-module cql
+module github.com/tilau2328/cql/package/adaptor/data/cql
 
 go 1.19
 

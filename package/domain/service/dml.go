@@ -5,13 +5,18 @@ import (
 	"github.com/tilau2328/cql/package/domain/provider"
 )
 
-type DMLService struct {
-}
+type (
+	DMLServiceOptions struct {
+	}
+	DMLService struct {
+		DMLServiceOptions
+	}
+)
 
 var _ provider.DML = &DMLService{}
 
-func NewDML() *DMLService {
-	return &DMLService{}
+func NewDML(opts DMLServiceOptions) *DMLService {
+	return &DMLService{DMLServiceOptions: opts}
 }
 
 func (D DMLService) Select(ctx context.Context) error {

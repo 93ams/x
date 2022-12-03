@@ -1,4 +1,4 @@
-module http
+module github.com/tilau2328/cql/cmd/http
 
 go 1.19
 

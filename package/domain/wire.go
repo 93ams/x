@@ -7,7 +7,8 @@ import (
 )
 
 var Set = wire.NewSet(
-	service.NewDDL, service.NewDML,
+	wire.Struct(new(service.DDLServiceOptions), "*"), service.NewDDL,
 	wire.Bind(new(provider.DDL), new(*service.DDLService)),
+	wire.Struct(new(service.DMLServiceOptions), "*"), service.NewDML,
 	wire.Bind(new(provider.DML), new(*service.DMLService)),
 )
