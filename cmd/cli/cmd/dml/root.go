@@ -1,4 +1,4 @@
-package crud
+package dml
 
 import (
 	. "github.com/tilau2328/cql/package/shared/cmd"

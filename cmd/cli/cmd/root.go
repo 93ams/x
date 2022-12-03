@@ -1,13 +1,13 @@
-package cli
+package cmd
 
 import (
 	"github.com/gocql/gocql"
-	. "github.com/spf13/cobra"
-	"github.com/tilau2328/cql/cmd/cli/crud"
+	ddl3 "github.com/tilau2328/cql/cmd/cli/cmd/ddl"
+	"github.com/tilau2328/cql/cmd/cli/cmd/dml"
 	. "github.com/tilau2328/cql/package/adaptor/data/cql/repo/ddl"
+	"github.com/tilau2328/cql/package/domain/provider"
 	. "github.com/tilau2328/cql/package/shared/cmd"
 	. "github.com/tilau2328/cql/package/shared/cmd/flags"
-	. "github.com/tilau2328/cql/package/shared/data/cql"
 )
 
 var (
@@ -16,18 +16,18 @@ var (
 	ks          string
 	hosts       []string
 	// Services
+	ddl    provider.DDL
 	ksRepo *KeySpaceRepo
 	tRepo  *TableRepo
 	// RootCmd Command
 	RootCmd = New(
 		Use("cql"),
-		PersistentPreRunE(boot),
 		PersistentFlags(
 			Uint16P(&consistency, "consistency", "c", "", uint16(gocql.One)),
 			StringSlice(&hosts, "hosts", "", "localhost:9042"),
 			String(&ks, "ks", "", ""),
 		),
-		Add(KeyspaceCmd, TableCmd, crud.RootCmd),
+		Add(ddl3.KeyspaceCmd, ddl3.TableCmd, dml.RootCmd),
 	)
 )
 
@@ -35,14 +35,4 @@ var (
 func Execute() error {
 	return GenDocument(RootCmd, "./cmd")
 	//return RootCmd.Execute()
-}
-
-func boot(*Command, []string) error {
-	session, err, _ := NewSession(NewCluster(gocql.Consistency(consistency), ks, hosts...))
-	if err != nil {
-		return err
-	}
-	ksRepo = NewKeySpaceRepo(session)
-	tRepo = NewTableRepo(session)
-	return nil
 }

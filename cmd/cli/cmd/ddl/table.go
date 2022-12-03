@@ -1,10 +1,10 @@
-package cli
+package ddl
 
 import (
 	. "github.com/samber/lo"
 	. "github.com/spf13/cobra"
+	"github.com/tilau2328/cql/cmd/cli"
 	. "github.com/tilau2328/cql/package/adaptor/data/cql/model"
-	. "github.com/tilau2328/cql/package/cql"
 	. "github.com/tilau2328/cql/package/shared/cmd"
 	. "github.com/tilau2328/cql/package/shared/cmd/flags"
 	"github.com/tilau2328/cql/package/shared/cmd/pretty"
@@ -30,11 +30,13 @@ var (
 	)
 )
 
-func createT(c *Command, _ []string) error { return tRepo.Create(c.Context(), tFlags.Name, tFields) }
-func alterT(c *Command, _ []string) error  { return tRepo.Alter(c.Context(), tFlags.Name, tFields) }
-func dropT(c *Command, _ []string) error   { return tRepo.Drop(c.Context(), tFlags.Name) }
+func createT(c *Command, _ []string) error {
+	return cli.tRepo.Create(c.Context(), tFlags.Name, tFields)
+}
+func alterT(c *Command, _ []string) error { return cli.tRepo.Alter(c.Context(), tFlags.Name, tFields) }
+func dropT(c *Command, _ []string) error  { return cli.tRepo.Drop(c.Context(), tFlags.Name) }
 func listT(c *Command, _ []string) error {
-	ret, err := tRepo.List(c.Context(), tFlags)
+	ret, err := cli.tRepo.List(c.Context(), tFlags)
 	if err != nil {
 		return err
 	}

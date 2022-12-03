@@ -1,8 +1,9 @@
-package cli
+package ddl
 
 import (
 	. "github.com/samber/lo"
 	. "github.com/spf13/cobra"
+	"github.com/tilau2328/cql/cmd/cli"
 	. "github.com/tilau2328/cql/package/adaptor/data/cql/model"
 	. "github.com/tilau2328/cql/package/shared/cmd"
 	. "github.com/tilau2328/cql/package/shared/cmd/flags"
@@ -31,11 +32,11 @@ var (
 	)
 )
 
-func createKS(c *Command, _ []string) error { return ksRepo.Create(c.Context(), ksFlags) }
-func alterKS(c *Command, _ []string) error  { return ksRepo.Alter(c.Context(), ksFlags) }
-func dropKS(c *Command, _ []string) error   { return ksRepo.Drop(c.Context(), ksFlags.Name) }
+func createKS(c *Command, _ []string) error { return cli.ksRepo.Create(c.Context(), ksFlags) }
+func alterKS(c *Command, _ []string) error  { return cli.ksRepo.Alter(c.Context(), ksFlags) }
+func dropKS(c *Command, _ []string) error   { return cli.ksRepo.Drop(c.Context(), ksFlags.Name) }
 func listKS(c *Command, _ []string) error {
-	ks, err := ksRepo.List(c.Context(), ksFlags)
+	ks, err := cli.ksRepo.List(c.Context(), ksFlags)
 	if err != nil {
 		return err
 	}
