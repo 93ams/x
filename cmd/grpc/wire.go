@@ -9,7 +9,6 @@ import (
 	"github.com/tilau2328/cql/package/adaptor/data/cql"
 	"github.com/tilau2328/cql/package/domain"
 	cql2 "github.com/tilau2328/cql/package/shared/data/cql"
-	"google.golang.org/grpc"
 )
 
 var Set = wire.NewSet(
@@ -18,6 +17,6 @@ var Set = wire.NewSet(
 	handler.NewServer,
 )
 
-func Init(cql2.Options) (*grpc.Server, func(), error) {
+func Init(cql2.Options) (handler.Server, func(), error) {
 	panic(wire.Build(cql.Set, domain.Set, Set))
 }

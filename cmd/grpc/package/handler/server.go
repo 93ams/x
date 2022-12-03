@@ -3,11 +3,20 @@ package handler
 import (
 	"github.com/tilau2328/cql/cmd/grpc/package/model"
 	"google.golang.org/grpc"
+	"net/http"
 )
 
-func NewServer(ddl *DDL, dml *DML) *grpc.Server {
+type Server struct {
+	*grpc.Server
+}
+
+func NewServer(ddl *DDL, dml *DML) Server {
 	s := grpc.NewServer()
 	model.RegisterDDLServer(s, ddl)
 	model.RegisterDMLServer(s, dml)
-	return s
+	return Server{Server: s}
+}
+
+func (s Server) Serve() error {
+	return http.ListenAndServe(":9099", s)
 }

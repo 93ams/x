@@ -28,13 +28,14 @@ func (s *KeySpaceRepo) Create(ctx Context, keyspace KeySpace) error {
 	return SafeExec(ctx, s.session, stmt, keyspace.KeySpaceKey)
 }
 func (s *KeySpaceRepo) Alter(ctx Context, key KeySpaceKey, patches []Patch) error {
-	stmt := "ALTER keyspace ? WITH REPLICATION = " + string(replication) + " WITH DURABLE_WRITES = "
-	if keyspace.Durable {
-		stmt = "true"
-	} else {
-		stmt = "false"
-	}
-	return SafeExec(ctx, s.session, stmt, key)
+	//stmt := "ALTER keyspace ? WITH REPLICATION = " + string(replication) + " WITH DURABLE_WRITES = "
+	//if keyspace.Durable {
+	//	stmt = "true"
+	//} else {
+	//	stmt = "false"
+	//}
+	//return SafeExec(ctx, s.session, stmt, key)
+	return nil
 }
 func (s *KeySpaceRepo) Drop(ctx Context, name KeySpaceKey) error {
 	return SafeExec(ctx, s.session, "DROP table IF EXISTS "+name.String())
@@ -57,9 +58,9 @@ func (s *KeySpaceRepo) Get(ctx Context, name KeySpaceKey) (ret KeySpace, err err
 	return
 }
 
-func toCqlKeySpace() {
-
+func toCqlKeySpace(in KeySpace) (ret model.KeySpace, err error) {
+	return
 }
-func fromCqlKeySpace() {
-
+func fromCqlKeySpace(in model.KeySpace) (ret KeySpace, err error) {
+	return
 }

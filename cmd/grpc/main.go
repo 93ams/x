@@ -6,10 +6,9 @@ import (
 )
 
 //go:generate protoc -I schema --go_out=package --go-grpc_out=package schema/ddl.proto schema/dml.proto
-func main() {
-	_, close := lo.Must2(Init(cql.Options{
-		Keyspace: "",
-	}))
-	defer close()
 
+func main() {
+	server, close := lo.Must2(Init(cql.Options{}))
+	defer close()
+	server.Serve()
 }

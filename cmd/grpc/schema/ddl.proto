@@ -5,5 +5,17 @@ package cql.grpc.v1;
 option go_package = "./model";
 
 service DDL {
+  rpc CreateKeySpace(Empty) returns (Empty);
+  rpc AlterKeySpace(Empty) returns (Empty);
+  rpc DropKeySpace(Empty) returns (Empty);
+  rpc ListKeySpaces(Empty) returns (Empty);
+  rpc GetKeySpace(Empty) returns (Empty);
+  rpc CreateTable(Empty) returns (Empty);
+  rpc AlterTable(Empty) returns (Empty);
+  rpc DropTable(Empty) returns (Empty);
+  rpc ListTables(Empty) returns (Empty);
+  rpc GetTable(Empty) returns (Empty);
+}
+message Empty {
 
 }
