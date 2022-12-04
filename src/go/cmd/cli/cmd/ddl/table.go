@@ -1,49 +1,40 @@
 package ddl
 
 import (
-	. "github.com/samber/lo"
 	. "github.com/spf13/cobra"
-	"github.com/tilau2328/cql/package/adaptor/data/cql/model"
-	. "github.com/tilau2328/cql/src/go/package/shared/cmd"
-	. "github.com/tilau2328/cql/src/go/package/shared/cmd/flags"
-	"github.com/tilau2328/cql/src/go/package/shared/cmd/pretty"
-	"os"
+	. "github.com/tilau2328/cql/cmd/cli/package/ddl"
+	. "github.com/tilau2328/cql/package/domain/model"
+	. "github.com/tilau2328/cql/package/shared/cmd"
+	. "github.com/tilau2328/cql/package/shared/cmd/flags"
 )
 
 var (
-	tFields  []string
-	tFlags   = model.Table{}
-	TableCmd = New(
+	tableFlags = TableFlags{}
+	TableCmd   = New(
 		Use("table"), Alias("t"),
 		PersistentFlags(
-			StringP(&tFlags.Keyspace, "keyspace_name", "k", "", ""),
-			StringSliceP(&tFields, "fields", "f", "", ""),
-			StringP(&tFlags.Name, "name", "n", "", ""),
+			StringP(&tableFlags.Keyspace, "keyspace_name", "k", "", ""),
+			StringSliceP(&tableFlags.Fields, "fields", "f", "", ""),
+			StringP(&tableFlags.Name, "name", "n", "", ""),
 		),
 		Add(
-			New(Use("create"), Alias("c"), RunE(createT)),
-			New(Use("alter"), Alias("a"), RunE(alterT)),
-			New(Use("drop"), Alias("d"), RunE(dropT)),
-			New(Use("list"), Alias("l"), RunE(listT)),
+			New(Use("create"), Alias("c"), RunE(func(c *Command, _ []string) error {
+				return ddlService.CreateTable(c.Context(), ToTable(tableFlags))
+			})),
+			New(Use("alter"), Alias("a"), RunE(func(c *Command, _ []string) error {
+				return ddlService.AlterTable(c.Context(), ToTableKey(tableFlags), ToTablePatch(tableFlags))
+			})),
+			New(Use("drop"), Alias("d"), RunE(func(c *Command, _ []string) error {
+				return ddlService.DropTable(c.Context(), ToTableKey(tableFlags))
+			})),
+			New(Use("list"), Alias("l"), RunE(func(c *Command, _ []string) error {
+				t, err := ddlService.ListTables(c.Context(), ToTable(tableFlags))
+				if err != nil {
+					return err
+				}
+				PrintTables(t)
+				return nil
+			})),
 		),
 	)
 )
-
-func createT(c *Command, _ []string) error {
-	return cli.tRepo.Create(c.Context(), tFlags.Name, tFields)
-}
-func alterT(c *Command, _ []string) error { return cli.tRepo.Alter(c.Context(), tFlags.Name, tFields) }
-func dropT(c *Command, _ []string) error  { return cli.tRepo.Drop(c.Context(), tFlags.Name) }
-func listT(c *Command, _ []string) error {
-	ret, err := cli.tRepo.List(c.Context(), tFlags)
-	if err != nil {
-		return err
-	}
-	pretty.NewTable(
-		pretty.Header("#", "Id", "KeyspaceName", "TableName", "Comment"),
-		pretty.Rows(Map(ret, func(v model.Table, i int) []any {
-			return []any{i, v.Id, v.Keyspace, v.Name, v.Comment}
-		})...),
-	).Write(os.Stdout)
-	return nil
-}

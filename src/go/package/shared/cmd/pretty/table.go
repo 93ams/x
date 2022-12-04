@@ -1,19 +1,19 @@
 package pretty
 
 import (
-	"github.com/jedib0t/go-pretty/v6/table"
-	. "github.com/tilau2328/cql/src/go/package/shared/x"
+	. "github.com/jedib0t/go-pretty/v6/table"
+	. "github.com/tilau2328/cql/package/shared/x"
 	"io"
 )
 
-type Table struct {
+type TablePretty struct {
 	Header []any
 	Footer []any
 	Rows   [][]any
 }
 
-func (t Table) Write(w io.Writer) {
-	tw := table.NewWriter()
+func (t TablePretty) Write(w io.Writer) {
+	tw := NewWriter()
 	tw.SetOutputMirror(w)
 	tw.AppendHeader(t.Header)
 	for _, v := range t.Rows {
@@ -23,8 +23,8 @@ func (t Table) Write(w io.Writer) {
 	tw.Render()
 }
 
-func NewTable(opt ...Opt[*Table]) *Table { return Apply(&Table{}, opt) }
+func NewTable(opt ...Opt[*TablePretty]) *TablePretty { return Apply(&TablePretty{}, opt) }
 
-func Header(v ...any) Opt[*Table] { return func(t *Table) { t.Header = v } }
-func Footer(v ...any) Opt[*Table] { return func(t *Table) { t.Footer = v } }
-func Rows(r ...[]any) Opt[*Table] { return func(t *Table) { t.Rows = r } }
+func Header(v ...any) Opt[*TablePretty] { return func(t *TablePretty) { t.Header = v } }
+func Footer(v ...any) Opt[*TablePretty] { return func(t *TablePretty) { t.Footer = v } }
+func Rows(r ...[]any) Opt[*TablePretty] { return func(t *TablePretty) { t.Rows = r } }

@@ -1,49 +1,40 @@
 package ddl
 
 import (
-	. "github.com/samber/lo"
 	. "github.com/spf13/cobra"
-	"github.com/tilau2328/cql/package/adaptor/data/cql/model"
-	. "github.com/tilau2328/cql/src/go/package/shared/cmd"
-	. "github.com/tilau2328/cql/src/go/package/shared/cmd/flags"
-	"github.com/tilau2328/cql/src/go/package/shared/cmd/pretty"
-	"os"
+	. "github.com/tilau2328/cql/cmd/cli/package/ddl"
+	. "github.com/tilau2328/cql/package/domain/model"
+	. "github.com/tilau2328/cql/package/shared/cmd"
+	. "github.com/tilau2328/cql/package/shared/cmd/flags"
 )
 
 var (
-	ksFlags     model.KeySpace
-	KeyspaceCmd = New(
+	ksFlags     KeySpaceFlags
+	KeySpaceCmd = New(
 		Use("keyspace"), Alias("k"),
 		PersistentFlags(
 			StringP(&ksFlags.Name, "name", "n", "", ""),
 			BoolP(&ksFlags.Durable, "durable", "d", "", true),
-			MapStringStringP(&ksFlags.Replication, "replication", "r", "", map[string]string{
-				"class":              string(SimpleReplicationStrategy),
-				"replication_factor": "3",
-			}),
+			MapStringStringP(&ksFlags.Replication, "replication", "r", "", NewSimpleReplication(1)),
 		),
 		Add(
-			New(Use("create"), Alias("c"), RunE(createKS)),
-			New(Use("alter"), Alias("a"), RunE(alterKS)),
-			New(Use("drop"), Alias("d"), RunE(dropKS)),
-			New(Use("list"), Alias("l"), RunE(listKS)),
+			New(Use("create"), Alias("c"), RunE(func(cmd *Command, _ []string) error {
+				return ddlService.CreateKeySpace(cmd.Context(), ToKeySpace(ksFlags))
+			})),
+			New(Use("alter"), Alias("a"), RunE(func(c *Command, _ []string) error {
+				return ddlService.AlterKeySpace(c.Context(), KeySpaceKey(ksFlags.Name), ToKeySpacePatch(ksFlags))
+			})),
+			New(Use("drop"), Alias("d"), RunE(func(c *Command, _ []string) error {
+				return ddlService.DropKeySpace(c.Context(), KeySpaceKey(ksFlags.Name))
+			})),
+			New(Use("list"), Alias("l"), RunE(func(c *Command, _ []string) error {
+				ks, err := ddlService.ListKeySpaces(c.Context(), ToKeySpace(ksFlags))
+				if err != nil {
+					return err
+				}
+				PrintKeySpaces(ks)
+				return nil
+			})),
 		),
 	)
 )
-
-func createKS(c *Command, _ []string) error { return cli.ksRepo.Create(c.Context(), ksFlags) }
-func alterKS(c *Command, _ []string) error  { return cli.ksRepo.Alter(c.Context(), ksFlags) }
-func dropKS(c *Command, _ []string) error   { return cli.ksRepo.Drop(c.Context(), ksFlags.Name) }
-func listKS(c *Command, _ []string) error {
-	ks, err := cli.ksRepo.List(c.Context(), ksFlags)
-	if err != nil {
-		return err
-	}
-	pretty.NewTable(
-		pretty.Header("#", "KeyspaceName", "DurableWrites", "Replication"),
-		pretty.Rows(Map(ks, func(v model.KeySpace, i int) []any {
-			return []any{i, v.Name, v.Durable, v.Replication}
-		})...),
-	).Write(os.Stdout)
-	return nil
-}

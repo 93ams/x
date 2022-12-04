@@ -1,11 +1,11 @@
 go 1.19
 
 use (
-	./../..
-	./src/go/cmd/cli
-	./src/go/cmd/gql
-	./src/go/cmd/grpc
-	./src/go/cmd/http
-	./src/go/package/adaptor/data/cql
-	./src/go/package/domain
+	.
+	./cmd/cli
+	./cmd/gql
+	./cmd/grpc
+	./cmd/http
+	./package/adaptor/data/cql
+	./package/domain
 )

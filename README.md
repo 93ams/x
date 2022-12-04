@@ -1,1 +1,1 @@
-# CQL CLI
+# CQL Manager
