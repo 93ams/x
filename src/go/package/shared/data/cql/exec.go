@@ -12,7 +12,9 @@ func SafeExec(ctx context.Context, s gocqlx.Session, stmt string, values ...any)
 		log.Printf("error waiting for schema agreement pre running stmt=%q err=%v\n", stmt, err)
 		return err
 	}
-	if err := s.Session.Query(stmt, values...).RetryPolicy(&gocql.SimpleRetryPolicy{}).Exec(); err != nil {
+	if err := s.Session.Query(stmt, values...).RetryPolicy(&gocql.SimpleRetryPolicy{
+		NumRetries: 5,
+	}).Exec(); err != nil {
 		log.Printf("error running stmt stmt=%q err=%v\n", stmt, err)
 		return err
 	}

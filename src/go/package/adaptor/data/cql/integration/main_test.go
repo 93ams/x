@@ -1,9 +1,10 @@
 package integration
 
 import (
+	"github.com/gocql/gocql"
 	"github.com/samber/lo"
 	"github.com/scylladb/gocqlx/v2"
-	"github.com/tilau2328/cql/src/go/package/shared/data/cql"
+	. "github.com/tilau2328/cql/package/shared/data/cql"
 	"os"
 	"testing"
 )
@@ -14,8 +15,8 @@ func TestMain(m *testing.M) {
 	main := M{M: m}
 
 	var fn func()
-	session, fn = lo.Must2(cql.NewSession(cql.NewCluster(cql.Options{})))
-	main.Clean(fn)
+	session, fn = lo.Must2(NewSession(NewCluster(Options{Consistency: gocql.All})))
+	main.Defer(fn)
 
 	os.Exit(main.Run())
 }
@@ -30,7 +31,7 @@ func (m *M) Run() int {
 	return m.M.Run()
 }
 
-func (m *M) Clean(fn ...func()) { m.cleanup = append(m.cleanup, fn...) }
+func (m *M) Defer(fn ...func()) { m.cleanup = append(m.cleanup, fn...) }
 func (m *M) Close() {
 	for _, fn := range m.cleanup {
 		fn()

@@ -1,9 +1,9 @@
 package model
 
-import "strconv"
+import "strings"
 
 type (
-	Replication         map[string]string
+	Replication         map[string]any
 	KeySpaceKey         string
 	ReplicationStrategy string
 	KeySpace            struct {
@@ -18,17 +18,26 @@ const (
 	NetworkReplicationStrategy ReplicationStrategy = "NetworkTopologyStrategy"
 )
 
-func NewNetworkReplication(datacenters map[string]string) Replication {
+func NewNetworkReplication(datacenters map[string]any) Replication {
 	ret := Replication(datacenters)
-	ret["class"] = string(SimpleReplicationStrategy)
+	ret["class"] = string(NetworkReplicationStrategy)
 	return ret
 }
-func NewSimpleReplication(factor uint) Replication {
+func NewSimpleReplication(factor int) Replication {
 	return Replication{
-		"class":              string(NetworkReplicationStrategy),
-		"replication_factor": strconv.Itoa(int(factor)),
+		"class":              string(SimpleReplicationStrategy),
+		"replication_factor": factor,
 	}
 }
-func (r Replication) Strategy() ReplicationStrategy { return ReplicationStrategy(r["class"]) }
+func (r Replication) Strategy() ReplicationStrategy { return ReplicationStrategy(r["class"].(string)) }
 func (k KeySpaceKey) String() string                { return string(k) }
 func (k KeySpaceKey) Raw() any                      { return k }
+
+func FilterSystem(in []KeySpace) (out []KeySpace) {
+	for _, ks := range in {
+		if !strings.HasPrefix(ks.KeySpaceKey.String(), "system") {
+			out = append(out, ks)
+		}
+	}
+	return
+}

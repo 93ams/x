@@ -1,10 +1,17 @@
 package model
 
+import (
+	"github.com/tilau2328/cql/package/domain/model"
+	"strconv"
+	"strings"
+)
+
 type (
-	KeySpace struct {
-		Name        string            `db:"keyspace_name"`
-		Durable     bool              `db:"durable_writes"`
-		Replication map[string]string `db:"replication"`
+	Replication map[string]string
+	KeySpace    struct {
+		Name        string      `db:"keyspace_name"`
+		Durable     bool        `db:"durable_writes"`
+		Replication Replication `db:"replication"`
 	}
 	Table struct {
 		Id                      string            `db:"id"`
@@ -28,3 +35,66 @@ type (
 		Extensions              map[string][]byte `db:"extensions"`
 	}
 )
+
+func ToKeySpaces(in []KeySpace) []model.KeySpace {
+	ret := make([]model.KeySpace, len(in))
+	for i, v := range in {
+		ret[i] = ToKeySpace(v)
+	}
+	return ret
+}
+func ToKeySpace(in KeySpace) model.KeySpace {
+	return model.KeySpace{
+		Replication: ToReplication(in.Replication),
+		KeySpaceKey: model.KeySpaceKey(in.Name),
+		Durable:     in.Durable,
+	}
+}
+func FromKeySpace(in model.KeySpace) KeySpace {
+	return KeySpace{
+		Replication: FromReplication(in.Replication),
+		Name:        string(in.KeySpaceKey),
+		Durable:     in.Durable,
+	}
+}
+func ToTables(in []Table) []model.Table {
+	ret := make([]model.Table, len(in))
+	for i, v := range in {
+		ret[i] = ToTable(v)
+	}
+	return ret
+}
+func ToTable(in Table) model.Table {
+	return model.Table{}
+}
+func FromTable(in model.Table) Table {
+	return Table{}
+}
+func ToReplication(in Replication) model.Replication {
+	ret := model.Replication{}
+	for k, v := range in {
+		switch k {
+		case "class":
+			ret[k] = strings.TrimPrefix(v, "org.apache.cassandra.locator.")
+		default:
+			ret[k], _ = strconv.Atoi(v)
+		}
+	}
+	return ret
+}
+func FromReplication(in model.Replication) Replication {
+	ret := Replication{}
+	for k, v := range in {
+		switch k {
+		case "class":
+			if i, ok := v.(string); ok {
+				ret[k] = i
+			}
+		default:
+			if i, ok := v.(int); ok {
+				ret[k] = strconv.Itoa(i)
+			}
+		}
+	}
+	return ret
+}
