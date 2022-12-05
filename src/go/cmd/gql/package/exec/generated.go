@@ -580,7 +580,7 @@ func (ec *executionContext) field_Mutation_alterKeySpace_args(ctx context.Contex
 	var arg0 model.NewKeyspace
 	if tmp, ok := rawArgs["in"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("in"))
-		arg0, err = ec.unmarshalNNewKeyspace2githubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐNewKeyspace(ctx, tmp)
+		arg0, err = ec.unmarshalNNewKeyspace2githubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐNewKeyspace(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -595,7 +595,7 @@ func (ec *executionContext) field_Mutation_alterTable_args(ctx context.Context, 
 	var arg0 model.NewTable
 	if tmp, ok := rawArgs["in"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("in"))
-		arg0, err = ec.unmarshalNNewTable2githubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐNewTable(ctx, tmp)
+		arg0, err = ec.unmarshalNNewTable2githubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐNewTable(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -610,7 +610,7 @@ func (ec *executionContext) field_Mutation_createKeySpace_args(ctx context.Conte
 	var arg0 model.NewKeyspace
 	if tmp, ok := rawArgs["in"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("in"))
-		arg0, err = ec.unmarshalNNewKeyspace2githubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐNewKeyspace(ctx, tmp)
+		arg0, err = ec.unmarshalNNewKeyspace2githubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐNewKeyspace(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -625,7 +625,7 @@ func (ec *executionContext) field_Mutation_createTable_args(ctx context.Context,
 	var arg0 model.NewTable
 	if tmp, ok := rawArgs["in"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("in"))
-		arg0, err = ec.unmarshalNNewTable2githubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐNewTable(ctx, tmp)
+		arg0, err = ec.unmarshalNNewTable2githubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐNewTable(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1067,7 +1067,7 @@ func (ec *executionContext) _KeySpace_tables(ctx context.Context, field graphql.
 	}
 	res := resTmp.([]*model.Table)
 	fc.Result = res
-	return ec.marshalOTable2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐTableᚄ(ctx, field.Selections, res)
+	return ec.marshalOTable2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐTableᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_KeySpace_tables(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1157,7 +1157,7 @@ func (ec *executionContext) _KeySpace_replication(ctx context.Context, field gra
 	}
 	res := resTmp.(model.Replication)
 	fc.Result = res
-	return ec.marshalOReplication2githubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐReplication(ctx, field.Selections, res)
+	return ec.marshalOReplication2githubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐReplication(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_KeySpace_replication(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1242,7 +1242,7 @@ func (ec *executionContext) _Mutation_createKeySpace(ctx context.Context, field 
 	}
 	res := resTmp.(*model.KeySpace)
 	fc.Result = res
-	return ec.marshalNKeySpace2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐKeySpace(ctx, field.Selections, res)
+	return ec.marshalNKeySpace2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐKeySpace(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_createKeySpace(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1307,7 +1307,7 @@ func (ec *executionContext) _Mutation_alterKeySpace(ctx context.Context, field g
 	}
 	res := resTmp.(*model.KeySpace)
 	fc.Result = res
-	return ec.marshalNKeySpace2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐKeySpace(ctx, field.Selections, res)
+	return ec.marshalNKeySpace2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐKeySpace(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_alterKeySpace(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1427,7 +1427,7 @@ func (ec *executionContext) _Mutation_createTable(ctx context.Context, field gra
 	}
 	res := resTmp.(*model.Table)
 	fc.Result = res
-	return ec.marshalNTable2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐTable(ctx, field.Selections, res)
+	return ec.marshalNTable2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐTable(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_createTable(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1490,7 +1490,7 @@ func (ec *executionContext) _Mutation_alterTable(ctx context.Context, field grap
 	}
 	res := resTmp.(*model.Table)
 	fc.Result = res
-	return ec.marshalNTable2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐTable(ctx, field.Selections, res)
+	return ec.marshalNTable2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐTable(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_alterTable(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1761,7 +1761,7 @@ func (ec *executionContext) _NetworkTopologyReplication_class(ctx context.Contex
 	}
 	res := resTmp.(*model.ReplicationStrategy)
 	fc.Result = res
-	return ec.marshalOReplicationStrategy2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐReplicationStrategy(ctx, field.Selections, res)
+	return ec.marshalOReplicationStrategy2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐReplicationStrategy(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_NetworkTopologyReplication_class(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1802,7 +1802,7 @@ func (ec *executionContext) _NetworkTopologyReplication_datacenters(ctx context.
 	}
 	res := resTmp.([]*model.Datacenter)
 	fc.Result = res
-	return ec.marshalODatacenter2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐDatacenterᚄ(ctx, field.Selections, res)
+	return ec.marshalODatacenter2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐDatacenterᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_NetworkTopologyReplication_datacenters(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1893,7 +1893,7 @@ func (ec *executionContext) _Query_table(ctx context.Context, field graphql.Coll
 	}
 	res := resTmp.(*model.Table)
 	fc.Result = res
-	return ec.marshalNTable2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐTable(ctx, field.Selections, res)
+	return ec.marshalNTable2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐTable(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_table(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1956,7 +1956,7 @@ func (ec *executionContext) _Query_tables(ctx context.Context, field graphql.Col
 	}
 	res := resTmp.([]*model.Table)
 	fc.Result = res
-	return ec.marshalNTable2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐTableᚄ(ctx, field.Selections, res)
+	return ec.marshalNTable2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐTableᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_tables(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2019,7 +2019,7 @@ func (ec *executionContext) _Query_keyspace(ctx context.Context, field graphql.C
 	}
 	res := resTmp.(*model.KeySpace)
 	fc.Result = res
-	return ec.marshalNKeySpace2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐKeySpace(ctx, field.Selections, res)
+	return ec.marshalNKeySpace2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐKeySpace(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_keyspace(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2084,7 +2084,7 @@ func (ec *executionContext) _Query_keyspaces(ctx context.Context, field graphql.
 	}
 	res := resTmp.([]*model.KeySpace)
 	fc.Result = res
-	return ec.marshalNKeySpace2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐKeySpaceᚄ(ctx, field.Selections, res)
+	return ec.marshalNKeySpace2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐKeySpaceᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_keyspaces(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2316,7 +2316,7 @@ func (ec *executionContext) _SimpleReplication_class(ctx context.Context, field 
 	}
 	res := resTmp.(*model.ReplicationStrategy)
 	fc.Result = res
-	return ec.marshalOReplicationStrategy2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐReplicationStrategy(ctx, field.Selections, res)
+	return ec.marshalOReplicationStrategy2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐReplicationStrategy(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SimpleReplication_class(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2492,7 +2492,7 @@ func (ec *executionContext) _Table_columns(ctx context.Context, field graphql.Co
 	}
 	res := resTmp.([]*model.Column)
 	fc.Result = res
-	return ec.marshalNColumn2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐColumnᚄ(ctx, field.Selections, res)
+	return ec.marshalNColumn2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐColumnᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Table_columns(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -4349,7 +4349,7 @@ func (ec *executionContext) unmarshalInputNewKeyspace(ctx context.Context, obj i
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("replication"))
-			it.Replication, err = ec.unmarshalNNewReplication2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐNewReplication(ctx, v)
+			it.Replication, err = ec.unmarshalNNewReplication2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐNewReplication(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -4377,7 +4377,7 @@ func (ec *executionContext) unmarshalInputNewReplication(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("strategy"))
-			it.Strategy, err = ec.unmarshalOReplicationStrategy2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐReplicationStrategy(ctx, v)
+			it.Strategy, err = ec.unmarshalOReplicationStrategy2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐReplicationStrategy(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -4413,7 +4413,7 @@ func (ec *executionContext) unmarshalInputNewTable(ctx context.Context, obj inte
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("columns"))
-			it.Columns, err = ec.unmarshalNNewColumn2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐNewColumn(ctx, v)
+			it.Columns, err = ec.unmarshalNNewColumn2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐNewColumn(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -5282,7 +5282,7 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
-func (ec *executionContext) marshalNColumn2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐColumnᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Column) graphql.Marshaler {
+func (ec *executionContext) marshalNColumn2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐColumnᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Column) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -5306,7 +5306,7 @@ func (ec *executionContext) marshalNColumn2ᚕᚖgithubᚗcomᚋtilau2328ᚋcql�
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNColumn2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐColumn(ctx, sel, v[i])
+			ret[i] = ec.marshalNColumn2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐColumn(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -5326,7 +5326,7 @@ func (ec *executionContext) marshalNColumn2ᚕᚖgithubᚗcomᚋtilau2328ᚋcql�
 	return ret
 }
 
-func (ec *executionContext) marshalNColumn2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐColumn(ctx context.Context, sel ast.SelectionSet, v *model.Column) graphql.Marshaler {
+func (ec *executionContext) marshalNColumn2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐColumn(ctx context.Context, sel ast.SelectionSet, v *model.Column) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -5336,7 +5336,7 @@ func (ec *executionContext) marshalNColumn2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋc
 	return ec._Column(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNDatacenter2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐDatacenter(ctx context.Context, sel ast.SelectionSet, v *model.Datacenter) graphql.Marshaler {
+func (ec *executionContext) marshalNDatacenter2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐDatacenter(ctx context.Context, sel ast.SelectionSet, v *model.Datacenter) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -5376,11 +5376,11 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 	return res
 }
 
-func (ec *executionContext) marshalNKeySpace2githubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐKeySpace(ctx context.Context, sel ast.SelectionSet, v model.KeySpace) graphql.Marshaler {
+func (ec *executionContext) marshalNKeySpace2githubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐKeySpace(ctx context.Context, sel ast.SelectionSet, v model.KeySpace) graphql.Marshaler {
 	return ec._KeySpace(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNKeySpace2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐKeySpaceᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.KeySpace) graphql.Marshaler {
+func (ec *executionContext) marshalNKeySpace2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐKeySpaceᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.KeySpace) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -5404,7 +5404,7 @@ func (ec *executionContext) marshalNKeySpace2ᚕᚖgithubᚗcomᚋtilau2328ᚋcq
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNKeySpace2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐKeySpace(ctx, sel, v[i])
+			ret[i] = ec.marshalNKeySpace2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐKeySpace(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -5424,7 +5424,7 @@ func (ec *executionContext) marshalNKeySpace2ᚕᚖgithubᚗcomᚋtilau2328ᚋcq
 	return ret
 }
 
-func (ec *executionContext) marshalNKeySpace2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐKeySpace(ctx context.Context, sel ast.SelectionSet, v *model.KeySpace) graphql.Marshaler {
+func (ec *executionContext) marshalNKeySpace2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐKeySpace(ctx context.Context, sel ast.SelectionSet, v *model.KeySpace) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -5434,7 +5434,7 @@ func (ec *executionContext) marshalNKeySpace2ᚖgithubᚗcomᚋtilau2328ᚋcql�
 	return ec._KeySpace(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNNewColumn2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐNewColumn(ctx context.Context, v interface{}) ([]*model.NewColumn, error) {
+func (ec *executionContext) unmarshalNNewColumn2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐNewColumn(ctx context.Context, v interface{}) ([]*model.NewColumn, error) {
 	var vSlice []interface{}
 	if v != nil {
 		vSlice = graphql.CoerceList(v)
@@ -5443,7 +5443,7 @@ func (ec *executionContext) unmarshalNNewColumn2ᚕᚖgithubᚗcomᚋtilau2328�
 	res := make([]*model.NewColumn, len(vSlice))
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalONewColumn2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐNewColumn(ctx, vSlice[i])
+		res[i], err = ec.unmarshalONewColumn2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐNewColumn(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}
@@ -5451,17 +5451,17 @@ func (ec *executionContext) unmarshalNNewColumn2ᚕᚖgithubᚗcomᚋtilau2328�
 	return res, nil
 }
 
-func (ec *executionContext) unmarshalNNewKeyspace2githubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐNewKeyspace(ctx context.Context, v interface{}) (model.NewKeyspace, error) {
+func (ec *executionContext) unmarshalNNewKeyspace2githubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐNewKeyspace(ctx context.Context, v interface{}) (model.NewKeyspace, error) {
 	res, err := ec.unmarshalInputNewKeyspace(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNNewReplication2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐNewReplication(ctx context.Context, v interface{}) (*model.NewReplication, error) {
+func (ec *executionContext) unmarshalNNewReplication2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐNewReplication(ctx context.Context, v interface{}) (*model.NewReplication, error) {
 	res, err := ec.unmarshalInputNewReplication(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNNewTable2githubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐNewTable(ctx context.Context, v interface{}) (model.NewTable, error) {
+func (ec *executionContext) unmarshalNNewTable2githubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐNewTable(ctx context.Context, v interface{}) (model.NewTable, error) {
 	res, err := ec.unmarshalInputNewTable(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
@@ -5481,11 +5481,11 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 	return res
 }
 
-func (ec *executionContext) marshalNTable2githubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐTable(ctx context.Context, sel ast.SelectionSet, v model.Table) graphql.Marshaler {
+func (ec *executionContext) marshalNTable2githubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐTable(ctx context.Context, sel ast.SelectionSet, v model.Table) graphql.Marshaler {
 	return ec._Table(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNTable2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐTableᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Table) graphql.Marshaler {
+func (ec *executionContext) marshalNTable2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐTableᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Table) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -5509,7 +5509,7 @@ func (ec *executionContext) marshalNTable2ᚕᚖgithubᚗcomᚋtilau2328ᚋcql�
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNTable2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐTable(ctx, sel, v[i])
+			ret[i] = ec.marshalNTable2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐTable(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -5529,7 +5529,7 @@ func (ec *executionContext) marshalNTable2ᚕᚖgithubᚗcomᚋtilau2328ᚋcql�
 	return ret
 }
 
-func (ec *executionContext) marshalNTable2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐTable(ctx context.Context, sel ast.SelectionSet, v *model.Table) graphql.Marshaler {
+func (ec *executionContext) marshalNTable2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐTable(ctx context.Context, sel ast.SelectionSet, v *model.Table) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -5818,7 +5818,7 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return res
 }
 
-func (ec *executionContext) marshalODatacenter2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐDatacenterᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Datacenter) graphql.Marshaler {
+func (ec *executionContext) marshalODatacenter2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐDatacenterᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Datacenter) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -5845,7 +5845,7 @@ func (ec *executionContext) marshalODatacenter2ᚕᚖgithubᚗcomᚋtilau2328ᚋ
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNDatacenter2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐDatacenter(ctx, sel, v[i])
+			ret[i] = ec.marshalNDatacenter2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐDatacenter(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -5865,7 +5865,7 @@ func (ec *executionContext) marshalODatacenter2ᚕᚖgithubᚗcomᚋtilau2328ᚋ
 	return ret
 }
 
-func (ec *executionContext) unmarshalONewColumn2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐNewColumn(ctx context.Context, v interface{}) (*model.NewColumn, error) {
+func (ec *executionContext) unmarshalONewColumn2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐNewColumn(ctx context.Context, v interface{}) (*model.NewColumn, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -5873,14 +5873,14 @@ func (ec *executionContext) unmarshalONewColumn2ᚖgithubᚗcomᚋtilau2328ᚋcq
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOReplication2githubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐReplication(ctx context.Context, sel ast.SelectionSet, v model.Replication) graphql.Marshaler {
+func (ec *executionContext) marshalOReplication2githubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐReplication(ctx context.Context, sel ast.SelectionSet, v model.Replication) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Replication(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOReplicationStrategy2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐReplicationStrategy(ctx context.Context, v interface{}) (*model.ReplicationStrategy, error) {
+func (ec *executionContext) unmarshalOReplicationStrategy2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐReplicationStrategy(ctx context.Context, v interface{}) (*model.ReplicationStrategy, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -5889,7 +5889,7 @@ func (ec *executionContext) unmarshalOReplicationStrategy2ᚖgithubᚗcomᚋtila
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOReplicationStrategy2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐReplicationStrategy(ctx context.Context, sel ast.SelectionSet, v *model.ReplicationStrategy) graphql.Marshaler {
+func (ec *executionContext) marshalOReplicationStrategy2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐReplicationStrategy(ctx context.Context, sel ast.SelectionSet, v *model.ReplicationStrategy) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -5912,7 +5912,7 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	return res
 }
 
-func (ec *executionContext) marshalOTable2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐTableᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Table) graphql.Marshaler {
+func (ec *executionContext) marshalOTable2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐTableᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Table) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -5939,7 +5939,7 @@ func (ec *executionContext) marshalOTable2ᚕᚖgithubᚗcomᚋtilau2328ᚋcql�
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNTable2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐTable(ctx, sel, v[i])
+			ret[i] = ec.marshalNTable2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋsrcᚋgoᚋcmdᚋgqlᚋpackageᚋmodelᚐTable(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)

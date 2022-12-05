@@ -23,42 +23,52 @@ func NewDDL(opts DDLServiceOptions) *DDLService {
 	return &DDLService{DDLServiceOptions: opts}
 }
 
-func (D DDLService) ListKeySpace(ctx Context, space KeySpace) ([]KeySpace, error) {
-	return nil, nil
+func (D DDLService) ListKeySpaces(ctx Context, space KeySpace) ([]KeySpace, error) {
+	//TODO implement me
+	panic("implement me")
 }
 
 func (D DDLService) GetKeySpace(ctx Context, key KeySpaceKey) (KeySpace, error) {
-	return KeySpace{}, nil
+	//TODO implement me
+	panic("implement me")
 }
 
 func (D DDLService) CreateKeySpace(ctx Context, space KeySpace) error {
-	return nil
+	//TODO implement me
+	panic("implement me")
 }
 
 func (D DDLService) AlterKeySpace(ctx Context, key KeySpaceKey, patches []Patch) error {
-	return nil
+	//TODO implement me
+	panic("implement me")
 }
 
 func (D DDLService) DropKeySpace(ctx Context, key KeySpaceKey) error {
-	return nil
+	//TODO implement me
+	panic("implement me")
 }
 
-func (D DDLService) ListTable(ctx Context, table Table) ([]Table, error) {
-	return nil, nil
+func (D DDLService) ListTables(ctx Context, table Table) ([]Table, error) {
+	//TODO implement me
+	panic("implement me")
 }
 
 func (D DDLService) GetTable(ctx Context, key TableKey) (Table, error) {
-	return Table{}, nil
+	//TODO implement me
+	panic("implement me")
 }
 
 func (D DDLService) CreateTable(ctx Context, table Table) error {
-	return nil
+	//TODO implement me
+	panic("implement me")
 }
 
 func (D DDLService) AlterTable(ctx Context, key TableKey, patches []Patch) error {
-	return nil
+	//TODO implement me
+	panic("implement me")
 }
 
 func (D DDLService) DropTable(ctx Context, key TableKey) error {
-	return nil
+	//TODO implement me
+	panic("implement me")
 }

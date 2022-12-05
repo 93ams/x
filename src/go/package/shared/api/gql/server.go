@@ -25,8 +25,8 @@ func (s *Server) WithPlayground(path string) *Server {
 	http.Handle(path, s.Playground())
 	return s
 }
-func (s *Server) Handle() { http.Handle(string(s.ep), s.Server) }
-func (s *Server) Start() error {
+func (s *Server) Serve() error {
+	http.Handle(string(s.ep), s.Server)
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", "7878")
 	return http.ListenAndServe(":7878", nil)
 }
