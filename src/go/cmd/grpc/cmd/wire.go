@@ -13,7 +13,7 @@ import (
 
 var Set = wire.NewSet(
 	wire.Struct(new(handler.DMLOptions), "*"), handler.NewDML,
-	wire.Struct(new(handler.DDLOptions), "*"), handler.NewDDL,
+	wire.Struct(new(handler.DDLOptions), "*"), handler.NewDDLHandler,
 	handler.NewServer,
 )
 

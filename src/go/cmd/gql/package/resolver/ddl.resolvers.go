@@ -52,7 +52,7 @@ func (r *queryResolver) Tables(ctx context.Context, keyspace string) ([]*model.T
 
 // Keyspace is the resolver for the keyspace field.
 func (r *queryResolver) Keyspace(ctx context.Context, name *string) (*model.KeySpace, error) {
-	panic(fmt.Errorf("not implemented: Keyspace - keyspace"))
+	panic(fmt.Errorf("not implemented: KeySpace - keyspace"))
 }
 
 // Keyspaces is the resolver for the keyspaces field.

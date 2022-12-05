@@ -61,11 +61,34 @@ func TestKeySpaceRepo(t *testing.T) {
 					Replication: NewSimpleReplication(2),
 				},
 			},
-			tableCreate: []Table{},
-			tableGet:    map[TableKey]Table{},
-			tableAlter:  map[TableKey][]Patch{},
-			tableDrop:   []TableKey{},
-			tableList:   []Table{},
+			tableCreate: []Table{
+				{
+					TableKey: TableKey{
+						KeySpace: k2,
+						Name:     k1,
+					},
+					Columns: []Column{
+						{
+							ColumnKey: ColumnKey{
+								Name: "test",
+							},
+							Type:    "text",
+							Primary: true,
+						},
+					},
+				},
+			},
+			tableGet:   map[TableKey]Table{},
+			tableAlter: map[TableKey][]Patch{},
+			tableDrop:  []TableKey{},
+			tableList: []Table{
+				{
+					TableKey: TableKey{
+						KeySpace: k2,
+						Name:     k1,
+					},
+				},
+			},
 		},
 		{
 			name: "other",
@@ -77,7 +100,7 @@ func TestKeySpaceRepo(t *testing.T) {
 			t.Cleanup(func() {
 				res, err := ksRepo.List(ctx, KeySpace{})
 				require.NoError(t, err)
-				for _, ks := range FilterSystem(res) {
+				for _, ks := range FilterTest(res) {
 					require.NoError(t, ksRepo.Drop(ctx, ks.KeySpaceKey))
 				}
 			})
@@ -97,7 +120,7 @@ func TestKeySpaceRepo(t *testing.T) {
 			}
 			res, err := ksRepo.List(ctx, KeySpace{})
 			require.NoError(t, err)
-			require.Equal(t, tt.ksList, FilterSystem(res))
+			require.Equal(t, tt.ksList, FilterTest(res))
 			for _, v := range tt.tableCreate {
 				require.NoError(t, tRepo.Create(ctx, v))
 			}
@@ -112,7 +135,11 @@ func TestKeySpaceRepo(t *testing.T) {
 			for _, k := range tt.tableDrop {
 				require.NoError(t, tRepo.Drop(ctx, k))
 			}
-			res2, err := tRepo.List(ctx, Table{})
+			res2, err := tRepo.List(ctx, Table{
+				TableKey: TableKey{
+					KeySpace: k2,
+				},
+			})
 			require.NoError(t, err)
 			require.Equal(t, tt.tableList, res2)
 		})

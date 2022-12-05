@@ -22,6 +22,10 @@ type (
 		Alter(Context, TableKey, []Patch) error
 		Drop(Context, TableKey) error
 	}
+	ColumnProvider interface {
+		List(Context, Column) ([]Column, error)
+		Get(Context, ColumnKey) (Column, error)
+	}
 	CrudProvider interface {
 		Select(Context) error
 		Insert(Context) error

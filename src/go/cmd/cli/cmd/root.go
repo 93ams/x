@@ -30,7 +30,7 @@ func Execute() error {
 	//return GenDocument(RootCmd, "./cmd")
 	//session, fn := lo.Must2(cql.NewSession(cql.NewCluster(cql.Options{
 	//	Consistency: gocql.Consistency(consistency),
-	//	Keyspace:    cql.Keyspace(ks),
+	//	KeySpace:    cql.KeySpace(ks),
 	//	Hosts:       hosts,
 	//})))
 	//defer fn()

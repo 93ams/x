@@ -5,17 +5,61 @@ package cql.grpc.v1;
 option go_package = "./model";
 
 service DDL {
-  rpc CreateKeySpace(Empty) returns (Empty);
-  rpc AlterKeySpace(Empty) returns (Empty);
-  rpc DropKeySpace(Empty) returns (Empty);
-  rpc ListKeySpaces(Empty) returns (Empty);
+  rpc CreateKeySpaces(CreateKeySpacesRequest) returns (Empty);
+  rpc AlterKeySpaces(AlterKeySpacesRequest) returns (Empty);
+  rpc DropKeySpaces(DropKeySpacesRequest) returns (Empty);
+  rpc ListKeySpaces(ListKeySpacesRequest) returns (Empty);
   rpc GetKeySpace(Empty) returns (Empty);
-  rpc CreateTable(Empty) returns (Empty);
-  rpc AlterTable(Empty) returns (Empty);
-  rpc DropTable(Empty) returns (Empty);
-  rpc ListTables(Empty) returns (Empty);
+  rpc CreateTables(CreateTablesRequest) returns (Empty);
+  rpc AlterTables(AlterTablesRequest) returns (Empty);
+  rpc DropTables(DropTablesRequest) returns (Empty);
+  rpc ListTables(ListTablesRequest) returns (Empty);
   rpc GetTable(Empty) returns (Empty);
 }
+
+message KeySpace {
+  string name = 1;
+  bool durable = 2;
+  repeated Table tables = 3;
+  map<string, string> replication = 4;
+  map<string, string> tags = 5;
+}
+message Table {
+  string name = 1;
+  repeated Column cols = 2;
+  map<string, string> tags = 3;
+}
+message Column {
+  string name = 1;
+  string type = 2;
+  bool static = 3;
+  bool primary = 4;
+}
 message Empty {
+
+}
+
+message CreateKeySpacesRequest {
+  repeated KeySpace keySpaces = 1;
+}
+message AlterKeySpacesRequest {
+  repeated KeySpace keySpaces = 1;
+}
+message DropKeySpacesRequest {
+  repeated string keySpaces = 1;
+}
+message ListKeySpacesRequest {
+
+}
+message CreateTablesRequest {
+  repeated Table tables = 1;
+}
+message AlterTablesRequest {
+  repeated Table tables = 1;
+}
+message DropTablesRequest {
+  repeated string tables = 1;
+}
+message ListTablesRequest {
 
 }

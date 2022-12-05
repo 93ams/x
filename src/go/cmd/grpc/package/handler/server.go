@@ -10,7 +10,7 @@ type Server struct {
 	*grpc.Server
 }
 
-func NewServer(ddl *DDL, dml *DML) Server {
+func NewServer(ddl *DDLHandler, dml *DML) Server {
 	s := grpc.NewServer()
 	model.RegisterDDLServer(s, ddl)
 	model.RegisterDMLServer(s, dml)

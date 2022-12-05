@@ -22,15 +22,15 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DDLClient interface {
-	CreateKeySpace(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error)
-	AlterKeySpace(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error)
-	DropKeySpace(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error)
-	ListKeySpaces(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error)
+	CreateKeySpaces(ctx context.Context, in *CreateKeySpacesRequest, opts ...grpc.CallOption) (*Empty, error)
+	AlterKeySpaces(ctx context.Context, in *AlterKeySpacesRequest, opts ...grpc.CallOption) (*Empty, error)
+	DropKeySpaces(ctx context.Context, in *DropKeySpacesRequest, opts ...grpc.CallOption) (*Empty, error)
+	ListKeySpaces(ctx context.Context, in *ListKeySpacesRequest, opts ...grpc.CallOption) (*Empty, error)
 	GetKeySpace(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error)
-	CreateTable(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error)
-	AlterTable(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error)
-	DropTable(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error)
-	ListTables(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error)
+	CreateTables(ctx context.Context, in *CreateTablesRequest, opts ...grpc.CallOption) (*Empty, error)
+	AlterTables(ctx context.Context, in *AlterTablesRequest, opts ...grpc.CallOption) (*Empty, error)
+	DropTables(ctx context.Context, in *DropTablesRequest, opts ...grpc.CallOption) (*Empty, error)
+	ListTables(ctx context.Context, in *ListTablesRequest, opts ...grpc.CallOption) (*Empty, error)
 	GetTable(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error)
 }
 
@@ -42,34 +42,34 @@ func NewDDLClient(cc grpc.ClientConnInterface) DDLClient {
 	return &dDLClient{cc}
 }
 
-func (c *dDLClient) CreateKeySpace(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error) {
+func (c *dDLClient) CreateKeySpaces(ctx context.Context, in *CreateKeySpacesRequest, opts ...grpc.CallOption) (*Empty, error) {
 	out := new(Empty)
-	err := c.cc.Invoke(ctx, "/cql.grpc.v1.DDL/CreateKeySpace", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cql.grpc.v1.DDL/CreateKeySpaces", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dDLClient) AlterKeySpace(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error) {
+func (c *dDLClient) AlterKeySpaces(ctx context.Context, in *AlterKeySpacesRequest, opts ...grpc.CallOption) (*Empty, error) {
 	out := new(Empty)
-	err := c.cc.Invoke(ctx, "/cql.grpc.v1.DDL/AlterKeySpace", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cql.grpc.v1.DDL/AlterKeySpaces", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dDLClient) DropKeySpace(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error) {
+func (c *dDLClient) DropKeySpaces(ctx context.Context, in *DropKeySpacesRequest, opts ...grpc.CallOption) (*Empty, error) {
 	out := new(Empty)
-	err := c.cc.Invoke(ctx, "/cql.grpc.v1.DDL/DropKeySpace", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cql.grpc.v1.DDL/DropKeySpaces", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dDLClient) ListKeySpaces(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error) {
+func (c *dDLClient) ListKeySpaces(ctx context.Context, in *ListKeySpacesRequest, opts ...grpc.CallOption) (*Empty, error) {
 	out := new(Empty)
 	err := c.cc.Invoke(ctx, "/cql.grpc.v1.DDL/ListKeySpaces", in, out, opts...)
 	if err != nil {
@@ -87,34 +87,34 @@ func (c *dDLClient) GetKeySpace(ctx context.Context, in *Empty, opts ...grpc.Cal
 	return out, nil
 }
 
-func (c *dDLClient) CreateTable(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error) {
+func (c *dDLClient) CreateTables(ctx context.Context, in *CreateTablesRequest, opts ...grpc.CallOption) (*Empty, error) {
 	out := new(Empty)
-	err := c.cc.Invoke(ctx, "/cql.grpc.v1.DDL/CreateTable", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cql.grpc.v1.DDL/CreateTables", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dDLClient) AlterTable(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error) {
+func (c *dDLClient) AlterTables(ctx context.Context, in *AlterTablesRequest, opts ...grpc.CallOption) (*Empty, error) {
 	out := new(Empty)
-	err := c.cc.Invoke(ctx, "/cql.grpc.v1.DDL/AlterTable", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cql.grpc.v1.DDL/AlterTables", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dDLClient) DropTable(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error) {
+func (c *dDLClient) DropTables(ctx context.Context, in *DropTablesRequest, opts ...grpc.CallOption) (*Empty, error) {
 	out := new(Empty)
-	err := c.cc.Invoke(ctx, "/cql.grpc.v1.DDL/DropTable", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/cql.grpc.v1.DDL/DropTables", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *dDLClient) ListTables(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error) {
+func (c *dDLClient) ListTables(ctx context.Context, in *ListTablesRequest, opts ...grpc.CallOption) (*Empty, error) {
 	out := new(Empty)
 	err := c.cc.Invoke(ctx, "/cql.grpc.v1.DDL/ListTables", in, out, opts...)
 	if err != nil {
@@ -136,15 +136,15 @@ func (c *dDLClient) GetTable(ctx context.Context, in *Empty, opts ...grpc.CallOp
 // All implementations must embed UnimplementedDDLServer
 // for forward compatibility
 type DDLServer interface {
-	CreateKeySpace(context.Context, *Empty) (*Empty, error)
-	AlterKeySpace(context.Context, *Empty) (*Empty, error)
-	DropKeySpace(context.Context, *Empty) (*Empty, error)
-	ListKeySpaces(context.Context, *Empty) (*Empty, error)
+	CreateKeySpaces(context.Context, *CreateKeySpacesRequest) (*Empty, error)
+	AlterKeySpaces(context.Context, *AlterKeySpacesRequest) (*Empty, error)
+	DropKeySpaces(context.Context, *DropKeySpacesRequest) (*Empty, error)
+	ListKeySpaces(context.Context, *ListKeySpacesRequest) (*Empty, error)
 	GetKeySpace(context.Context, *Empty) (*Empty, error)
-	CreateTable(context.Context, *Empty) (*Empty, error)
-	AlterTable(context.Context, *Empty) (*Empty, error)
-	DropTable(context.Context, *Empty) (*Empty, error)
-	ListTables(context.Context, *Empty) (*Empty, error)
+	CreateTables(context.Context, *CreateTablesRequest) (*Empty, error)
+	AlterTables(context.Context, *AlterTablesRequest) (*Empty, error)
+	DropTables(context.Context, *DropTablesRequest) (*Empty, error)
+	ListTables(context.Context, *ListTablesRequest) (*Empty, error)
 	GetTable(context.Context, *Empty) (*Empty, error)
 	mustEmbedUnimplementedDDLServer()
 }
@@ -153,31 +153,31 @@ type DDLServer interface {
 type UnimplementedDDLServer struct {
 }
 
-func (UnimplementedDDLServer) CreateKeySpace(context.Context, *Empty) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateKeySpace not implemented")
+func (UnimplementedDDLServer) CreateKeySpaces(context.Context, *CreateKeySpacesRequest) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateKeySpaces not implemented")
 }
-func (UnimplementedDDLServer) AlterKeySpace(context.Context, *Empty) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AlterKeySpace not implemented")
+func (UnimplementedDDLServer) AlterKeySpaces(context.Context, *AlterKeySpacesRequest) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AlterKeySpaces not implemented")
 }
-func (UnimplementedDDLServer) DropKeySpace(context.Context, *Empty) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DropKeySpace not implemented")
+func (UnimplementedDDLServer) DropKeySpaces(context.Context, *DropKeySpacesRequest) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DropKeySpaces not implemented")
 }
-func (UnimplementedDDLServer) ListKeySpaces(context.Context, *Empty) (*Empty, error) {
+func (UnimplementedDDLServer) ListKeySpaces(context.Context, *ListKeySpacesRequest) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListKeySpaces not implemented")
 }
 func (UnimplementedDDLServer) GetKeySpace(context.Context, *Empty) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetKeySpace not implemented")
 }
-func (UnimplementedDDLServer) CreateTable(context.Context, *Empty) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateTable not implemented")
+func (UnimplementedDDLServer) CreateTables(context.Context, *CreateTablesRequest) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateTables not implemented")
 }
-func (UnimplementedDDLServer) AlterTable(context.Context, *Empty) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AlterTable not implemented")
+func (UnimplementedDDLServer) AlterTables(context.Context, *AlterTablesRequest) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AlterTables not implemented")
 }
-func (UnimplementedDDLServer) DropTable(context.Context, *Empty) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DropTable not implemented")
+func (UnimplementedDDLServer) DropTables(context.Context, *DropTablesRequest) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DropTables not implemented")
 }
-func (UnimplementedDDLServer) ListTables(context.Context, *Empty) (*Empty, error) {
+func (UnimplementedDDLServer) ListTables(context.Context, *ListTablesRequest) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListTables not implemented")
 }
 func (UnimplementedDDLServer) GetTable(context.Context, *Empty) (*Empty, error) {
@@ -196,62 +196,62 @@ func RegisterDDLServer(s grpc.ServiceRegistrar, srv DDLServer) {
 	s.RegisterService(&DDL_ServiceDesc, srv)
 }
 
-func _DDL_CreateKeySpace_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
+func _DDL_CreateKeySpaces_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateKeySpacesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DDLServer).CreateKeySpace(ctx, in)
+		return srv.(DDLServer).CreateKeySpaces(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/cql.grpc.v1.DDL/CreateKeySpace",
+		FullMethod: "/cql.grpc.v1.DDL/CreateKeySpaces",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DDLServer).CreateKeySpace(ctx, req.(*Empty))
+		return srv.(DDLServer).CreateKeySpaces(ctx, req.(*CreateKeySpacesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DDL_AlterKeySpace_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
+func _DDL_AlterKeySpaces_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AlterKeySpacesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DDLServer).AlterKeySpace(ctx, in)
+		return srv.(DDLServer).AlterKeySpaces(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/cql.grpc.v1.DDL/AlterKeySpace",
+		FullMethod: "/cql.grpc.v1.DDL/AlterKeySpaces",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DDLServer).AlterKeySpace(ctx, req.(*Empty))
+		return srv.(DDLServer).AlterKeySpaces(ctx, req.(*AlterKeySpacesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DDL_DropKeySpace_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
+func _DDL_DropKeySpaces_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DropKeySpacesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DDLServer).DropKeySpace(ctx, in)
+		return srv.(DDLServer).DropKeySpaces(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/cql.grpc.v1.DDL/DropKeySpace",
+		FullMethod: "/cql.grpc.v1.DDL/DropKeySpaces",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DDLServer).DropKeySpace(ctx, req.(*Empty))
+		return srv.(DDLServer).DropKeySpaces(ctx, req.(*DropKeySpacesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _DDL_ListKeySpaces_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
+	in := new(ListKeySpacesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -263,7 +263,7 @@ func _DDL_ListKeySpaces_Handler(srv interface{}, ctx context.Context, dec func(i
 		FullMethod: "/cql.grpc.v1.DDL/ListKeySpaces",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DDLServer).ListKeySpaces(ctx, req.(*Empty))
+		return srv.(DDLServer).ListKeySpaces(ctx, req.(*ListKeySpacesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -286,62 +286,62 @@ func _DDL_GetKeySpace_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DDL_CreateTable_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
+func _DDL_CreateTables_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateTablesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DDLServer).CreateTable(ctx, in)
+		return srv.(DDLServer).CreateTables(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/cql.grpc.v1.DDL/CreateTable",
+		FullMethod: "/cql.grpc.v1.DDL/CreateTables",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DDLServer).CreateTable(ctx, req.(*Empty))
+		return srv.(DDLServer).CreateTables(ctx, req.(*CreateTablesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DDL_AlterTable_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
+func _DDL_AlterTables_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AlterTablesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DDLServer).AlterTable(ctx, in)
+		return srv.(DDLServer).AlterTables(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/cql.grpc.v1.DDL/AlterTable",
+		FullMethod: "/cql.grpc.v1.DDL/AlterTables",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DDLServer).AlterTable(ctx, req.(*Empty))
+		return srv.(DDLServer).AlterTables(ctx, req.(*AlterTablesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DDL_DropTable_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
+func _DDL_DropTables_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DropTablesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DDLServer).DropTable(ctx, in)
+		return srv.(DDLServer).DropTables(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/cql.grpc.v1.DDL/DropTable",
+		FullMethod: "/cql.grpc.v1.DDL/DropTables",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DDLServer).DropTable(ctx, req.(*Empty))
+		return srv.(DDLServer).DropTables(ctx, req.(*DropTablesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _DDL_ListTables_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
+	in := new(ListTablesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -353,7 +353,7 @@ func _DDL_ListTables_Handler(srv interface{}, ctx context.Context, dec func(inte
 		FullMethod: "/cql.grpc.v1.DDL/ListTables",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DDLServer).ListTables(ctx, req.(*Empty))
+		return srv.(DDLServer).ListTables(ctx, req.(*ListTablesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -384,16 +384,16 @@ var DDL_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*DDLServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "CreateKeySpace",
-			Handler:    _DDL_CreateKeySpace_Handler,
+			MethodName: "CreateKeySpaces",
+			Handler:    _DDL_CreateKeySpaces_Handler,
 		},
 		{
-			MethodName: "AlterKeySpace",
-			Handler:    _DDL_AlterKeySpace_Handler,
+			MethodName: "AlterKeySpaces",
+			Handler:    _DDL_AlterKeySpaces_Handler,
 		},
 		{
-			MethodName: "DropKeySpace",
-			Handler:    _DDL_DropKeySpace_Handler,
+			MethodName: "DropKeySpaces",
+			Handler:    _DDL_DropKeySpaces_Handler,
 		},
 		{
 			MethodName: "ListKeySpaces",
@@ -404,16 +404,16 @@ var DDL_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _DDL_GetKeySpace_Handler,
 		},
 		{
-			MethodName: "CreateTable",
-			Handler:    _DDL_CreateTable_Handler,
+			MethodName: "CreateTables",
+			Handler:    _DDL_CreateTables_Handler,
 		},
 		{
-			MethodName: "AlterTable",
-			Handler:    _DDL_AlterTable_Handler,
+			MethodName: "AlterTables",
+			Handler:    _DDL_AlterTables_Handler,
 		},
 		{
-			MethodName: "DropTable",
-			Handler:    _DDL_DropTable_Handler,
+			MethodName: "DropTables",
+			Handler:    _DDL_DropTables_Handler,
 		},
 		{
 			MethodName: "ListTables",

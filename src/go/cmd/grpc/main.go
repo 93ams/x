@@ -5,7 +5,7 @@ import (
 	"github.com/tilau2328/cql/src/go/package/shared/data/cql"
 )
 
-//go:generate protoc -I schema --go_out=package --go-grpc_out=package schema/ddl.proto schema/dml.proto
+//go:generate protoc -I config/schema --go_out=package --go-grpc_out=package config/schema/ddl.proto config/schema/dml.proto
 
 func main() {
 	server, close := lo.Must2(Init(cql.Options{}))

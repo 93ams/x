@@ -7,6 +7,14 @@ import (
 	"log"
 )
 
+type DDLVerb string
+
+const (
+	VerbCreate DDLVerb = "CREATE"
+	VerbAlter  DDLVerb = "ALTER"
+	VerbDrop   DDLVerb = "DROP"
+)
+
 func SafeExec(ctx context.Context, s gocqlx.Session, stmt string, values ...any) error {
 	if err := s.AwaitSchemaAgreement(ctx); err != nil {
 		log.Printf("error waiting for schema agreement pre running stmt=%q err=%v\n", stmt, err)

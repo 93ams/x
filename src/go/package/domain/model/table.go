@@ -24,6 +24,7 @@ type (
 		Compaction              map[string]string
 		Flags                   []string
 		Extensions              map[string][]byte
+		Columns                 []Column
 	}
 )
 

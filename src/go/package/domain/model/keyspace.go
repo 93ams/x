@@ -10,6 +10,7 @@ type (
 		KeySpaceKey
 		Durable     bool
 		Replication Replication
+		Tables      []Table
 	}
 )
 
@@ -33,9 +34,9 @@ func (r Replication) Strategy() ReplicationStrategy { return ReplicationStrategy
 func (k KeySpaceKey) String() string                { return string(k) }
 func (k KeySpaceKey) Raw() any                      { return k }
 
-func FilterSystem(in []KeySpace) (out []KeySpace) {
+func FilterTest(in []KeySpace) (out []KeySpace) {
 	for _, ks := range in {
-		if !strings.HasPrefix(ks.KeySpaceKey.String(), "system") {
+		if strings.HasPrefix(ks.KeySpaceKey.String(), "test") {
 			out = append(out, ks)
 		}
 	}
