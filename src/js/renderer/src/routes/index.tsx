@@ -103,26 +103,26 @@ export default component$(() => {
       <ul>
         <li>
           <span>Questions or just want to say hi? </span>
-          <a href="https://qwik.builder.io/chat" target="_blank">
+          <a href="https://qwik.builder.io/chat" target="_blank" class='btn'>
             Chat on discord!
           </a>
         </li>
         <li>
           <span>Follow </span>
-          <a href="https://twitter.com/QwikDev" target="_blank">
+          <a href="https://twitter.com/QwikDev" target="_blank" class='btn'>
             @QwikDev
           </a>
           <span> on Twitter</span>
         </li>
         <li>
           <span>Open issues and contribute on </span>
-          <a href="https://github.com/BuilderIO/qwik" target="_blank">
+          <a href="https://github.com/BuilderIO/qwik" target="_blank" class='btn'>
             GitHub
           </a>
         </li>
         <li>
           <span>Watch </span>
-          <a href="~/routes/index" target="_blank">
+          <a href="~/routes/index" target="_blank" class='btn'>
             Presentations, Podcasts, Videos, etc.
           </a>
         </li>
