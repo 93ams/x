@@ -3,12 +3,12 @@ package ddl
 import (
 	. "context"
 	"github.com/scylladb/gocqlx/v2"
-	"github.com/tilau2328/cql/package/adaptor/data/cql/model"
-	. "github.com/tilau2328/cql/package/domain/model"
-	. "github.com/tilau2328/cql/package/domain/provider"
-	. "github.com/tilau2328/cql/package/shared/data/cql"
-	"github.com/tilau2328/cql/package/shared/data/cql/ddl"
-	. "github.com/tilau2328/cql/package/shared/patch"
+	"github.com/tilau2328/cql/src/go/package/adaptor/data/cql/model"
+	. "github.com/tilau2328/cql/src/go/package/domain/model"
+	. "github.com/tilau2328/cql/src/go/package/domain/provider"
+	. "github.com/tilau2328/cql/src/go/package/shared/data/cql"
+	"github.com/tilau2328/cql/src/go/package/shared/data/cql/ddl"
+	. "github.com/tilau2328/cql/src/go/package/shared/patch"
 )
 
 type KeySpaceRepo struct{ session gocqlx.Session }

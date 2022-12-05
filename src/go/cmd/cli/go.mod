@@ -1,10 +1,9 @@
-module github.com/tilau2328/cql/cmd/cli
+module github.com/tilau2328/cql/src/go/cmd/cli
 
 go 1.19
 
 require (
 	github.com/gocql/gocql v1.2.1
-	github.com/google/wire v0.5.0
 	github.com/samber/lo v1.36.0
 	github.com/spf13/cobra v1.6.1
 )

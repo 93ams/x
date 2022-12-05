@@ -9,8 +9,8 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
-	. "github.com/tilau2328/cql/package/domain/model"
-	. "github.com/tilau2328/cql/package/shared/patch"
+	. "github.com/tilau2328/cql/src/go/package/domain/model"
+	. "github.com/tilau2328/cql/src/go/package/shared/patch"
 )
 
 // MockKeySpaceProvider is a mock of KeySpaceProvider interface.

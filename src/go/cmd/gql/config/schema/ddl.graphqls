@@ -26,6 +26,11 @@ type KeySpace {
 type Table {
     id: ID!
     name: String!
+    columns: [Column!]!
+}
+type Column {
+    name: String!
+    type: String!
 }
 extend type Query {
     table(name: String!): Table!
@@ -42,7 +47,11 @@ input NewKeyspace {
 }
 input NewTable {
     name: String!
-    params: [String]!
+    columns: [NewColumn]!
+}
+input NewColumn {
+    name: String!
+    type: String!
 }
 extend type Mutation {
     createKeySpace(in: NewKeyspace!): KeySpace!

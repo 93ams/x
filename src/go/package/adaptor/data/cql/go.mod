@@ -1,8 +1,9 @@
-module github.com/tilau2328/cql/package/adaptor/data/cql
+module github.com/tilau2328/cql/src/go/package/adaptor/data/cql
 
 go 1.19
 
 require (
+	github.com/gocql/gocql v1.2.1
 	github.com/google/wire v0.5.0
 	github.com/samber/lo v1.36.0
 	github.com/scylladb/gocqlx/v2 v2.7.0
@@ -11,7 +12,6 @@ require (
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/gocql/gocql v1.2.1 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/go-cmp v0.5.6 // indirect
 	github.com/hailocab/go-hostpool v0.0.0-20160125115350-e80d13ce29ed // indirect

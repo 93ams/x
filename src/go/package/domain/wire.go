@@ -2,8 +2,8 @@ package domain
 
 import (
 	"github.com/google/wire"
-	"github.com/tilau2328/cql/package/domain/provider"
-	"github.com/tilau2328/cql/package/domain/service"
+	"github.com/tilau2328/cql/src/go/package/domain/provider"
+	"github.com/tilau2328/cql/src/go/package/domain/service"
 )
 
 var Set = wire.NewSet(

@@ -2,8 +2,8 @@ package ddl
 
 import (
 	. "github.com/samber/lo"
-	. "github.com/tilau2328/cql/package/domain/model"
-	. "github.com/tilau2328/cql/package/shared/cmd/pretty"
+	. "github.com/tilau2328/cql/src/go/package/domain/model"
+	. "github.com/tilau2328/cql/src/go/package/shared/cmd/pretty"
 	"os"
 )
 

@@ -2,10 +2,9 @@ package ddl
 
 import (
 	. "github.com/spf13/cobra"
-	. "github.com/tilau2328/cql/cmd/cli/package/ddl"
-	. "github.com/tilau2328/cql/package/domain/model"
-	. "github.com/tilau2328/cql/package/shared/cmd"
-	. "github.com/tilau2328/cql/package/shared/cmd/flags"
+	. "github.com/tilau2328/cql/src/go/cmd/cli/package/ddl"
+	. "github.com/tilau2328/cql/src/go/package/shared/cmd"
+	. "github.com/tilau2328/cql/src/go/package/shared/cmd/flags"
 )
 
 var (

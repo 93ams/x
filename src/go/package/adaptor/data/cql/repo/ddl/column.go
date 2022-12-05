@@ -3,9 +3,9 @@ package ddl
 import (
 	. "context"
 	"github.com/scylladb/gocqlx/v2"
-	"github.com/tilau2328/cql/package/adaptor/data/cql/model"
-	. "github.com/tilau2328/cql/package/domain/model"
-	. "github.com/tilau2328/cql/package/domain/provider"
+	"github.com/tilau2328/cql/src/go/package/adaptor/data/cql/model"
+	. "github.com/tilau2328/cql/src/go/package/domain/model"
+	. "github.com/tilau2328/cql/src/go/package/domain/provider"
 )
 
 type ColumnRepo struct{ session gocqlx.Session }

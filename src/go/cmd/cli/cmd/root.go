@@ -2,10 +2,10 @@ package cmd
 
 import (
 	"github.com/gocql/gocql"
-	"github.com/tilau2328/cql/cmd/cli/cmd/ddl"
-	"github.com/tilau2328/cql/cmd/cli/cmd/dml"
-	. "github.com/tilau2328/cql/package/shared/cmd"
-	. "github.com/tilau2328/cql/package/shared/cmd/flags"
+	"github.com/tilau2328/cql/src/go/cmd/cli/cmd/ddl"
+	"github.com/tilau2328/cql/src/go/cmd/cli/cmd/dml"
+	. "github.com/tilau2328/cql/src/go/package/shared/cmd"
+	. "github.com/tilau2328/cql/src/go/package/shared/cmd/flags"
 )
 
 var (

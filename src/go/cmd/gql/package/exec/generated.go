@@ -13,9 +13,9 @@ import (
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
+	"github.com/tilau2328/cql/src/go/cmd/gql/package/model"
 	gqlparser "github.com/vektah/gqlparser/v2"
 	"github.com/vektah/gqlparser/v2/ast"
-	"gql/package/model"
 )
 
 // region    ************************** generated!.gotpl **************************
@@ -44,6 +44,11 @@ type DirectiveRoot struct {
 }
 
 type ComplexityRoot struct {
+	Column struct {
+		Name func(childComplexity int) int
+		Type func(childComplexity int) int
+	}
+
 	Datacenter struct {
 		Name              func(childComplexity int) int
 		ReplicationFactor func(childComplexity int) int
@@ -89,8 +94,9 @@ type ComplexityRoot struct {
 	}
 
 	Table struct {
-		ID   func(childComplexity int) int
-		Name func(childComplexity int) int
+		Columns func(childComplexity int) int
+		ID      func(childComplexity int) int
+		Name    func(childComplexity int) int
 	}
 }
 
@@ -129,6 +135,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	ec := executionContext{nil, e}
 	_ = ec
 	switch typeName + "." + field {
+
+	case "Column.name":
+		if e.complexity.Column.Name == nil {
+			break
+		}
+
+		return e.complexity.Column.Name(childComplexity), true
+
+	case "Column.type":
+		if e.complexity.Column.Type == nil {
+			break
+		}
+
+		return e.complexity.Column.Type(childComplexity), true
 
 	case "Datacenter.name":
 		if e.complexity.Datacenter.Name == nil {
@@ -377,6 +397,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SimpleReplication.ReplicationFactor(childComplexity), true
 
+	case "Table.columns":
+		if e.complexity.Table.Columns == nil {
+			break
+		}
+
+		return e.complexity.Table.Columns(childComplexity), true
+
 	case "Table.id":
 		if e.complexity.Table.ID == nil {
 			break
@@ -399,6 +426,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	rc := graphql.GetOperationContext(ctx)
 	ec := executionContext{rc, e}
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
+		ec.unmarshalInputNewColumn,
 		ec.unmarshalInputNewKeyspace,
 		ec.unmarshalInputNewReplication,
 		ec.unmarshalInputNewTable,
@@ -462,7 +490,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
-	{Name: "../schema/ddl.graphqls", Input: `enum ReplicationStrategy {
+	{Name: "../../config/schema/ddl.graphqls", Input: `enum ReplicationStrategy {
     SimpleStrategy
     NetworkTopologyStrategy
 }
@@ -490,6 +518,11 @@ type KeySpace {
 type Table {
     id: ID!
     name: String!
+    columns: [Column!]!
+}
+type Column {
+    name: String!
+    type: String!
 }
 extend type Query {
     table(name: String!): Table!
@@ -506,7 +539,11 @@ input NewKeyspace {
 }
 input NewTable {
     name: String!
-    params: [String]!
+    columns: [NewColumn]!
+}
+input NewColumn {
+    name: String!
+    type: String!
 }
 extend type Mutation {
     createKeySpace(in: NewKeyspace!): KeySpace!
@@ -516,7 +553,7 @@ extend type Mutation {
     alterTable(in: NewTable!): Table!
     dropTable(in: String!): Boolean!
 }`, BuiltIn: false},
-	{Name: "../schema/dml.graphqls", Input: `extend type Query {
+	{Name: "../../config/schema/dml.graphqls", Input: `extend type Query {
     select(query: String): String
 }
 extend type Mutation {
@@ -524,7 +561,7 @@ extend type Mutation {
     update(query: String): String
     delete(query: String): String
 }`, BuiltIn: false},
-	{Name: "../schema/schema.graphqls", Input: `type Query {
+	{Name: "../../config/schema/schema.graphqls", Input: `type Query {
     version: String
 }
 type Mutation {
@@ -543,7 +580,7 @@ func (ec *executionContext) field_Mutation_alterKeySpace_args(ctx context.Contex
 	var arg0 model.NewKeyspace
 	if tmp, ok := rawArgs["in"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("in"))
-		arg0, err = ec.unmarshalNNewKeyspace2githubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐNewKeyspace(ctx, tmp)
+		arg0, err = ec.unmarshalNNewKeyspace2githubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐNewKeyspace(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -558,7 +595,7 @@ func (ec *executionContext) field_Mutation_alterTable_args(ctx context.Context, 
 	var arg0 model.NewTable
 	if tmp, ok := rawArgs["in"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("in"))
-		arg0, err = ec.unmarshalNNewTable2githubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐNewTable(ctx, tmp)
+		arg0, err = ec.unmarshalNNewTable2githubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐNewTable(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -573,7 +610,7 @@ func (ec *executionContext) field_Mutation_createKeySpace_args(ctx context.Conte
 	var arg0 model.NewKeyspace
 	if tmp, ok := rawArgs["in"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("in"))
-		arg0, err = ec.unmarshalNNewKeyspace2githubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐNewKeyspace(ctx, tmp)
+		arg0, err = ec.unmarshalNNewKeyspace2githubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐNewKeyspace(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -588,7 +625,7 @@ func (ec *executionContext) field_Mutation_createTable_args(ctx context.Context,
 	var arg0 model.NewTable
 	if tmp, ok := rawArgs["in"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("in"))
-		arg0, err = ec.unmarshalNNewTable2githubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐNewTable(ctx, tmp)
+		arg0, err = ec.unmarshalNNewTable2githubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐNewTable(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -785,6 +822,94 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 
 // region    **************************** field.gotpl *****************************
 
+func (ec *executionContext) _Column_name(ctx context.Context, field graphql.CollectedField, obj *model.Column) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Column_name(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Column_name(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Column",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Column_type(ctx context.Context, field graphql.CollectedField, obj *model.Column) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Column_type(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Type, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Column_type(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Column",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Datacenter_name(ctx context.Context, field graphql.CollectedField, obj *model.Datacenter) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Datacenter_name(ctx, field)
 	if err != nil {
@@ -942,7 +1067,7 @@ func (ec *executionContext) _KeySpace_tables(ctx context.Context, field graphql.
 	}
 	res := resTmp.([]*model.Table)
 	fc.Result = res
-	return ec.marshalOTable2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐTableᚄ(ctx, field.Selections, res)
+	return ec.marshalOTable2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐTableᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_KeySpace_tables(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -957,6 +1082,8 @@ func (ec *executionContext) fieldContext_KeySpace_tables(ctx context.Context, fi
 				return ec.fieldContext_Table_id(ctx, field)
 			case "name":
 				return ec.fieldContext_Table_name(ctx, field)
+			case "columns":
+				return ec.fieldContext_Table_columns(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Table", field.Name)
 		},
@@ -1030,7 +1157,7 @@ func (ec *executionContext) _KeySpace_replication(ctx context.Context, field gra
 	}
 	res := resTmp.(model.Replication)
 	fc.Result = res
-	return ec.marshalOReplication2githubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐReplication(ctx, field.Selections, res)
+	return ec.marshalOReplication2githubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐReplication(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_KeySpace_replication(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1115,7 +1242,7 @@ func (ec *executionContext) _Mutation_createKeySpace(ctx context.Context, field 
 	}
 	res := resTmp.(*model.KeySpace)
 	fc.Result = res
-	return ec.marshalNKeySpace2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐKeySpace(ctx, field.Selections, res)
+	return ec.marshalNKeySpace2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐKeySpace(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_createKeySpace(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1180,7 +1307,7 @@ func (ec *executionContext) _Mutation_alterKeySpace(ctx context.Context, field g
 	}
 	res := resTmp.(*model.KeySpace)
 	fc.Result = res
-	return ec.marshalNKeySpace2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐKeySpace(ctx, field.Selections, res)
+	return ec.marshalNKeySpace2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐKeySpace(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_alterKeySpace(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1300,7 +1427,7 @@ func (ec *executionContext) _Mutation_createTable(ctx context.Context, field gra
 	}
 	res := resTmp.(*model.Table)
 	fc.Result = res
-	return ec.marshalNTable2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐTable(ctx, field.Selections, res)
+	return ec.marshalNTable2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐTable(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_createTable(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1315,6 +1442,8 @@ func (ec *executionContext) fieldContext_Mutation_createTable(ctx context.Contex
 				return ec.fieldContext_Table_id(ctx, field)
 			case "name":
 				return ec.fieldContext_Table_name(ctx, field)
+			case "columns":
+				return ec.fieldContext_Table_columns(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Table", field.Name)
 		},
@@ -1361,7 +1490,7 @@ func (ec *executionContext) _Mutation_alterTable(ctx context.Context, field grap
 	}
 	res := resTmp.(*model.Table)
 	fc.Result = res
-	return ec.marshalNTable2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐTable(ctx, field.Selections, res)
+	return ec.marshalNTable2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐTable(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_alterTable(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1376,6 +1505,8 @@ func (ec *executionContext) fieldContext_Mutation_alterTable(ctx context.Context
 				return ec.fieldContext_Table_id(ctx, field)
 			case "name":
 				return ec.fieldContext_Table_name(ctx, field)
+			case "columns":
+				return ec.fieldContext_Table_columns(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Table", field.Name)
 		},
@@ -1630,7 +1761,7 @@ func (ec *executionContext) _NetworkTopologyReplication_class(ctx context.Contex
 	}
 	res := resTmp.(*model.ReplicationStrategy)
 	fc.Result = res
-	return ec.marshalOReplicationStrategy2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐReplicationStrategy(ctx, field.Selections, res)
+	return ec.marshalOReplicationStrategy2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐReplicationStrategy(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_NetworkTopologyReplication_class(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1671,7 +1802,7 @@ func (ec *executionContext) _NetworkTopologyReplication_datacenters(ctx context.
 	}
 	res := resTmp.([]*model.Datacenter)
 	fc.Result = res
-	return ec.marshalODatacenter2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐDatacenterᚄ(ctx, field.Selections, res)
+	return ec.marshalODatacenter2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐDatacenterᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_NetworkTopologyReplication_datacenters(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1762,7 +1893,7 @@ func (ec *executionContext) _Query_table(ctx context.Context, field graphql.Coll
 	}
 	res := resTmp.(*model.Table)
 	fc.Result = res
-	return ec.marshalNTable2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐTable(ctx, field.Selections, res)
+	return ec.marshalNTable2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐTable(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_table(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1777,6 +1908,8 @@ func (ec *executionContext) fieldContext_Query_table(ctx context.Context, field 
 				return ec.fieldContext_Table_id(ctx, field)
 			case "name":
 				return ec.fieldContext_Table_name(ctx, field)
+			case "columns":
+				return ec.fieldContext_Table_columns(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Table", field.Name)
 		},
@@ -1823,7 +1956,7 @@ func (ec *executionContext) _Query_tables(ctx context.Context, field graphql.Col
 	}
 	res := resTmp.([]*model.Table)
 	fc.Result = res
-	return ec.marshalNTable2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐTableᚄ(ctx, field.Selections, res)
+	return ec.marshalNTable2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐTableᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_tables(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1838,6 +1971,8 @@ func (ec *executionContext) fieldContext_Query_tables(ctx context.Context, field
 				return ec.fieldContext_Table_id(ctx, field)
 			case "name":
 				return ec.fieldContext_Table_name(ctx, field)
+			case "columns":
+				return ec.fieldContext_Table_columns(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Table", field.Name)
 		},
@@ -1884,7 +2019,7 @@ func (ec *executionContext) _Query_keyspace(ctx context.Context, field graphql.C
 	}
 	res := resTmp.(*model.KeySpace)
 	fc.Result = res
-	return ec.marshalNKeySpace2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐKeySpace(ctx, field.Selections, res)
+	return ec.marshalNKeySpace2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐKeySpace(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_keyspace(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1949,7 +2084,7 @@ func (ec *executionContext) _Query_keyspaces(ctx context.Context, field graphql.
 	}
 	res := resTmp.([]*model.KeySpace)
 	fc.Result = res
-	return ec.marshalNKeySpace2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐKeySpaceᚄ(ctx, field.Selections, res)
+	return ec.marshalNKeySpace2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐKeySpaceᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_keyspaces(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2181,7 +2316,7 @@ func (ec *executionContext) _SimpleReplication_class(ctx context.Context, field 
 	}
 	res := resTmp.(*model.ReplicationStrategy)
 	fc.Result = res
-	return ec.marshalOReplicationStrategy2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐReplicationStrategy(ctx, field.Selections, res)
+	return ec.marshalOReplicationStrategy2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐReplicationStrategy(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SimpleReplication_class(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2324,6 +2459,56 @@ func (ec *executionContext) fieldContext_Table_name(ctx context.Context, field g
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Table_columns(ctx context.Context, field graphql.CollectedField, obj *model.Table) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Table_columns(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Columns, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.Column)
+	fc.Result = res
+	return ec.marshalNColumn2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐColumnᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Table_columns(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Table",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "name":
+				return ec.fieldContext_Column_name(ctx, field)
+			case "type":
+				return ec.fieldContext_Column_type(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Column", field.Name)
 		},
 	}
 	return fc, nil
@@ -4102,6 +4287,42 @@ func (ec *executionContext) fieldContext___Type_specifiedByURL(ctx context.Conte
 
 // region    **************************** input.gotpl *****************************
 
+func (ec *executionContext) unmarshalInputNewColumn(ctx context.Context, obj interface{}) (model.NewColumn, error) {
+	var it model.NewColumn
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"name", "type"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "name":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			it.Name, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "type":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("type"))
+			it.Type, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputNewKeyspace(ctx context.Context, obj interface{}) (model.NewKeyspace, error) {
 	var it model.NewKeyspace
 	asMap := map[string]interface{}{}
@@ -4128,7 +4349,7 @@ func (ec *executionContext) unmarshalInputNewKeyspace(ctx context.Context, obj i
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("replication"))
-			it.Replication, err = ec.unmarshalNNewReplication2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐNewReplication(ctx, v)
+			it.Replication, err = ec.unmarshalNNewReplication2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐNewReplication(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -4156,7 +4377,7 @@ func (ec *executionContext) unmarshalInputNewReplication(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("strategy"))
-			it.Strategy, err = ec.unmarshalOReplicationStrategy2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐReplicationStrategy(ctx, v)
+			it.Strategy, err = ec.unmarshalOReplicationStrategy2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐReplicationStrategy(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -4173,7 +4394,7 @@ func (ec *executionContext) unmarshalInputNewTable(ctx context.Context, obj inte
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"name", "params"}
+	fieldsInOrder := [...]string{"name", "columns"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -4188,11 +4409,11 @@ func (ec *executionContext) unmarshalInputNewTable(ctx context.Context, obj inte
 			if err != nil {
 				return it, err
 			}
-		case "params":
+		case "columns":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("params"))
-			it.Params, err = ec.unmarshalNString2ᚕᚖstring(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("columns"))
+			it.Columns, err = ec.unmarshalNNewColumn2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐNewColumn(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -4232,6 +4453,41 @@ func (ec *executionContext) _Replication(ctx context.Context, sel ast.SelectionS
 // endregion ************************** interface.gotpl ***************************
 
 // region    **************************** object.gotpl ****************************
+
+var columnImplementors = []string{"Column"}
+
+func (ec *executionContext) _Column(ctx context.Context, sel ast.SelectionSet, obj *model.Column) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, columnImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Column")
+		case "name":
+
+			out.Values[i] = ec._Column_name(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "type":
+
+			out.Values[i] = ec._Column_type(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
 
 var datacenterImplementors = []string{"Datacenter"}
 
@@ -4675,6 +4931,13 @@ func (ec *executionContext) _Table(ctx context.Context, sel ast.SelectionSet, ob
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "columns":
+
+			out.Values[i] = ec._Table_columns(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -5019,7 +5282,61 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
-func (ec *executionContext) marshalNDatacenter2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐDatacenter(ctx context.Context, sel ast.SelectionSet, v *model.Datacenter) graphql.Marshaler {
+func (ec *executionContext) marshalNColumn2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐColumnᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Column) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNColumn2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐColumn(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNColumn2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐColumn(ctx context.Context, sel ast.SelectionSet, v *model.Column) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._Column(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNDatacenter2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐDatacenter(ctx context.Context, sel ast.SelectionSet, v *model.Datacenter) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -5059,11 +5376,11 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 	return res
 }
 
-func (ec *executionContext) marshalNKeySpace2githubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐKeySpace(ctx context.Context, sel ast.SelectionSet, v model.KeySpace) graphql.Marshaler {
+func (ec *executionContext) marshalNKeySpace2githubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐKeySpace(ctx context.Context, sel ast.SelectionSet, v model.KeySpace) graphql.Marshaler {
 	return ec._KeySpace(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNKeySpace2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐKeySpaceᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.KeySpace) graphql.Marshaler {
+func (ec *executionContext) marshalNKeySpace2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐKeySpaceᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.KeySpace) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -5087,7 +5404,7 @@ func (ec *executionContext) marshalNKeySpace2ᚕᚖgithubᚗcomᚋtilau2328ᚋcq
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNKeySpace2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐKeySpace(ctx, sel, v[i])
+			ret[i] = ec.marshalNKeySpace2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐKeySpace(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -5107,7 +5424,7 @@ func (ec *executionContext) marshalNKeySpace2ᚕᚖgithubᚗcomᚋtilau2328ᚋcq
 	return ret
 }
 
-func (ec *executionContext) marshalNKeySpace2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐKeySpace(ctx context.Context, sel ast.SelectionSet, v *model.KeySpace) graphql.Marshaler {
+func (ec *executionContext) marshalNKeySpace2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐKeySpace(ctx context.Context, sel ast.SelectionSet, v *model.KeySpace) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -5117,17 +5434,34 @@ func (ec *executionContext) marshalNKeySpace2ᚖgithubᚗcomᚋtilau2328ᚋcql�
 	return ec._KeySpace(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNNewKeyspace2githubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐNewKeyspace(ctx context.Context, v interface{}) (model.NewKeyspace, error) {
+func (ec *executionContext) unmarshalNNewColumn2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐNewColumn(ctx context.Context, v interface{}) ([]*model.NewColumn, error) {
+	var vSlice []interface{}
+	if v != nil {
+		vSlice = graphql.CoerceList(v)
+	}
+	var err error
+	res := make([]*model.NewColumn, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalONewColumn2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐNewColumn(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) unmarshalNNewKeyspace2githubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐNewKeyspace(ctx context.Context, v interface{}) (model.NewKeyspace, error) {
 	res, err := ec.unmarshalInputNewKeyspace(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNNewReplication2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐNewReplication(ctx context.Context, v interface{}) (*model.NewReplication, error) {
+func (ec *executionContext) unmarshalNNewReplication2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐNewReplication(ctx context.Context, v interface{}) (*model.NewReplication, error) {
 	res, err := ec.unmarshalInputNewReplication(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNNewTable2githubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐNewTable(ctx context.Context, v interface{}) (model.NewTable, error) {
+func (ec *executionContext) unmarshalNNewTable2githubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐNewTable(ctx context.Context, v interface{}) (model.NewTable, error) {
 	res, err := ec.unmarshalInputNewTable(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
@@ -5147,37 +5481,11 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 	return res
 }
 
-func (ec *executionContext) unmarshalNString2ᚕᚖstring(ctx context.Context, v interface{}) ([]*string, error) {
-	var vSlice []interface{}
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
-	var err error
-	res := make([]*string, len(vSlice))
-	for i := range vSlice {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalOString2ᚖstring(ctx, vSlice[i])
-		if err != nil {
-			return nil, err
-		}
-	}
-	return res, nil
-}
-
-func (ec *executionContext) marshalNString2ᚕᚖstring(ctx context.Context, sel ast.SelectionSet, v []*string) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	for i := range v {
-		ret[i] = ec.marshalOString2ᚖstring(ctx, sel, v[i])
-	}
-
-	return ret
-}
-
-func (ec *executionContext) marshalNTable2githubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐTable(ctx context.Context, sel ast.SelectionSet, v model.Table) graphql.Marshaler {
+func (ec *executionContext) marshalNTable2githubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐTable(ctx context.Context, sel ast.SelectionSet, v model.Table) graphql.Marshaler {
 	return ec._Table(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNTable2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐTableᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Table) graphql.Marshaler {
+func (ec *executionContext) marshalNTable2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐTableᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Table) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -5201,7 +5509,7 @@ func (ec *executionContext) marshalNTable2ᚕᚖgithubᚗcomᚋtilau2328ᚋcql�
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNTable2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐTable(ctx, sel, v[i])
+			ret[i] = ec.marshalNTable2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐTable(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -5221,7 +5529,7 @@ func (ec *executionContext) marshalNTable2ᚕᚖgithubᚗcomᚋtilau2328ᚋcql�
 	return ret
 }
 
-func (ec *executionContext) marshalNTable2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐTable(ctx context.Context, sel ast.SelectionSet, v *model.Table) graphql.Marshaler {
+func (ec *executionContext) marshalNTable2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐTable(ctx context.Context, sel ast.SelectionSet, v *model.Table) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -5510,7 +5818,7 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return res
 }
 
-func (ec *executionContext) marshalODatacenter2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐDatacenterᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Datacenter) graphql.Marshaler {
+func (ec *executionContext) marshalODatacenter2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐDatacenterᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Datacenter) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -5537,7 +5845,7 @@ func (ec *executionContext) marshalODatacenter2ᚕᚖgithubᚗcomᚋtilau2328ᚋ
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNDatacenter2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐDatacenter(ctx, sel, v[i])
+			ret[i] = ec.marshalNDatacenter2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐDatacenter(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -5557,14 +5865,22 @@ func (ec *executionContext) marshalODatacenter2ᚕᚖgithubᚗcomᚋtilau2328ᚋ
 	return ret
 }
 
-func (ec *executionContext) marshalOReplication2githubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐReplication(ctx context.Context, sel ast.SelectionSet, v model.Replication) graphql.Marshaler {
+func (ec *executionContext) unmarshalONewColumn2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐNewColumn(ctx context.Context, v interface{}) (*model.NewColumn, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputNewColumn(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOReplication2githubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐReplication(ctx context.Context, sel ast.SelectionSet, v model.Replication) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Replication(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOReplicationStrategy2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐReplicationStrategy(ctx context.Context, v interface{}) (*model.ReplicationStrategy, error) {
+func (ec *executionContext) unmarshalOReplicationStrategy2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐReplicationStrategy(ctx context.Context, v interface{}) (*model.ReplicationStrategy, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -5573,7 +5889,7 @@ func (ec *executionContext) unmarshalOReplicationStrategy2ᚖgithubᚗcomᚋtila
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOReplicationStrategy2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐReplicationStrategy(ctx context.Context, sel ast.SelectionSet, v *model.ReplicationStrategy) graphql.Marshaler {
+func (ec *executionContext) marshalOReplicationStrategy2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐReplicationStrategy(ctx context.Context, sel ast.SelectionSet, v *model.ReplicationStrategy) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -5596,7 +5912,7 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	return res
 }
 
-func (ec *executionContext) marshalOTable2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐTableᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Table) graphql.Marshaler {
+func (ec *executionContext) marshalOTable2ᚕᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐTableᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Table) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -5623,7 +5939,7 @@ func (ec *executionContext) marshalOTable2ᚕᚖgithubᚗcomᚋtilau2328ᚋcql�
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNTable2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋpackageᚋapiᚋgqlᚋmodelᚐTable(ctx, sel, v[i])
+			ret[i] = ec.marshalNTable2ᚖgithubᚗcomᚋtilau2328ᚋcqlᚋcmdᚋgqlᚋpackageᚋmodelᚐTable(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)

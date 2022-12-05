@@ -3,13 +3,13 @@ package main
 import (
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
-	"gql/package/exec"
-	"gql/package/resolver"
+	"github.com/tilau2328/cql/src/go/cmd/gql/package/exec"
+	"github.com/tilau2328/cql/src/go/cmd/gql/package/resolver"
 	"log"
 	"net/http"
 )
 
-//go:generate gqlgen generate --config config.yaml
+//go:generate gqlgen generate --config gencfg.yaml
 
 func main() {
 	srv := handler.NewDefaultServer(exec.NewExecutableSchema(exec.Config{Resolvers: &resolver.Resolver{}}))

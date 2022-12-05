@@ -1,17 +1,17 @@
 package resolver
 
 import (
-	provider2 "github.com/tilau2328/cql/package/domain/provider"
+	"github.com/tilau2328/cql/src/go/package/domain/provider"
 )
 
 type Resolver struct {
-	ddl provider2.DDL
-	dml provider2.DML
+	ddl provider.DDL
+	dml provider.DML
 }
 
 func NewResolver(
-	ddl provider2.DDL,
-	dml provider2.DML,
+	ddl provider.DDL,
+	dml provider.DML,
 ) *Resolver {
 	return &Resolver{
 		ddl: ddl,

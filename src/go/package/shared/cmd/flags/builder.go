@@ -2,7 +2,7 @@ package flags
 
 import (
 	"github.com/spf13/pflag"
-	. "github.com/tilau2328/cql/package/shared/x"
+	. "github.com/tilau2328/cql/src/go/package/shared/x"
 )
 
 func String(v *string, name string, usage string, value string) Opt[*pflag.FlagSet] {

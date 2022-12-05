@@ -1,9 +1,9 @@
 package ddl
 
 import (
-	. "github.com/tilau2328/cql/package/domain/model"
-	. "github.com/tilau2328/cql/package/shared/patch"
-	. "github.com/tilau2328/cql/package/shared/x"
+	. "github.com/tilau2328/cql/src/go/package/domain/model"
+	. "github.com/tilau2328/cql/src/go/package/shared/patch"
+	. "github.com/tilau2328/cql/src/go/package/shared/x"
 )
 
 type (

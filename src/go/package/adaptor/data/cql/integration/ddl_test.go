@@ -3,9 +3,9 @@ package integration
 import (
 	"context"
 	"github.com/stretchr/testify/require"
-	. "github.com/tilau2328/cql/package/adaptor/data/cql/repo/ddl"
-	. "github.com/tilau2328/cql/package/domain/model"
-	. "github.com/tilau2328/cql/package/shared/patch"
+	. "github.com/tilau2328/cql/src/go/package/adaptor/data/cql/repo/ddl"
+	. "github.com/tilau2328/cql/src/go/package/domain/model"
+	. "github.com/tilau2328/cql/src/go/package/shared/patch"
 	"strconv"
 	"testing"
 	"time"

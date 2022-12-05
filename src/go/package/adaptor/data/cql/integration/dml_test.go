@@ -1,7 +1,7 @@
 package integration
 
 import (
-	"github.com/tilau2328/cql/package/adaptor/data/cql/repo/ddl"
+	"github.com/tilau2328/cql/src/go/package/adaptor/data/cql/repo/ddl"
 	"testing"
 )
 

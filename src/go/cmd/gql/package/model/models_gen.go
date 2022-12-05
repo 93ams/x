@@ -13,6 +13,11 @@ type Replication interface {
 	GetClass() *ReplicationStrategy
 }
 
+type Column struct {
+	Name string `json:"name"`
+	Type string `json:"type"`
+}
+
 type Datacenter struct {
 	Name              string `json:"name"`
 	ReplicationFactor int    `json:"replication_factor"`
@@ -33,6 +38,11 @@ type NetworkTopologyReplication struct {
 func (NetworkTopologyReplication) IsReplication()                      {}
 func (this NetworkTopologyReplication) GetClass() *ReplicationStrategy { return this.Class }
 
+type NewColumn struct {
+	Name string `json:"name"`
+	Type string `json:"type"`
+}
+
 type NewKeyspace struct {
 	Name        string          `json:"name"`
 	Replication *NewReplication `json:"replication"`
@@ -43,8 +53,8 @@ type NewReplication struct {
 }
 
 type NewTable struct {
-	Name   string    `json:"name"`
-	Params []*string `json:"params"`
+	Name    string       `json:"name"`
+	Columns []*NewColumn `json:"columns"`
 }
 
 type SimpleReplication struct {
@@ -56,8 +66,9 @@ func (SimpleReplication) IsReplication()                      {}
 func (this SimpleReplication) GetClass() *ReplicationStrategy { return this.Class }
 
 type Table struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+	ID      string    `json:"id"`
+	Name    string    `json:"name"`
+	Columns []*Column `json:"columns"`
 }
 
 type ReplicationStrategy string

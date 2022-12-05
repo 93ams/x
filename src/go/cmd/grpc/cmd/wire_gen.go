@@ -8,7 +8,7 @@ package cmd
 
 import (
 	"github.com/google/wire"
-	"github.com/tilau2328/cql/cmd/grpc/package/handler"
+	"github.com/tilau2328/cql/src/go/cmd/grpc/package/handler"
 	"github.com/tilau2328/cql/src/go/package/adaptor/data/cql/repo/ddl"
 	"github.com/tilau2328/cql/src/go/package/domain/service"
 	"github.com/tilau2328/cql/src/go/package/shared/data/cql"

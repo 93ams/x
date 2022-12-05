@@ -1,7 +1,7 @@
 package ddl
 
 import (
-	. "github.com/tilau2328/cql/package/shared/data/cql"
+	. "github.com/tilau2328/cql/src/go/package/shared/data/cql"
 	"strings"
 )
 

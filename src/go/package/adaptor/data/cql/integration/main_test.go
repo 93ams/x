@@ -4,7 +4,7 @@ import (
 	"github.com/gocql/gocql"
 	"github.com/samber/lo"
 	"github.com/scylladb/gocqlx/v2"
-	. "github.com/tilau2328/cql/package/shared/data/cql"
+	. "github.com/tilau2328/cql/src/go/package/shared/data/cql"
 	"os"
 	"testing"
 )

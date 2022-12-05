@@ -2,8 +2,8 @@ package provider
 
 import (
 	. "context"
-	. "github.com/tilau2328/cql/package/domain/model"
-	. "github.com/tilau2328/cql/package/shared/patch"
+	. "github.com/tilau2328/cql/src/go/package/domain/model"
+	. "github.com/tilau2328/cql/src/go/package/shared/patch"
 )
 
 type (

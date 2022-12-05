@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"github.com/tilau2328/cql/cmd/grpc/package/model"
+	"github.com/tilau2328/cql/src/go/cmd/grpc/package/model"
 	"google.golang.org/grpc"
 	"net/http"
 )
