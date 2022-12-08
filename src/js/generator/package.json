@@ -1,0 +1,14 @@
+{
+  "name": "components",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "mitosis build"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@builder.io/mitosis": "^0.0.81"
+  }
+}

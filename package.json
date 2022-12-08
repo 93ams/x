@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@builder.io/mitosis-cli": "^0.0.40"
+  }
+}
