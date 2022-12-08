@@ -1,2 +1,4 @@
-cli:
-	go run github.com/tilau2328/cql/src/go/cmd/cli
+ENV=local# local | staging | production
+-include cfg/env/.env.${ENV}
+-include cfg/make/*.Makefile
+export
