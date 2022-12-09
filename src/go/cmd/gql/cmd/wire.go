@@ -4,7 +4,6 @@
 package cmd
 
 import (
-	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/google/wire"
 	"github.com/tilau2328/cql/src/go/cmd/gql/package/exec"
 	"github.com/tilau2328/cql/src/go/cmd/gql/package/resolver"
@@ -17,6 +16,6 @@ import (
 var Set = wire.NewSet(wire.Bind(new(exec.ResolverRoot), new(*resolver.Resolver)), resolver.NewResolver,
 	wire.Struct(new(exec.Config), "Resolvers"), exec.NewExecutableSchema)
 
-func Init(cql2.Options) (*handler.Server, func(), error) {
+func Init(cql2.Options, gql.Endpoint) (*gql.Server, func(), error) {
 	panic(wire.Build(cql.Set, domain.Set, Set, gql.Set))
 }

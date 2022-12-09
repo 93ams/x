@@ -13,12 +13,13 @@ import (
 	"github.com/tilau2328/cql/src/go/cmd/gql/package/resolver"
 	"github.com/tilau2328/cql/src/go/package/adaptor/data/cql/repo/ddl"
 	"github.com/tilau2328/cql/src/go/package/domain/service"
+	"github.com/tilau2328/cql/src/go/package/shared/api/gql"
 	"github.com/tilau2328/cql/src/go/package/shared/data/cql"
 )
 
 // Injectors from wire.go:
 
-func Init(options cql.Options) (*handler.Server, func(), error) {
+func Init(options cql.Options, endpoint gql.Endpoint) (*gql.Server, func(), error) {
 	clusterConfig := cql.NewCluster(options)
 	session, cleanup, err := cql.NewSession(clusterConfig)
 	if err != nil {
@@ -39,7 +40,8 @@ func Init(options cql.Options) (*handler.Server, func(), error) {
 	}
 	executableSchema := exec.NewExecutableSchema(config)
 	server := handler.NewDefaultServer(executableSchema)
-	return server, func() {
+	gqlServer := gql.NewServer(server, endpoint)
+	return gqlServer, func() {
 		cleanup()
 	}, nil
 }

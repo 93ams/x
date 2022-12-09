@@ -6,17 +6,18 @@ package resolver
 import (
 	"context"
 	"fmt"
+	"github.com/tilau2328/cql/src/go/package/domain/model"
 
-	"github.com/tilau2328/cql/src/go/cmd/gql/package/model"
+	. "github.com/tilau2328/cql/src/go/cmd/gql/package/model"
 )
 
 // CreateKeySpace is the resolver for the createKeySpace field.
-func (r *mutationResolver) CreateKeySpace(ctx context.Context, in model.NewKeyspace) (*model.KeySpace, error) {
+func (r *mutationResolver) CreateKeySpace(ctx context.Context, in NewKeyspace) (*KeySpace, error) {
 	panic(fmt.Errorf("not implemented: CreateKeySpace - createKeySpace"))
 }
 
 // AlterKeySpace is the resolver for the alterKeySpace field.
-func (r *mutationResolver) AlterKeySpace(ctx context.Context, in model.NewKeyspace) (*model.KeySpace, error) {
+func (r *mutationResolver) AlterKeySpace(ctx context.Context, in NewKeyspace) (*KeySpace, error) {
 	panic(fmt.Errorf("not implemented: AlterKeySpace - alterKeySpace"))
 }
 
@@ -26,12 +27,12 @@ func (r *mutationResolver) DropKeySpace(ctx context.Context, in string) (bool, e
 }
 
 // CreateTable is the resolver for the createTable field.
-func (r *mutationResolver) CreateTable(ctx context.Context, in model.NewTable) (*model.Table, error) {
+func (r *mutationResolver) CreateTable(ctx context.Context, in NewTable) (*Table, error) {
 	panic(fmt.Errorf("not implemented: CreateTable - createTable"))
 }
 
 // AlterTable is the resolver for the alterTable field.
-func (r *mutationResolver) AlterTable(ctx context.Context, in model.NewTable) (*model.Table, error) {
+func (r *mutationResolver) AlterTable(ctx context.Context, in NewTable) (*Table, error) {
 	panic(fmt.Errorf("not implemented: AlterTable - alterTable"))
 }
 
@@ -41,21 +42,25 @@ func (r *mutationResolver) DropTable(ctx context.Context, in string) (bool, erro
 }
 
 // Table is the resolver for the table field.
-func (r *queryResolver) Table(ctx context.Context, name string) (*model.Table, error) {
+func (r *queryResolver) Table(ctx context.Context, name string) (*Table, error) {
 	panic(fmt.Errorf("not implemented: Table - table"))
 }
 
 // Tables is the resolver for the tables field.
-func (r *queryResolver) Tables(ctx context.Context, keyspace string) ([]*model.Table, error) {
+func (r *queryResolver) Tables(ctx context.Context, keyspace string) ([]*Table, error) {
 	panic(fmt.Errorf("not implemented: Tables - tables"))
 }
 
 // Keyspace is the resolver for the keyspace field.
-func (r *queryResolver) Keyspace(ctx context.Context, name *string) (*model.KeySpace, error) {
+func (r *queryResolver) Keyspace(ctx context.Context, name *string) (*KeySpace, error) {
 	panic(fmt.Errorf("not implemented: Keyspace - keyspace"))
 }
 
 // Keyspaces is the resolver for the keyspaces field.
-func (r *queryResolver) Keyspaces(ctx context.Context) ([]*model.KeySpace, error) {
-	panic(fmt.Errorf("not implemented: Keyspaces - keyspaces"))
+func (r *queryResolver) Keyspaces(ctx context.Context) ([]*KeySpace, error) {
+	res, err := r.ddl.ListKeySpaces(ctx, model.KeySpace{})
+	if err != nil {
+		return nil, err
+	}
+	return FromKeySpaces(res), nil
 }

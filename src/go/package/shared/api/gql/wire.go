@@ -5,4 +5,4 @@ import (
 	"github.com/google/wire"
 )
 
-var Set = wire.NewSet(handler.NewDefaultServer)
+var Set = wire.NewSet(NewServer, handler.NewDefaultServer)

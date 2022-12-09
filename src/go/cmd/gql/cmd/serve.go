@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/gocql/gocql"
 	"github.com/samber/lo"
 	"github.com/spf13/cobra"
 	. "github.com/tilau2328/cql/src/go/package/shared/cmd"
@@ -10,6 +11,8 @@ import (
 var ServeCmd = New(
 	Use("serve"), Alias("s"),
 	Run(func(cmd *cobra.Command, _ []string) {
-		lo.Must0(Init(cql2.Options{}).WithPlayground().Serve())
+		server, finish := lo.Must2(Init(cql2.Options{Consistency: gocql.One}, "/graphql"))
+		defer finish()
+		server.WithPlayground("/").Serve()
 	}),
 )

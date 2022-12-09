@@ -37,11 +37,9 @@ func (s *KeySpaceRepo) Drop(ctx Context, key KeySpaceKey) error {
 	return SafeExec(ctx, s.session, ddl.DropKeySpace(string(key)).String())
 }
 func (s *KeySpaceRepo) List(ctx Context, filter KeySpace) ([]KeySpace, error) {
-	stmt, names := model.Keyspaces.Select()
+	stmt, names := model.Keyspaces.SelectAll()
 	var res []model.KeySpace
-	if err := s.session.ContextQuery(ctx, stmt, names).
-		BindStruct(model.FromKeySpace(filter)).
-		SelectRelease(&res); err != nil {
+	if err := s.session.ContextQuery(ctx, stmt, names).SelectRelease(&res); err != nil {
 		return nil, err
 	}
 	return model.ToKeySpaces(res), nil
