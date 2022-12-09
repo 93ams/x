@@ -87,6 +87,17 @@ func TestKeySpaceRepo(t *testing.T) {
 						KeySpace: k2,
 						Name:     k1,
 					},
+					SpeculativeRetry:    "99.0PERCENTILE",
+					Gc:                  864000,
+					MaxIndexInterval:    2048,
+					BloomFilterFpChance: 0.01,
+					Caching:             map[string]string{"keys": "ALL", "rows_per_partition": "ALL"},
+					Compression:         map[string]string{"sstable_compression": "org.apache.cassandra.io.compress.LZ4Compressor"},
+					Compaction:          map[string]string{"class": "SizeTieredCompactionStrategy"},
+					Flags:               []string{"compound"},
+					Extensions:          map[string][]uint8{},
+					MinIndexInterval:    128,
+					CrcCheckChance:      1,
 				},
 			},
 		},
@@ -127,6 +138,8 @@ func TestKeySpaceRepo(t *testing.T) {
 			for k, v := range tt.tableGet {
 				res, err := tRepo.Get(ctx, k)
 				require.NoError(t, err)
+				require.NotEmpty(t, res.Id)
+				res.Id = ""
 				require.Equal(t, v, res)
 			}
 			for k, v := range tt.tableAlter {
@@ -141,6 +154,9 @@ func TestKeySpaceRepo(t *testing.T) {
 				},
 			})
 			require.NoError(t, err)
+			for i := range res2 {
+				res2[i].Id = ""
+			}
 			require.Equal(t, tt.tableList, res2)
 		})
 	}

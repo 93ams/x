@@ -29,10 +29,11 @@ func (s *TableRepo) Drop(ctx Context, key TableKey) error {
 	return SafeExec(ctx, s.session, ddl.DropTable(key.KeySpace, key.Name).String())
 }
 func (s *TableRepo) List(ctx Context, filter Table) ([]Table, error) {
-	stmt, names := model.Tables.SelectAll()
+	stmt, names := model.Tables.Select()
 	var ret []model.Table
 	if err := s.session.ContextQuery(ctx, stmt, names).
-		BindStruct(filter).SelectRelease(&ret); err != nil {
+		BindStruct(model.FromTable(filter)).
+		SelectRelease(&ret); err != nil {
 		return nil, err
 	}
 	return model.ToTables(ret), nil
