@@ -2,13 +2,13 @@ go 1.19
 
 use (
 	.
-	./services/internal/cql
-	./services/internal/cql/cmd/cli
-	./services/internal/cql/cmd/gql
-	./services/internal/cql/cmd/grpc
-	./services/internal/cql/cmd/http
-	./services/internal/go
-	./services/internal/go/cmd/cli
-	./services/internal/proto
-	./services/internal/proto/cmd/cli
+	./service/api/grpc
+	./service/api/grpc/cmd/cli
+	./service/db/cql
+	./service/db/cql/cmd/cli
+	./service/db/cql/cmd/gql
+	./service/db/cql/cmd/grpc
+	./service/db/cql/cmd/http
+	./service/repo/go
+	./service/repo/go/cmd/cli
 )
