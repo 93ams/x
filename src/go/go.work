@@ -2,13 +2,20 @@ go 1.19
 
 use (
 	.
+	./service/api/gql
+	./service/api/gql/cmd/cli
 	./service/api/grpc
 	./service/api/grpc/cmd/cli
+	./service/api/oapi
+	./service/api/oapi/cmd/cli
 	./service/db/cql
 	./service/db/cql/cmd/cli
 	./service/db/cql/cmd/gql
 	./service/db/cql/cmd/grpc
 	./service/db/cql/cmd/http
+	./service/db/pg
 	./service/repo/go
 	./service/repo/go/cmd/cli
+	./service/repo/files
+	./service/repo/files/cmd/cli
 )
