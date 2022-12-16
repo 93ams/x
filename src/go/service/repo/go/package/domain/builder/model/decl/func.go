@@ -37,35 +37,35 @@ func (b *funcBuilder) Build() *model.Func { return b.T }
 func (b *funcBuilder) AsDecl() model.Decl { return b.T }
 
 func FuncDecs() FuncDecsBuilder { return &funcDecsBuilder{} }
-func (f *funcDecsBuilder) TypeParams(d model.Decorations) FuncDecsBuilder {
+func (f *funcDecsBuilder) TypeParams(d model.Decs) FuncDecsBuilder {
 	f.T.TypeParams = d
 	return f
 }
-func (f *funcDecsBuilder) Results(d model.Decorations) FuncDecsBuilder {
+func (f *funcDecsBuilder) Results(d model.Decs) FuncDecsBuilder {
 	f.T.Results = d
 	return f
 }
-func (f *funcDecsBuilder) Params(d model.Decorations) FuncDecsBuilder {
+func (f *funcDecsBuilder) Params(d model.Decs) FuncDecsBuilder {
 	f.T.Params = d
 	return f
 }
-func (f *funcDecsBuilder) Start(d model.Decorations) FuncDecsBuilder {
+func (f *funcDecsBuilder) Start(d model.Decs) FuncDecsBuilder {
 	f.T.Start = d
 	return f
 }
-func (f *funcDecsBuilder) Name(d model.Decorations) FuncDecsBuilder {
+func (f *funcDecsBuilder) Name(d model.Decs) FuncDecsBuilder {
 	f.T.Name = d
 	return f
 }
-func (f *funcDecsBuilder) Func(d model.Decorations) FuncDecsBuilder {
+func (f *funcDecsBuilder) Func(d model.Decs) FuncDecsBuilder {
 	f.T.Func = d
 	return f
 }
-func (f *funcDecsBuilder) Recv(d model.Decorations) FuncDecsBuilder {
+func (f *funcDecsBuilder) Recv(d model.Decs) FuncDecsBuilder {
 	f.T.Recv = d
 	return f
 }
-func (f *funcDecsBuilder) End(d model.Decorations) FuncDecsBuilder {
+func (f *funcDecsBuilder) End(d model.Decs) FuncDecsBuilder {
 	f.T.End = d
 	return f
 }

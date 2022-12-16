@@ -12,7 +12,7 @@ type callBuilder Builder[*model.Call]
 func Call(fun ExprBuilder, args ...ExprBuilder) CallBuilder {
 	return &callBuilder{T: &model.Call{Fun: fun.AsExpr(), Args: MapExprs(args)}}
 }
-func (b *callBuilder) Decs(decs model.CallDecorations) CallBuilder {
+func (b *callBuilder) Decs(decs model.CallDecs) CallBuilder {
 	b.T.Decs = decs
 	return b
 }

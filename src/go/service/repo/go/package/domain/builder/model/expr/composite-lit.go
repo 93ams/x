@@ -43,11 +43,11 @@ func (b *compositeLitDecsBuilder) After(d model.SpaceType) CompositeLitDecsBuild
 	b.T.After = d
 	return b
 }
-func (b *compositeLitDecsBuilder) Start(d model.Decorations) CompositeLitDecsBuilder {
+func (b *compositeLitDecsBuilder) Start(d model.Decs) CompositeLitDecsBuilder {
 	b.T.Start = d
 	return b
 }
-func (b *compositeLitDecsBuilder) End(d model.Decorations) CompositeLitDecsBuilder {
+func (b *compositeLitDecsBuilder) End(d model.Decs) CompositeLitDecsBuilder {
 	b.T.End = d
 	return b
 }

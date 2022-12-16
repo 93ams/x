@@ -9,6 +9,9 @@ func NewGoService() *GoService {
 func (*GoService) CreateInterface() {
 
 }
+func (*GoService) CreateBuilder() {
+
+}
 func (*GoService) CreateService() {
 
 }

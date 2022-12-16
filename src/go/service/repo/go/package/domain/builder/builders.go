@@ -112,8 +112,8 @@ type (
 		StmtBuilder
 	}
 	ReturnDecsBuilder interface {
-		Start(d model.Decorations) ReturnDecsBuilder
-		End(d model.Decorations) ReturnDecsBuilder
+		Start(d model.Decs) ReturnDecsBuilder
+		End(d model.Decs) ReturnDecsBuilder
 		Before(d model.SpaceType) ReturnDecsBuilder
 		After(d model.SpaceType) ReturnDecsBuilder
 		IBuilder[model.ReturnDecs]
@@ -192,10 +192,10 @@ type (
 		ExprBuilder
 	}
 	KeyValueDecsBuilder interface {
-		Start(model.Decorations) KeyValueDecsBuilder
+		Start(model.Decs) KeyValueDecsBuilder
 		Before(model.SpaceType) KeyValueDecsBuilder
 		After(model.SpaceType) KeyValueDecsBuilder
-		End(model.Decorations) KeyValueDecsBuilder
+		End(model.Decs) KeyValueDecsBuilder
 		IBuilder[model.KeyValueDecs]
 	}
 	FuncTypeBuilder interface {
@@ -208,7 +208,7 @@ type (
 		ExprBuilder
 	}
 	CallBuilder interface {
-		Decs(model.CallDecorations) CallBuilder
+		Decs(model.CallDecs) CallBuilder
 		Ellipsis(bool) CallBuilder
 		IBuilder[*model.Call]
 		ExprBuilder

@@ -12,7 +12,7 @@ func NewBlock(stmts []model.Stmt) *model.Block { return &model.Block{List: stmts
 func Block(stmts ...StmtBuilder) BlockBuilder {
 	return &blockBuilder{T: NewBlock(MapStmts(stmts))}
 }
-func (b *blockBuilder) Decs(decs model.BlockDecorations) BlockBuilder {
+func (b *blockBuilder) Decs(decs model.BlockDecs) BlockBuilder {
 	b.T.Decs = decs
 	return b
 }

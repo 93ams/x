@@ -1,8 +1,9 @@
-package driver
+package printer
 
 import (
 	"bufio"
 	"fmt"
+	"grpc/package/domain/model"
 	"io"
 	"strings"
 )
@@ -11,7 +12,7 @@ type encoder interface{ Encode(int, io.Writer) error }
 
 var Indent = "\t"
 
-func multiLineComment(indent int, dst io.Writer, s string) error {
+func (p *Printer) multiLineComment(indent int, dst io.Writer, s string) error {
 	scanner := bufio.NewScanner(strings.NewReader(s))
 	i := strings.Repeat(Indent, indent)
 	for scanner.Scan() {
@@ -21,11 +22,11 @@ func multiLineComment(indent int, dst io.Writer, s string) error {
 	}
 	return nil
 }
-func singleLineComment(dst io.Writer, s string) error {
+func (p *Printer) comment(dst io.Writer, s string) error {
 	_, err := fmt.Fprintf(dst, " // %s", strings.Replace(s, "\n", " ", -1))
 	return err
 }
-func (e _literalField) Encode(indent int, dst io.Writer) error {
+func (p *Printer) LiteralField(dst io.Writer, e model.LiteralField) error {
 	if _, err := fmt.Fprintf(dst, "%s: ", e.name); err != nil {
 		return err
 	} else if f, ok := e.value.(encoder); ok {
@@ -37,7 +38,7 @@ func (e _literalField) Encode(indent int, dst io.Writer) error {
 	}
 	return nil
 }
-func (e _enumElement) Encode(indent int, dst io.Writer) error {
+func (p *Printer) EnumElement(dst io.Writer, e model.EnumElement) error {
 	if _, err := fmt.Fprintf(dst, "\n%s%s = %d;", strings.Repeat(Indent, indent), e.name, e.value); err != nil {
 		return err
 	}
@@ -48,7 +49,7 @@ func (e _enumElement) Encode(indent int, dst io.Writer) error {
 	}
 	return nil
 }
-func (e _extension) Encode(indent int, dst io.Writer) error {
+func (p *Printer) Extension(dst io.Writer, e model.Extension) error {
 	i := strings.Repeat(Indent, indent)
 	if _, err := fmt.Fprintf(dst, "\n%sextend %s {", i, e.name); err != nil {
 		return err
@@ -63,7 +64,7 @@ func (e _extension) Encode(indent int, dst io.Writer) error {
 	}
 	return nil
 }
-func (e _message) Encode(indent int, dst io.Writer) error {
+func (p *Printer) Message(dst io.Writer, e model.Message) error {
 	i := strings.Repeat(Indent, indent)
 	if c := e.comment; c != "" {
 		if err := multiLineComment(indent, dst, c); err != nil {
@@ -110,7 +111,7 @@ func (e _message) Encode(indent int, dst io.Writer) error {
 	}
 	return nil
 }
-func (e _literal) Encode(indent int, dst io.Writer) error {
+func (p *Printer) Literal(dst io.Writer, e model.Literal) error {
 	ind := strings.Repeat(Indent, indent)
 	if _, err := fmt.Fprintf(dst, "%s{", ind); err != nil {
 		return err
@@ -139,7 +140,7 @@ func (e _literal) Encode(indent int, dst io.Writer) error {
 	}
 	return nil
 }
-func (e _service) Encode(indent int, dst io.Writer) error {
+func (p *Printer) Service(dst io.Writer, e model.Service) error {
 	i := strings.Repeat(Indent, indent)
 	if _, err := fmt.Fprintf(dst, "\n%sservice %s {", i, e.name); err != nil {
 		return err
@@ -154,7 +155,7 @@ func (e _service) Encode(indent int, dst io.Writer) error {
 	}
 	return nil
 }
-func (e _option) Encode(indent int, dst io.Writer) error {
+func (p *Printer) Option(dst io.Writer, e model.Option) error {
 	if e.compact {
 		if _, err := fmt.Fprintf(dst, "%s = %s", e.name, e.value); err != nil {
 			return err
@@ -176,7 +177,7 @@ func (e _option) Encode(indent int, dst io.Writer) error {
 	}
 	return nil
 }
-func (e _method) Encode(indent int, dst io.Writer) error {
+func (p *Printer) Method(dst io.Writer, e model.Method) error {
 	i := strings.Repeat(Indent, indent)
 	if _, err := fmt.Fprintf(dst, "\n%srpc %s(%s) returns (%s)", i, e.name, e.input, e.output); err != nil {
 		return err
@@ -199,7 +200,7 @@ func (e _method) Encode(indent int, dst io.Writer) error {
 	}
 	return nil
 }
-func (e _import) Encode(indent int, dst io.Writer) error {
+func (p *Printer) Import(dst io.Writer, e model.Import) error {
 	if _, err := fmt.Fprintf(dst, "\n%simport", strings.Repeat(Indent, indent)); err != nil {
 		return err
 	}
@@ -218,7 +219,7 @@ func (e _import) Encode(indent int, dst io.Writer) error {
 	}
 	return nil
 }
-func (e _oneOf) Encode(indent int, dst io.Writer) error {
+func (p *Printer) OneOf(dst io.Writer, e model.OneOf) error {
 	i := strings.Repeat(Indent, indent)
 	if _, err := fmt.Fprintf(dst, "\n%soneof %s {", i, e.name); err != nil {
 		return err
@@ -233,7 +234,7 @@ func (e _oneOf) Encode(indent int, dst io.Writer) error {
 	}
 	return nil
 }
-func (e _field) Encode(indent int, dst io.Writer) error {
+func (p *Printer) Field(dst io.Writer, e model.Field) error {
 	if _, err := fmt.Fprintf(dst, "\n%s", strings.Repeat(Indent, indent)); err != nil {
 		return err
 	}
@@ -274,7 +275,7 @@ func (e _field) Encode(indent int, dst io.Writer) error {
 	}
 	return nil
 }
-func (e _enum) Encode(indent int, dst io.Writer) error {
+func (p *Printer) Enum(dst io.Writer, e model.Enum) error {
 	if s := e.comment; s != "" {
 		if err := multiLineComment(indent, dst, s); err != nil {
 			return err
@@ -294,7 +295,7 @@ func (e _enum) Encode(indent int, dst io.Writer) error {
 	}
 	return nil
 }
-func (e _file) Encode(indent int, dst io.Writer) error {
+func (p *Printer) File(dst io.Writer, e model.File) error {
 	i := strings.Repeat(Indent, indent)
 	if _, err := fmt.Fprintf(dst, "%ssyntax = \"proto3\";", i); err != nil {
 		return err

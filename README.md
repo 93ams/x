@@ -20,6 +20,7 @@ The functionality of this repository is:
       - [ ] Vault: Apps & Libraries for Vault
     - Repo
       - [x] Go: Apps & Libraries for Go
+      - [ ] Git: Apps & Libraries for Git
       - [ ] Files: Apps & Libraries for Files
 - Js: JavaScript WorkSpace
   - Framework

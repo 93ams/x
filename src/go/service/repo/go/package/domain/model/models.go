@@ -100,7 +100,7 @@ type (
 		High   Expr
 		Max    Expr
 		Slice3 bool
-		Decs   SliceExprDecorations
+		Decs   SliceExprDecs
 	}
 	TypeAssert struct {
 		X    Expr
@@ -111,7 +111,7 @@ type (
 		Fun      Expr
 		Args     []Expr
 		Ellipsis bool
-		Decs     CallDecorations
+		Decs     CallDecs
 	}
 	Star struct {
 		X    Expr
@@ -126,7 +126,7 @@ type (
 		X    Expr
 		Op   token.Token
 		Y    Expr
-		Decs BinaryExprDecorations
+		Decs BinaryDecs
 	}
 	KeyValue struct {
 		Key   Expr
@@ -243,7 +243,7 @@ type (
 	Send struct {
 		Chan  Expr
 		Value Expr
-		Decs  SendStmtDecorations
+		Decs  SendStmtDecs
 	}
 	IncDec struct {
 		X    Expr
@@ -271,12 +271,12 @@ type (
 	Branch struct {
 		Tok   token.Token
 		Label *Ident
-		Decs  BranchDecorations
+		Decs  BranchDecs
 	}
 	Block struct {
 		List           []Stmt
 		RbraceHasNoPos bool
-		Decs           BlockDecorations
+		Decs           BlockDecs
 	}
 	If struct {
 		Init Stmt
@@ -309,7 +309,7 @@ type (
 	}
 	Select struct {
 		Body *Block
-		Decs SelectStmtDecorations
+		Decs SelectStmtDecs
 	}
 	For struct {
 		Init Stmt
@@ -323,7 +323,7 @@ type (
 		Tok        token.Token
 		X          Expr
 		Body       *Block
-		Decs       RangeStmtDecorations
+		Decs       RangeStmtDecs
 	}
 )
 

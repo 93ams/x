@@ -1,253 +1,253 @@
 package model
 
 type (
-	SpaceType   int
-	Decorations []string
-	NodeDecs    struct {
+	SpaceType int
+	Decs      []string
+	NodeDecs  struct {
 		Before SpaceType
-		Start  Decorations
-		End    Decorations
+		Start  Decs
+		End    Decs
 		After  SpaceType
 	}
 	ArrayTypeDecorations struct {
 		NodeDecs
-		Lbrack Decorations
-		Len    Decorations
+		Lbrack Decs
+		Len    Decs
 	}
 	AssignStmtDecorations struct {
 		NodeDecs
-		Tok Decorations
+		Tok Decs
 	}
-	BadDeclDecorations    struct{ NodeDecs }
-	BadExprDecorations    struct{ NodeDecs }
-	BadStmtDecorations    struct{ NodeDecs }
-	LitDecs               struct{ NodeDecs }
-	BinaryExprDecorations struct {
+	BadDeclDecorations struct{ NodeDecs }
+	BadExprDecorations struct{ NodeDecs }
+	BadStmtDecorations struct{ NodeDecs }
+	LitDecs            struct{ NodeDecs }
+	BinaryDecs         struct {
 		NodeDecs
-		X  Decorations
-		Op Decorations
+		X  Decs
+		Op Decs
 	}
-	BlockDecorations struct {
+	BlockDecs struct {
 		NodeDecs
-		Lbrace Decorations
+		Lbrace Decs
 	}
-	BranchDecorations struct {
+	BranchDecs struct {
 		NodeDecs
-		Tok Decorations
+		Tok Decs
 	}
-	CallDecorations struct {
+	CallDecs struct {
 		NodeDecs
-		Fun      Decorations
-		Lparen   Decorations
-		Ellipsis Decorations
+		Fun      Decs
+		Lparen   Decs
+		Ellipsis Decs
 	}
 	CaseClauseDecorations struct {
 		NodeDecs
-		Case  Decorations
-		Colon Decorations
+		Case  Decs
+		Colon Decs
 	}
 	ChanTypeDecorations struct {
 		NodeDecs
-		Begin Decorations
-		Arrow Decorations
+		Begin Decs
+		Arrow Decs
 	}
 	CommClauseDecorations struct {
 		NodeDecs
-		Case  Decorations
-		Comm  Decorations
-		Colon Decorations
+		Case  Decs
+		Comm  Decs
+		Colon Decs
 	}
 	CompositeLitDecs struct {
 		NodeDecs
-		Type   Decorations
-		Lbrace Decorations
+		Type   Decs
+		Lbrace Decs
 	}
 	DeclStmtDecorations  struct{ NodeDecs }
 	DeferStmtDecorations struct {
 		NodeDecs
-		Defer Decorations
+		Defer Decs
 	}
 	EllipsisDecorations struct {
 		NodeDecs
-		Ellipsis Decorations
+		Ellipsis Decs
 	}
 	EmptyStmtDecorations struct{ NodeDecs }
 	ExprStmtDecorations  struct{ NodeDecs }
 	FieldDecorations     struct {
 		NodeDecs
-		Type Decorations
+		Type Decs
 	}
 	FieldListDecorations struct {
 		NodeDecs
-		Opening Decorations
+		Opening Decs
 	}
 	FileDecorations struct {
 		NodeDecs
-		Package Decorations
-		Name    Decorations
+		Package Decs
+		Name    Decs
 	}
 	ForStmtDecorations struct {
 		NodeDecs
-		For  Decorations
-		Init Decorations
-		Cond Decorations
-		Post Decorations
+		For  Decs
+		Init Decs
+		Cond Decs
+		Post Decs
 	}
 	FuncDecs struct {
 		NodeDecs
-		Func       Decorations
-		Recv       Decorations
-		Name       Decorations
-		TypeParams Decorations
-		Params     Decorations
-		Results    Decorations
+		Func       Decs
+		Recv       Decs
+		Name       Decs
+		TypeParams Decs
+		Params     Decs
+		Results    Decs
 	}
 	FuncLitDecorations struct {
 		NodeDecs
-		Type Decorations
+		Type Decs
 	}
 	FuncTypeDecorations struct {
 		NodeDecs
-		Func       Decorations
-		TypeParams Decorations
-		Params     Decorations
+		Func       Decs
+		TypeParams Decs
+		Params     Decs
 	}
 	GenDecorations struct {
 		NodeDecs
-		Tok    Decorations
-		Lparen Decorations
+		Tok    Decs
+		Lparen Decs
 	}
 	GoStmtDecorations struct {
 		NodeDecs
-		Go Decorations
+		Go Decs
 	}
 	IdentDecorations struct {
 		NodeDecs
-		X Decorations
+		X Decs
 	}
 	IfStmtDecorations struct {
 		NodeDecs
-		If   Decorations
-		Init Decorations
-		Cond Decorations
-		Else Decorations
+		If   Decs
+		Init Decs
+		Cond Decs
+		Else Decs
 	}
 	ImportDecorations struct {
 		NodeDecs
-		Name Decorations
+		Name Decs
 	}
 	IncDecStmtDecorations struct {
 		NodeDecs
-		X Decorations
+		X Decs
 	}
 	IndexExprDecorations struct {
 		NodeDecs
-		X      Decorations
-		Lbrack Decorations
-		Index  Decorations
+		X      Decs
+		Lbrack Decs
+		Index  Decs
 	}
 	IndexListExprDecorations struct {
 		NodeDecs
-		X       Decorations
-		Lbrack  Decorations
-		Indices Decorations
+		X       Decs
+		Lbrack  Decs
+		Indices Decs
 	}
 	InterfaceDecorations struct {
 		NodeDecs
-		Interface Decorations
+		Interface Decs
 	}
 	KeyValueDecs struct {
 		NodeDecs
-		Key   Decorations
-		Colon Decorations
+		Key   Decs
+		Colon Decs
 	}
 	LabeledStmtDecorations struct {
 		NodeDecs
-		Label Decorations
-		Colon Decorations
+		Label Decs
+		Colon Decs
 	}
 	MapTypeDecorations struct {
 		NodeDecs
-		Map Decorations
-		Key Decorations
+		Map Decs
+		Key Decs
 	}
 	PackageDecorations   struct{ NodeDecs }
 	ParenExprDecorations struct {
 		NodeDecs
-		Lparen Decorations
-		X      Decorations
+		Lparen Decs
+		X      Decs
 	}
-	RangeStmtDecorations struct {
+	RangeStmtDecs struct {
 		NodeDecs
-		For   Decorations
-		Key   Decorations
-		Value Decorations
-		Range Decorations
-		X     Decorations
+		For   Decs
+		Key   Decs
+		Value Decs
+		Range Decs
+		X     Decs
 	}
 	ReturnDecs struct {
 		NodeDecs
-		Return Decorations
+		Return Decs
 	}
-	SelectStmtDecorations struct {
+	SelectStmtDecs struct {
 		NodeDecs
-		Select Decorations
+		Select Decs
 	}
 	SelectorDecs struct {
 		NodeDecs
-		X Decorations
+		X Decs
 	}
-	SendStmtDecorations struct {
+	SendStmtDecs struct {
 		NodeDecs
-		Chan  Decorations
-		Arrow Decorations
+		Chan  Decs
+		Arrow Decs
 	}
-	SliceExprDecorations struct {
+	SliceExprDecs struct {
 		NodeDecs
-		X      Decorations
-		Lbrack Decorations
-		Low    Decorations
-		High   Decorations
-		Max    Decorations
+		X      Decs
+		Lbrack Decs
+		Low    Decs
+		High   Decs
+		Max    Decs
 	}
 	StarExprDecorations struct {
 		NodeDecs
-		Star Decorations
+		Star Decs
 	}
 	StructDecs struct {
 		NodeDecs
-		Struct Decorations
+		Struct Decs
 	}
 	SwitchStmtDecorations struct {
 		NodeDecs
-		Switch Decorations
-		Init   Decorations
-		Tag    Decorations
+		Switch Decs
+		Init   Decs
+		Tag    Decs
 	}
 	TypeAssertExprDecorations struct {
 		NodeDecs
-		X      Decorations
-		Lparen Decorations
-		Type   Decorations
+		X      Decs
+		Lparen Decs
+		Type   Decs
 	}
 	TypeDecorations struct {
 		NodeDecs
-		Name       Decorations
-		TypeParams Decorations
+		Name       Decs
+		TypeParams Decs
 	}
 	TypeSwitchStmtDecorations struct {
 		NodeDecs
-		Switch Decorations
-		Init   Decorations
-		Assign Decorations
+		Switch Decs
+		Init   Decs
+		Assign Decs
 	}
 	UnaryExprDecorations struct {
 		NodeDecs
-		Op Decorations
+		Op Decs
 	}
 	ValueDecorations struct {
 		NodeDecs
-		Assign Decorations
+		Assign Decs
 	}
 )
 
@@ -269,11 +269,11 @@ var Avoid = map[string]bool{
 	"Selector.Sel":  true,
 }
 
-func (d *Decorations) Append(decs ...string)  { *d = append(*d, decs...) }
-func (d *Decorations) Prepend(decs ...string) { *d = append(append([]string{}, decs...), *d...) }
-func (d *Decorations) Replace(decs ...string) { *d = append([]string{}, decs...) }
-func (d *Decorations) Clear()                 { *d = nil }
-func (d *Decorations) All() []string          { return *d }
+func (d *Decs) Append(decs ...string)  { *d = append(*d, decs...) }
+func (d *Decs) Prepend(decs ...string) { *d = append(append([]string{}, decs...), *d...) }
+func (d *Decs) Replace(decs ...string) { *d = append([]string{}, decs...) }
+func (d *Decs) Clear()                 { *d = nil }
+func (d *Decs) All() []string          { return *d }
 func (s SpaceType) String() string {
 	switch s {
 	case None:

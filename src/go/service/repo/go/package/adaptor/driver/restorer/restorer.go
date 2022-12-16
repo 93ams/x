@@ -451,7 +451,7 @@ func (r *FileRestorer) addCommentField(n ast.Node, slash token.Pos, text string)
 	}
 }
 
-func (r *FileRestorer) applyDecorations(node ast.Node, name string, decorations model2.Decorations, end bool) {
+func (r *FileRestorer) applyDecorations(node ast.Node, name string, decorations model2.Decs, end bool) {
 	firstLine := true
 	_, isNodeFile := node.(*ast.File)
 	isPackageComment := isNodeFile && name == "Start"

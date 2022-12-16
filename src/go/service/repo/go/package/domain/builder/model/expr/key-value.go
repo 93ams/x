@@ -36,11 +36,11 @@ func (b *keyValueDecsBuilder) After(d model.SpaceType) KeyValueDecsBuilder {
 	b.T.After = d
 	return b
 }
-func (b *keyValueDecsBuilder) Start(d model.Decorations) KeyValueDecsBuilder {
+func (b *keyValueDecsBuilder) Start(d model.Decs) KeyValueDecsBuilder {
 	b.T.Start = d
 	return b
 }
-func (b *keyValueDecsBuilder) End(d model.Decorations) KeyValueDecsBuilder {
+func (b *keyValueDecsBuilder) End(d model.Decs) KeyValueDecsBuilder {
 	b.T.End = d
 	return b
 }
