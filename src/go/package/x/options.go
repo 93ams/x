@@ -5,6 +5,12 @@ type (
 	OptE[T any] func(T) error
 )
 
+func IfNotNil[T any](t *T) (ret T) {
+	if t != nil {
+		ret = *t
+	}
+	return
+}
 func Apply[T any](t T, opts []Opt[T]) T {
 	for _, opt := range opts {
 		opt(t)

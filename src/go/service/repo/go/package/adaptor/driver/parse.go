@@ -4,9 +4,9 @@ import (
 	"bytes"
 	"errors"
 	"github.com/tilau2328/cql/src/go/services/gen/go/package/adaptor/driver/decorator"
-	resolver2 "github.com/tilau2328/cql/src/go/services/gen/go/package/adaptor/driver/resolver"
+	"github.com/tilau2328/cql/src/go/services/gen/go/package/adaptor/driver/resolver"
 	"github.com/tilau2328/cql/src/go/services/gen/go/package/adaptor/driver/restorer"
-	"github.com/tilau2328/cql/src/go/services/gen/go/package/adaptor/model"
+	"github.com/tilau2328/cql/src/go/services/gen/go/package/domain/model"
 	"go/ast"
 	"go/parser"
 	"go/token"
@@ -34,7 +34,7 @@ func DecorateFile(fset *token.FileSet, f *ast.File) (*model.File, error) {
 }
 func Load(cfg *packages.Config, patterns ...string) ([]*Package, error) {
 	if cfg == nil {
-		cfg = &packages.Config{Mode: resolver2.LoadMode}
+		cfg = &packages.Config{Mode: resolver.LoadMode}
 	}
 	if cfg.Mode&packages.NeedSyntax == 0 {
 		return nil, errors.New("config mode should include NeedSyntax")
@@ -71,7 +71,6 @@ func Load(cfg *packages.Config, patterns ...string) ([]*Package, error) {
 				}
 				p.Syntax = append(p.Syntax, file)
 			}
-
 			dir, _ := filepath.Split(pkg.Fset.File(pkg.Syntax[0].Pos()).Name())
 			p.Dir = dir
 			for path, imp := range pkg.Imports {
@@ -104,13 +103,13 @@ type Package struct {
 }
 
 func (p *Package) Save() error {
-	return p.save(resolver2.NewPackagesResolver(p.Dir), ioutil.WriteFile)
+	return p.save(resolver.NewPackagesResolver(p.Dir), ioutil.WriteFile)
 }
-func (p *Package) SaveWithResolver(resolver resolver2.RestorerResolver) error {
+func (p *Package) SaveWithResolver(resolver resolver.RestorerResolver) error {
 	return p.save(resolver, ioutil.WriteFile)
 }
 
-func (p *Package) save(resolver resolver2.RestorerResolver, writeFile func(filename string, data []byte, perm os.FileMode) error) error {
+func (p *Package) save(resolver resolver.RestorerResolver, writeFile func(filename string, data []byte, perm os.FileMode) error) error {
 	r := restorer.NewRestorerWithImports(p.PkgPath, resolver)
 	for _, file := range p.Syntax {
 		buf := &bytes.Buffer{}

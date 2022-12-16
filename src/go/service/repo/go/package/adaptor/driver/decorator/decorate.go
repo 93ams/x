@@ -1,7 +1,7 @@
 package decorator
 
 import (
-	"github.com/tilau2328/cql/src/go/services/gen/go/package/adaptor/model"
+	"github.com/tilau2328/cql/src/go/services/gen/go/package/domain/model"
 	"go/ast"
 	"go/token"
 )
@@ -12,20 +12,20 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 	}
 	switch n := n.(type) {
 	case *ast.ArrayType:
-		out := &model.ArrayType{}
+		out := &model.Array{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 		out.Decs.Before = f.before[n]
 		out.Decs.After = f.after[n]
 		if n.Len != nil {
-			child, err := f.decorateNode(n, "ArrayType", "Len", "Expr", n.Len)
+			child, err := f.decorateNode(n, "Array", "Len", "Expr", n.Len)
 			if err != nil {
 				return nil, err
 			}
 			out.Len = child.(model.Expr)
 		}
 		if n.Elt != nil {
-			child, err := f.decorateNode(n, "ArrayType", "Elt", "Expr", n.Elt)
+			child, err := f.decorateNode(n, "Array", "Elt", "Expr", n.Elt)
 			if err != nil {
 				return nil, err
 			}
@@ -47,7 +47,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 		}
 		return out, nil
 	case *ast.AssignStmt:
-		out := &model.AssignStmt{}
+		out := &model.Assign{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -56,7 +56,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// List: Lhs
 		for _, v := range n.Lhs {
-			child, err := f.decorateNode(n, "AssignStmt", "Lhs", "Expr", v)
+			child, err := f.decorateNode(n, "Assign", "Lhs", "Expr", v)
 			if err != nil {
 				return nil, err
 			}
@@ -68,7 +68,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// List: Rhs
 		for _, v := range n.Rhs {
-			child, err := f.decorateNode(n, "AssignStmt", "Rhs", "Expr", v)
+			child, err := f.decorateNode(n, "Assign", "Rhs", "Expr", v)
 			if err != nil {
 				return nil, err
 			}
@@ -152,7 +152,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		return out, nil
 	case *ast.BasicLit:
-		out := &model.BasicLit{}
+		out := &model.Lit{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -176,7 +176,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		return out, nil
 	case *ast.BinaryExpr:
-		out := &model.BinaryExpr{}
+		out := &model.Binary{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -185,7 +185,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: X
 		if n.X != nil {
-			child, err := f.decorateNode(n, "BinaryExpr", "X", "Expr", n.X)
+			child, err := f.decorateNode(n, "Binary", "X", "Expr", n.X)
 			if err != nil {
 				return nil, err
 			}
@@ -197,7 +197,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Y
 		if n.Y != nil {
-			child, err := f.decorateNode(n, "BinaryExpr", "Y", "Expr", n.Y)
+			child, err := f.decorateNode(n, "Binary", "Y", "Expr", n.Y)
 			if err != nil {
 				return nil, err
 			}
@@ -221,7 +221,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		return out, nil
 	case *ast.BlockStmt:
-		out := &model.BlockStmt{}
+		out := &model.Block{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -232,7 +232,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// List: List
 		for _, v := range n.List {
-			child, err := f.decorateNode(n, "BlockStmt", "List", "Stmt", v)
+			child, err := f.decorateNode(n, "Block", "List", "Stmt", v)
 			if err != nil {
 				return nil, err
 			}
@@ -258,7 +258,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		return out, nil
 	case *ast.BranchStmt:
-		out := &model.BranchStmt{}
+		out := &model.Branch{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -270,7 +270,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Label
 		if n.Label != nil {
-			child, err := f.decorateNode(n, "BranchStmt", "Label", "Ident", n.Label)
+			child, err := f.decorateNode(n, "Branch", "Label", "Ident", n.Label)
 			if err != nil {
 				return nil, err
 			}
@@ -291,7 +291,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		return out, nil
 	case *ast.CallExpr:
-		out := &model.CallExpr{}
+		out := &model.Call{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -300,7 +300,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Fun
 		if n.Fun != nil {
-			child, err := f.decorateNode(n, "CallExpr", "Fun", "Expr", n.Fun)
+			child, err := f.decorateNode(n, "Call", "Fun", "Expr", n.Fun)
 			if err != nil {
 				return nil, err
 			}
@@ -311,7 +311,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// List: Args
 		for _, v := range n.Args {
-			child, err := f.decorateNode(n, "CallExpr", "Args", "Expr", v)
+			child, err := f.decorateNode(n, "Call", "Args", "Expr", v)
 			if err != nil {
 				return nil, err
 			}
@@ -389,7 +389,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		return out, nil
 	case *ast.ChanType:
-		out := &model.ChanType{}
+		out := &model.Chan{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -404,7 +404,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Value
 		if n.Value != nil {
-			child, err := f.decorateNode(n, "ChanType", "Value", "Expr", n.Value)
+			child, err := f.decorateNode(n, "Chan", "Value", "Expr", n.Value)
 			if err != nil {
 				return nil, err
 			}
@@ -509,7 +509,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Token: Rbrace
 
-		// Value: Incomplete
+		// Value: Ellipsis
 		out.Incomplete = n.Incomplete
 
 		if nd, ok := f.decorations[n]; ok {
@@ -556,7 +556,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		return out, nil
 	case *ast.DeferStmt:
-		out := &model.DeferStmt{}
+		out := &model.Defer{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -567,11 +567,11 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Call
 		if n.Call != nil {
-			child, err := f.decorateNode(n, "DeferStmt", "Call", "CallExpr", n.Call)
+			child, err := f.decorateNode(n, "Defer", "Call", "Call", n.Call)
 			if err != nil {
 				return nil, err
 			}
-			out.Call = child.(*model.CallExpr)
+			out.Call = child.(*model.Call)
 		}
 
 		if nd, ok := f.decorations[n]; ok {
@@ -620,7 +620,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		return out, nil
 	case *ast.EmptyStmt:
-		out := &model.EmptyStmt{}
+		out := &model.Empty{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -697,11 +697,11 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Tag
 		if n.Tag != nil {
-			child, err := f.decorateNode(n, "Field", "Tag", "BasicLit", n.Tag)
+			child, err := f.decorateNode(n, "Field", "Tag", "Lit", n.Tag)
 			if err != nil {
 				return nil, err
 			}
-			out.Tag = child.(*model.BasicLit)
+			out.Tag = child.(*model.Lit)
 		}
 
 		if nd, ok := f.decorations[n]; ok {
@@ -790,11 +790,11 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// List: Imports
 		for _, v := range n.Imports {
-			child, err := f.decorateNode(n, "File", "Imports", "ImportSpec", v)
+			child, err := f.decorateNode(n, "File", "Imports", "Import", v)
 			if err != nil {
 				return nil, err
 			}
-			out.Imports = append(out.Imports, child.(*model.ImportSpec))
+			out.Imports = append(out.Imports, child.(*model.Import))
 		}
 
 		if nd, ok := f.decorations[n]; ok {
@@ -814,7 +814,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		return out, nil
 	case *ast.ForStmt:
-		out := &model.ForStmt{}
+		out := &model.For{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -825,7 +825,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Init
 		if n.Init != nil {
-			child, err := f.decorateNode(n, "ForStmt", "Init", "Stmt", n.Init)
+			child, err := f.decorateNode(n, "For", "Init", "Stmt", n.Init)
 			if err != nil {
 				return nil, err
 			}
@@ -836,7 +836,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Cond
 		if n.Cond != nil {
-			child, err := f.decorateNode(n, "ForStmt", "Cond", "Expr", n.Cond)
+			child, err := f.decorateNode(n, "For", "Cond", "Expr", n.Cond)
 			if err != nil {
 				return nil, err
 			}
@@ -847,7 +847,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Post
 		if n.Post != nil {
-			child, err := f.decorateNode(n, "ForStmt", "Post", "Stmt", n.Post)
+			child, err := f.decorateNode(n, "For", "Post", "Stmt", n.Post)
 			if err != nil {
 				return nil, err
 			}
@@ -856,11 +856,11 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Body
 		if n.Body != nil {
-			child, err := f.decorateNode(n, "ForStmt", "Body", "BlockStmt", n.Body)
+			child, err := f.decorateNode(n, "For", "Body", "Block", n.Body)
 			if err != nil {
 				return nil, err
 			}
-			out.Body = child.(*model.BlockStmt)
+			out.Body = child.(*model.Block)
 		}
 
 		if nd, ok := f.decorations[n]; ok {
@@ -886,7 +886,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		return out, nil
 	case *ast.FuncDecl:
-		out := &model.FuncDecl{}
+		out := &model.Func{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -903,7 +903,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Recv
 		if n.Recv != nil {
-			child, err := f.decorateNode(n, "FuncDecl", "Recv", "FieldList", n.Recv)
+			child, err := f.decorateNode(n, "Func", "Recv", "FieldList", n.Recv)
 			if err != nil {
 				return nil, err
 			}
@@ -912,16 +912,16 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Name
 		if n.Name != nil {
-			child, err := f.decorateNode(n, "FuncDecl", "Name", "Ident", n.Name)
+			child, err := f.decorateNode(n, "Func", "Name", "Ident", n.Name)
 			if err != nil {
 				return nil, err
 			}
 			out.Name = child.(*model.Ident)
 		}
 
-		// Node: TypeParams
+		// Node: Params
 		if n.Type.TypeParams != nil {
-			child, err := f.decorateNode(n, "FuncDecl", "TypeParams", "FieldList", n.Type.TypeParams)
+			child, err := f.decorateNode(n, "Func", "Params", "FieldList", n.Type.TypeParams)
 			if err != nil {
 				return nil, err
 			}
@@ -930,7 +930,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Params
 		if n.Type.Params != nil {
-			child, err := f.decorateNode(n, "FuncDecl", "Params", "FieldList", n.Type.Params)
+			child, err := f.decorateNode(n, "Func", "Params", "FieldList", n.Type.Params)
 			if err != nil {
 				return nil, err
 			}
@@ -939,7 +939,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Results
 		if n.Type.Results != nil {
-			child, err := f.decorateNode(n, "FuncDecl", "Results", "FieldList", n.Type.Results)
+			child, err := f.decorateNode(n, "Func", "Results", "FieldList", n.Type.Results)
 			if err != nil {
 				return nil, err
 			}
@@ -948,11 +948,11 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Body
 		if n.Body != nil {
-			child, err := f.decorateNode(n, "FuncDecl", "Body", "BlockStmt", n.Body)
+			child, err := f.decorateNode(n, "Func", "Body", "Block", n.Body)
 			if err != nil {
 				return nil, err
 			}
-			out.Body = child.(*model.BlockStmt)
+			out.Body = child.(*model.Block)
 		}
 
 		if nd, ok := f.decorations[n]; ok {
@@ -968,7 +968,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 			if decs, ok := nd["Name"]; ok {
 				out.Decs.Name = decs
 			}
-			if decs, ok := nd["TypeParams"]; ok {
+			if decs, ok := nd["Params"]; ok {
 				out.Decs.TypeParams = decs
 			}
 			if decs, ok := nd["Params"]; ok {
@@ -1002,11 +1002,11 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Body
 		if n.Body != nil {
-			child, err := f.decorateNode(n, "FuncLit", "Body", "BlockStmt", n.Body)
+			child, err := f.decorateNode(n, "FuncLit", "Body", "Block", n.Body)
 			if err != nil {
 				return nil, err
 			}
-			out.Body = child.(*model.BlockStmt)
+			out.Body = child.(*model.Block)
 		}
 
 		if nd, ok := f.decorations[n]; ok {
@@ -1033,9 +1033,9 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 		// Token: Func
 		out.Func = n.Func.IsValid()
 
-		// Node: TypeParams
+		// Node: Params
 		if n.TypeParams != nil {
-			child, err := f.decorateNode(n, "FuncType", "TypeParams", "FieldList", n.TypeParams)
+			child, err := f.decorateNode(n, "FuncType", "Params", "FieldList", n.TypeParams)
 			if err != nil {
 				return nil, err
 			}
@@ -1067,7 +1067,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 			if decs, ok := nd["Func"]; ok {
 				out.Decs.Func = decs
 			}
-			if decs, ok := nd["TypeParams"]; ok {
+			if decs, ok := nd["Params"]; ok {
 				out.Decs.TypeParams = decs
 			}
 			if decs, ok := nd["Params"]; ok {
@@ -1080,7 +1080,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		return out, nil
 	case *ast.GenDecl:
-		out := &model.GenDecl{}
+		out := &model.Gen{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -1095,7 +1095,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// List: Specs
 		for _, v := range n.Specs {
-			child, err := f.decorateNode(n, "GenDecl", "Specs", "Spec", v)
+			child, err := f.decorateNode(n, "Gen", "Specs", "Spec", v)
 			if err != nil {
 				return nil, err
 			}
@@ -1122,7 +1122,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		return out, nil
 	case *ast.GoStmt:
-		out := &model.GoStmt{}
+		out := &model.Go{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -1133,11 +1133,11 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Call
 		if n.Call != nil {
-			child, err := f.decorateNode(n, "GoStmt", "Call", "CallExpr", n.Call)
+			child, err := f.decorateNode(n, "Go", "Call", "Call", n.Call)
 			if err != nil {
 				return nil, err
 			}
-			out.Call = child.(*model.CallExpr)
+			out.Call = child.(*model.Call)
 		}
 
 		if nd, ok := f.decorations[n]; ok {
@@ -1194,7 +1194,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		return out, nil
 	case *ast.IfStmt:
-		out := &model.IfStmt{}
+		out := &model.If{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -1205,7 +1205,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Init
 		if n.Init != nil {
-			child, err := f.decorateNode(n, "IfStmt", "Init", "Stmt", n.Init)
+			child, err := f.decorateNode(n, "If", "Init", "Stmt", n.Init)
 			if err != nil {
 				return nil, err
 			}
@@ -1214,7 +1214,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Cond
 		if n.Cond != nil {
-			child, err := f.decorateNode(n, "IfStmt", "Cond", "Expr", n.Cond)
+			child, err := f.decorateNode(n, "If", "Cond", "Expr", n.Cond)
 			if err != nil {
 				return nil, err
 			}
@@ -1223,18 +1223,18 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Body
 		if n.Body != nil {
-			child, err := f.decorateNode(n, "IfStmt", "Body", "BlockStmt", n.Body)
+			child, err := f.decorateNode(n, "If", "Body", "Block", n.Body)
 			if err != nil {
 				return nil, err
 			}
-			out.Body = child.(*model.BlockStmt)
+			out.Body = child.(*model.Block)
 		}
 
 		// Token: ElseTok
 
 		// Node: Else
 		if n.Else != nil {
-			child, err := f.decorateNode(n, "IfStmt", "Else", "Stmt", n.Else)
+			child, err := f.decorateNode(n, "If", "Else", "Stmt", n.Else)
 			if err != nil {
 				return nil, err
 			}
@@ -1264,7 +1264,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		return out, nil
 	case *ast.ImportSpec:
-		out := &model.ImportSpec{}
+		out := &model.Import{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -1273,7 +1273,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Name
 		if n.Name != nil {
-			child, err := f.decorateNode(n, "ImportSpec", "Name", "Ident", n.Name)
+			child, err := f.decorateNode(n, "Import", "Name", "Ident", n.Name)
 			if err != nil {
 				return nil, err
 			}
@@ -1282,11 +1282,11 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Path
 		if n.Path != nil {
-			child, err := f.decorateNode(n, "ImportSpec", "Path", "BasicLit", n.Path)
+			child, err := f.decorateNode(n, "Import", "Path", "Lit", n.Path)
 			if err != nil {
 				return nil, err
 			}
-			out.Path = child.(*model.BasicLit)
+			out.Path = child.(*model.Lit)
 		}
 
 		if nd, ok := f.decorations[n]; ok {
@@ -1303,7 +1303,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		return out, nil
 	case *ast.IncDecStmt:
-		out := &model.IncDecStmt{}
+		out := &model.IncDec{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -1312,7 +1312,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: X
 		if n.X != nil {
-			child, err := f.decorateNode(n, "IncDecStmt", "X", "Expr", n.X)
+			child, err := f.decorateNode(n, "IncDec", "X", "Expr", n.X)
 			if err != nil {
 				return nil, err
 			}
@@ -1336,7 +1336,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		return out, nil
 	case *ast.IndexExpr:
-		out := &model.IndexExpr{}
+		out := &model.Index{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -1345,7 +1345,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: X
 		if n.X != nil {
-			child, err := f.decorateNode(n, "IndexExpr", "X", "Expr", n.X)
+			child, err := f.decorateNode(n, "Index", "X", "Expr", n.X)
 			if err != nil {
 				return nil, err
 			}
@@ -1356,7 +1356,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Index
 		if n.Index != nil {
-			child, err := f.decorateNode(n, "IndexExpr", "Index", "Expr", n.Index)
+			child, err := f.decorateNode(n, "Index", "Index", "Expr", n.Index)
 			if err != nil {
 				return nil, err
 			}
@@ -1385,7 +1385,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		return out, nil
 	case *ast.IndexListExpr:
-		out := &model.IndexListExpr{}
+		out := &model.IndexList{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -1394,7 +1394,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: X
 		if n.X != nil {
-			child, err := f.decorateNode(n, "IndexListExpr", "X", "Expr", n.X)
+			child, err := f.decorateNode(n, "IndexList", "X", "Expr", n.X)
 			if err != nil {
 				return nil, err
 			}
@@ -1405,7 +1405,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// List: Indices
 		for _, v := range n.Indices {
-			child, err := f.decorateNode(n, "IndexListExpr", "Indices", "Expr", v)
+			child, err := f.decorateNode(n, "IndexList", "Indices", "Expr", v)
 			if err != nil {
 				return nil, err
 			}
@@ -1434,7 +1434,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		return out, nil
 	case *ast.InterfaceType:
-		out := &model.InterfaceType{}
+		out := &model.Interface{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -1445,14 +1445,14 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Methods
 		if n.Methods != nil {
-			child, err := f.decorateNode(n, "InterfaceType", "Methods", "FieldList", n.Methods)
+			child, err := f.decorateNode(n, "Interface", "Methods", "FieldList", n.Methods)
 			if err != nil {
 				return nil, err
 			}
 			out.Methods = child.(*model.FieldList)
 		}
 
-		// Value: Incomplete
+		// Value: Ellipsis
 		out.Incomplete = n.Incomplete
 
 		if nd, ok := f.decorations[n]; ok {
@@ -1469,7 +1469,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		return out, nil
 	case *ast.KeyValueExpr:
-		out := &model.KeyValueExpr{}
+		out := &model.KeyValue{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -1478,7 +1478,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Key
 		if n.Key != nil {
-			child, err := f.decorateNode(n, "KeyValueExpr", "Key", "Expr", n.Key)
+			child, err := f.decorateNode(n, "KeyValue", "Key", "Expr", n.Key)
 			if err != nil {
 				return nil, err
 			}
@@ -1489,7 +1489,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Value
 		if n.Value != nil {
-			child, err := f.decorateNode(n, "KeyValueExpr", "Value", "Expr", n.Value)
+			child, err := f.decorateNode(n, "KeyValue", "Value", "Expr", n.Value)
 			if err != nil {
 				return nil, err
 			}
@@ -1513,7 +1513,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		return out, nil
 	case *ast.LabeledStmt:
-		out := &model.LabeledStmt{}
+		out := &model.Labeled{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -1522,7 +1522,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Label
 		if n.Label != nil {
-			child, err := f.decorateNode(n, "LabeledStmt", "Label", "Ident", n.Label)
+			child, err := f.decorateNode(n, "Labeled", "Label", "Ident", n.Label)
 			if err != nil {
 				return nil, err
 			}
@@ -1533,7 +1533,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Stmt
 		if n.Stmt != nil {
-			child, err := f.decorateNode(n, "LabeledStmt", "Stmt", "Stmt", n.Stmt)
+			child, err := f.decorateNode(n, "Labeled", "Stmt", "Stmt", n.Stmt)
 			if err != nil {
 				return nil, err
 			}
@@ -1641,7 +1641,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		return out, nil
 	case *ast.ParenExpr:
-		out := &model.ParenExpr{}
+		out := &model.Paren{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -1652,7 +1652,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: X
 		if n.X != nil {
-			child, err := f.decorateNode(n, "ParenExpr", "X", "Expr", n.X)
+			child, err := f.decorateNode(n, "Paren", "X", "Expr", n.X)
 			if err != nil {
 				return nil, err
 			}
@@ -1678,7 +1678,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		return out, nil
 	case *ast.RangeStmt:
-		out := &model.RangeStmt{}
+		out := &model.Range{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -1689,7 +1689,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Key
 		if n.Key != nil {
-			child, err := f.decorateNode(n, "RangeStmt", "Key", "Expr", n.Key)
+			child, err := f.decorateNode(n, "Range", "Key", "Expr", n.Key)
 			if err != nil {
 				return nil, err
 			}
@@ -1700,7 +1700,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Value
 		if n.Value != nil {
-			child, err := f.decorateNode(n, "RangeStmt", "Value", "Expr", n.Value)
+			child, err := f.decorateNode(n, "Range", "Value", "Expr", n.Value)
 			if err != nil {
 				return nil, err
 			}
@@ -1714,7 +1714,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: X
 		if n.X != nil {
-			child, err := f.decorateNode(n, "RangeStmt", "X", "Expr", n.X)
+			child, err := f.decorateNode(n, "Range", "X", "Expr", n.X)
 			if err != nil {
 				return nil, err
 			}
@@ -1723,11 +1723,11 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Body
 		if n.Body != nil {
-			child, err := f.decorateNode(n, "RangeStmt", "Body", "BlockStmt", n.Body)
+			child, err := f.decorateNode(n, "Range", "Body", "Block", n.Body)
 			if err != nil {
 				return nil, err
 			}
-			out.Body = child.(*model.BlockStmt)
+			out.Body = child.(*model.Block)
 		}
 
 		if nd, ok := f.decorations[n]; ok {
@@ -1756,7 +1756,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		return out, nil
 	case *ast.ReturnStmt:
-		out := &model.ReturnStmt{}
+		out := &model.Return{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -1767,7 +1767,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// List: Results
 		for _, v := range n.Results {
-			child, err := f.decorateNode(n, "ReturnStmt", "Results", "Expr", v)
+			child, err := f.decorateNode(n, "Return", "Results", "Expr", v)
 			if err != nil {
 				return nil, err
 			}
@@ -1788,7 +1788,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		return out, nil
 	case *ast.SelectStmt:
-		out := &model.SelectStmt{}
+		out := &model.Select{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -1799,11 +1799,11 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Body
 		if n.Body != nil {
-			child, err := f.decorateNode(n, "SelectStmt", "Body", "BlockStmt", n.Body)
+			child, err := f.decorateNode(n, "Select", "Body", "Block", n.Body)
 			if err != nil {
 				return nil, err
 			}
-			out.Body = child.(*model.BlockStmt)
+			out.Body = child.(*model.Block)
 		}
 
 		if nd, ok := f.decorations[n]; ok {
@@ -1821,7 +1821,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 		return out, nil
 	case *ast.SelectorExpr:
 
-		// Special case for *ast.SelectorExpr - replace with Ident if needed
+		// Special case for *ast.Selector - replace with Ident if needed
 		id, err := f.decorateSelectorExpr(parent, parentName, parentField, parentFieldType, n)
 		if err != nil {
 			return nil, err
@@ -1830,7 +1830,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 			return id, nil
 		}
 
-		out := &model.SelectorExpr{}
+		out := &model.Selector{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -1839,7 +1839,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: X
 		if n.X != nil {
-			child, err := f.decorateNode(n, "SelectorExpr", "X", "Expr", n.X)
+			child, err := f.decorateNode(n, "Selector", "X", "Expr", n.X)
 			if err != nil {
 				return nil, err
 			}
@@ -1850,7 +1850,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Sel
 		if n.Sel != nil {
-			child, err := f.decorateNode(n, "SelectorExpr", "Sel", "Ident", n.Sel)
+			child, err := f.decorateNode(n, "Selector", "Sel", "Ident", n.Sel)
 			if err != nil {
 				return nil, err
 			}
@@ -1871,7 +1871,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		return out, nil
 	case *ast.SendStmt:
-		out := &model.SendStmt{}
+		out := &model.Send{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -1880,7 +1880,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Chan
 		if n.Chan != nil {
-			child, err := f.decorateNode(n, "SendStmt", "Chan", "Expr", n.Chan)
+			child, err := f.decorateNode(n, "Send", "Chan", "Expr", n.Chan)
 			if err != nil {
 				return nil, err
 			}
@@ -1891,7 +1891,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Value
 		if n.Value != nil {
-			child, err := f.decorateNode(n, "SendStmt", "Value", "Expr", n.Value)
+			child, err := f.decorateNode(n, "Send", "Value", "Expr", n.Value)
 			if err != nil {
 				return nil, err
 			}
@@ -1915,7 +1915,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		return out, nil
 	case *ast.SliceExpr:
-		out := &model.SliceExpr{}
+		out := &model.Slice{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -1924,7 +1924,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: X
 		if n.X != nil {
-			child, err := f.decorateNode(n, "SliceExpr", "X", "Expr", n.X)
+			child, err := f.decorateNode(n, "Slice", "X", "Expr", n.X)
 			if err != nil {
 				return nil, err
 			}
@@ -1935,7 +1935,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Low
 		if n.Low != nil {
-			child, err := f.decorateNode(n, "SliceExpr", "Low", "Expr", n.Low)
+			child, err := f.decorateNode(n, "Slice", "Low", "Expr", n.Low)
 			if err != nil {
 				return nil, err
 			}
@@ -1946,7 +1946,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: High
 		if n.High != nil {
-			child, err := f.decorateNode(n, "SliceExpr", "High", "Expr", n.High)
+			child, err := f.decorateNode(n, "Slice", "High", "Expr", n.High)
 			if err != nil {
 				return nil, err
 			}
@@ -1957,7 +1957,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Max
 		if n.Max != nil {
-			child, err := f.decorateNode(n, "SliceExpr", "Max", "Expr", n.Max)
+			child, err := f.decorateNode(n, "Slice", "Max", "Expr", n.Max)
 			if err != nil {
 				return nil, err
 			}
@@ -1995,7 +1995,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		return out, nil
 	case *ast.StarExpr:
-		out := &model.StarExpr{}
+		out := &model.Star{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -2006,7 +2006,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: X
 		if n.X != nil {
-			child, err := f.decorateNode(n, "StarExpr", "X", "Expr", n.X)
+			child, err := f.decorateNode(n, "Star", "X", "Expr", n.X)
 			if err != nil {
 				return nil, err
 			}
@@ -2027,7 +2027,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		return out, nil
 	case *ast.StructType:
-		out := &model.StructType{}
+		out := &model.Struct{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -2038,14 +2038,14 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Fields
 		if n.Fields != nil {
-			child, err := f.decorateNode(n, "StructType", "Fields", "FieldList", n.Fields)
+			child, err := f.decorateNode(n, "Struct", "Fields", "FieldList", n.Fields)
 			if err != nil {
 				return nil, err
 			}
 			out.Fields = child.(*model.FieldList)
 		}
 
-		// Value: Incomplete
+		// Value: Ellipsis
 		out.Incomplete = n.Incomplete
 
 		if nd, ok := f.decorations[n]; ok {
@@ -2062,7 +2062,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		return out, nil
 	case *ast.SwitchStmt:
-		out := &model.SwitchStmt{}
+		out := &model.Switch{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -2073,7 +2073,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Init
 		if n.Init != nil {
-			child, err := f.decorateNode(n, "SwitchStmt", "Init", "Stmt", n.Init)
+			child, err := f.decorateNode(n, "Switch", "Init", "Stmt", n.Init)
 			if err != nil {
 				return nil, err
 			}
@@ -2082,7 +2082,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Tag
 		if n.Tag != nil {
-			child, err := f.decorateNode(n, "SwitchStmt", "Tag", "Expr", n.Tag)
+			child, err := f.decorateNode(n, "Switch", "Tag", "Expr", n.Tag)
 			if err != nil {
 				return nil, err
 			}
@@ -2091,11 +2091,11 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Body
 		if n.Body != nil {
-			child, err := f.decorateNode(n, "SwitchStmt", "Body", "BlockStmt", n.Body)
+			child, err := f.decorateNode(n, "Switch", "Body", "Block", n.Body)
 			if err != nil {
 				return nil, err
 			}
-			out.Body = child.(*model.BlockStmt)
+			out.Body = child.(*model.Block)
 		}
 
 		if nd, ok := f.decorations[n]; ok {
@@ -2118,7 +2118,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		return out, nil
 	case *ast.TypeAssertExpr:
-		out := &model.TypeAssertExpr{}
+		out := &model.TypeAssert{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -2127,7 +2127,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: X
 		if n.X != nil {
-			child, err := f.decorateNode(n, "TypeAssertExpr", "X", "Expr", n.X)
+			child, err := f.decorateNode(n, "TypeAssert", "X", "Expr", n.X)
 			if err != nil {
 				return nil, err
 			}
@@ -2140,7 +2140,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Type
 		if n.Type != nil {
-			child, err := f.decorateNode(n, "TypeAssertExpr", "Type", "Expr", n.Type)
+			child, err := f.decorateNode(n, "TypeAssert", "Type", "Expr", n.Type)
 			if err != nil {
 				return nil, err
 			}
@@ -2171,7 +2171,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		return out, nil
 	case *ast.TypeSpec:
-		out := &model.TypeSpec{}
+		out := &model.Type{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -2180,7 +2180,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Name
 		if n.Name != nil {
-			child, err := f.decorateNode(n, "TypeSpec", "Name", "Ident", n.Name)
+			child, err := f.decorateNode(n, "Type", "Name", "Ident", n.Name)
 			if err != nil {
 				return nil, err
 			}
@@ -2190,18 +2190,18 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 		// Token: Assign
 		out.Assign = n.Assign.IsValid()
 
-		// Node: TypeParams
+		// Node: Params
 		if n.TypeParams != nil {
-			child, err := f.decorateNode(n, "TypeSpec", "TypeParams", "FieldList", n.TypeParams)
+			child, err := f.decorateNode(n, "Type", "Params", "FieldList", n.TypeParams)
 			if err != nil {
 				return nil, err
 			}
-			out.TypeParams = child.(*model.FieldList)
+			out.Params = child.(*model.FieldList)
 		}
 
 		// Node: Type
 		if n.Type != nil {
-			child, err := f.decorateNode(n, "TypeSpec", "Type", "Expr", n.Type)
+			child, err := f.decorateNode(n, "Type", "Type", "Expr", n.Type)
 			if err != nil {
 				return nil, err
 			}
@@ -2215,7 +2215,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 			if decs, ok := nd["Name"]; ok {
 				out.Decs.Name = decs
 			}
-			if decs, ok := nd["TypeParams"]; ok {
+			if decs, ok := nd["Params"]; ok {
 				out.Decs.TypeParams = decs
 			}
 			if decs, ok := nd["End"]; ok {
@@ -2225,7 +2225,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		return out, nil
 	case *ast.TypeSwitchStmt:
-		out := &model.TypeSwitchStmt{}
+		out := &model.TypeSwitch{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -2236,7 +2236,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Init
 		if n.Init != nil {
-			child, err := f.decorateNode(n, "TypeSwitchStmt", "Init", "Stmt", n.Init)
+			child, err := f.decorateNode(n, "TypeSwitch", "Init", "Stmt", n.Init)
 			if err != nil {
 				return nil, err
 			}
@@ -2245,7 +2245,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Assign
 		if n.Assign != nil {
-			child, err := f.decorateNode(n, "TypeSwitchStmt", "Assign", "Stmt", n.Assign)
+			child, err := f.decorateNode(n, "TypeSwitch", "Assign", "Stmt", n.Assign)
 			if err != nil {
 				return nil, err
 			}
@@ -2254,11 +2254,11 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Body
 		if n.Body != nil {
-			child, err := f.decorateNode(n, "TypeSwitchStmt", "Body", "BlockStmt", n.Body)
+			child, err := f.decorateNode(n, "TypeSwitch", "Body", "Block", n.Body)
 			if err != nil {
 				return nil, err
 			}
-			out.Body = child.(*model.BlockStmt)
+			out.Body = child.(*model.Block)
 		}
 
 		if nd, ok := f.decorations[n]; ok {
@@ -2281,7 +2281,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		return out, nil
 	case *ast.UnaryExpr:
-		out := &model.UnaryExpr{}
+		out := &model.Unary{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -2293,7 +2293,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: X
 		if n.X != nil {
-			child, err := f.decorateNode(n, "UnaryExpr", "X", "Expr", n.X)
+			child, err := f.decorateNode(n, "Unary", "X", "Expr", n.X)
 			if err != nil {
 				return nil, err
 			}
@@ -2314,7 +2314,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		return out, nil
 	case *ast.ValueSpec:
-		out := &model.ValueSpec{}
+		out := &model.Value{}
 		f.Dst.Nodes[n] = out
 		f.Ast.Nodes[out] = n
 
@@ -2323,7 +2323,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// List: Names
 		for _, v := range n.Names {
-			child, err := f.decorateNode(n, "ValueSpec", "Names", "Ident", v)
+			child, err := f.decorateNode(n, "Value", "Names", "Ident", v)
 			if err != nil {
 				return nil, err
 			}
@@ -2332,7 +2332,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// Node: Type
 		if n.Type != nil {
-			child, err := f.decorateNode(n, "ValueSpec", "Type", "Expr", n.Type)
+			child, err := f.decorateNode(n, "Value", "Type", "Expr", n.Type)
 			if err != nil {
 				return nil, err
 			}
@@ -2343,7 +2343,7 @@ func (f *fileDecorator) decorateNode(parent ast.Node, parentName, parentField, p
 
 		// List: Values
 		for _, v := range n.Values {
-			child, err := f.decorateNode(n, "ValueSpec", "Values", "Expr", v)
+			child, err := f.decorateNode(n, "Value", "Values", "Expr", v)
 			if err != nil {
 				return nil, err
 			}

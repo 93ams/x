@@ -1,7 +1,7 @@
 package decorator
 
 import (
-	"github.com/tilau2328/cql/src/go/services/gen/go/package/adaptor/model"
+	"github.com/tilau2328/cql/src/go/services/gen/go/package/domain/model"
 	"go/ast"
 	"go/token"
 	"sort"
@@ -778,7 +778,7 @@ func (f *fileDecorator) addNodeFragments(n ast.Node) {
 			f.addNodeFragments(n.Type.TypeParams)
 		}
 		if n.Type.TypeParams != nil {
-			f.addDecorationFragment(n, "TypeParams", token.NoPos)
+			f.addDecorationFragment(n, "Params", token.NoPos)
 		}
 		if n.Type.Params != nil {
 			f.addNodeFragments(n.Type.Params)
@@ -818,7 +818,7 @@ func (f *fileDecorator) addNodeFragments(n ast.Node) {
 			f.addNodeFragments(n.TypeParams)
 		}
 		if n.TypeParams != nil {
-			f.addDecorationFragment(n, "TypeParams", token.NoPos)
+			f.addDecorationFragment(n, "Params", token.NoPos)
 		}
 		if n.Params != nil {
 			f.addNodeFragments(n.Params)
@@ -1191,7 +1191,7 @@ func (f *fileDecorator) addNodeFragments(n ast.Node) {
 			f.addNodeFragments(n.TypeParams)
 		}
 		if n.TypeParams != nil {
-			f.addDecorationFragment(n, "TypeParams", token.NoPos)
+			f.addDecorationFragment(n, "Params", token.NoPos)
 		}
 		if n.Type != nil {
 			f.addNodeFragments(n.Type)

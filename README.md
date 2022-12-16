@@ -13,10 +13,11 @@ The functionality of this repository is:
     - Api
       - [ ] Gql: Apps & Libraries for Gql
       - [ ] Grpc: Apps & Libraries for Grpc
-      - [ ] Rest: Apps & Libraries for Rest
+      - [ ] Rest: Apps & Libraries for Res
     - Db
       - [x] Cql: Apps & Libraries for Cql
       - [ ] Pg: Apps & Libraries for Pg
+      - [ ] Vault: Apps & Libraries for Vault
     - Repo
       - [x] Go: Apps & Libraries for Go
       - [ ] Files: Apps & Libraries for Files

@@ -3,7 +3,7 @@ package restorer
 import (
 	"fmt"
 	"github.com/tilau2328/cql/src/go/services/gen/go/package/adaptor/driver/resolver"
-	model2 "github.com/tilau2328/cql/src/go/services/gen/go/package/adaptor/model"
+	model2 "github.com/tilau2328/cql/src/go/services/gen/go/package/domain/model"
 	"go/ast"
 	"go/format"
 	"go/token"
@@ -123,7 +123,7 @@ func (r *FileRestorer) updateImports() error {
 	if r.Resolver == nil {
 		return nil
 	}
-	var blocks []*model2.GenDecl
+	var blocks []*model2.Gen
 	var hasCgoBlock bool
 	importsFound := map[string]string{}
 	packagesInUse := map[string]bool{}
@@ -140,16 +140,16 @@ func (r *FileRestorer) updateImports() error {
 			packagesInUse[n.Path] = true
 			importsRequired[n.Path] = true
 
-		case *model2.GenDecl:
+		case *model2.Gen:
 			if n.Tok != token.IMPORT {
 				return true
 			}
-			if len(n.Specs) == 1 && mustUnquote(n.Specs[0].(*model2.ImportSpec).Path.Value) == "C" {
+			if len(n.Specs) == 1 && mustUnquote(n.Specs[0].(*model2.Import).Path.Value) == "C" {
 				hasCgoBlock = true
 				return true
 			}
 			blocks = append(blocks, n)
-		case *model2.ImportSpec:
+		case *model2.Import:
 			path := mustUnquote(n.Path.Value)
 			if n.Name == nil {
 				importsFound[path] = ""
@@ -244,9 +244,9 @@ func (r *FileRestorer) updateImports() error {
 		}
 		added = true
 		if len(blocks) == 0 {
-			gd := &model2.GenDecl{
+			gd := &model2.Gen{
 				Tok: token.IMPORT,
-				Decs: model2.GenDeclDecorations{
+				Decs: model2.GenDecorations{
 					NodeDecs: model2.NodeDecs{Before: model2.EmptyLine, After: model2.EmptyLine},
 				},
 			}
@@ -257,8 +257,8 @@ func (r *FileRestorer) updateImports() error {
 			}
 			blocks = append(blocks, gd)
 		}
-		is := &model2.ImportSpec{
-			Path: &model2.BasicLit{Kind: token.STRING, Value: fmt.Sprintf("%q", path)},
+		is := &model2.Import{
+			Path: &model2.Lit{Kind: token.STRING, Value: fmt.Sprintf("%q", path)},
 		}
 		if aliases[path] != "" {
 			is.Name = &model2.Ident{
@@ -270,8 +270,8 @@ func (r *FileRestorer) updateImports() error {
 	if added {
 		sort.Slice(blocks[0].Specs, func(i, j int) bool {
 			return packagePathOrderLess(
-				mustUnquote(blocks[0].Specs[i].(*model2.ImportSpec).Path.Value),
-				mustUnquote(blocks[0].Specs[j].(*model2.ImportSpec).Path.Value),
+				mustUnquote(blocks[0].Specs[i].(*model2.Import).Path.Value),
+				mustUnquote(blocks[0].Specs[j].(*model2.Import).Path.Value),
 			)
 		})
 	}
@@ -279,7 +279,7 @@ func (r *FileRestorer) updateImports() error {
 	for _, block := range blocks {
 		specs := make([]model2.Spec, 0, len(block.Specs))
 		for _, spec := range block.Specs {
-			spec := spec.(*model2.ImportSpec)
+			spec := spec.(*model2.Import)
 			path := mustUnquote(spec.Path.Value)
 			if importsRequired[path] {
 				if spec.Name == nil && aliases[path] != "" {
@@ -312,7 +312,7 @@ func (r *FileRestorer) updateImports() error {
 	if added {
 		var foundDomainImport bool
 		for _, spec := range blocks[0].Specs {
-			path := mustUnquote(spec.(*model2.ImportSpec).Path.Value)
+			path := mustUnquote(spec.(*model2.Import).Path.Value)
 			if strings.Contains(path, ".") && !foundDomainImport {
 				spec.Decorations().Before = model2.EmptyLine
 				spec.Decorations().After = model2.NewLine
@@ -368,10 +368,10 @@ func (r *FileRestorer) restoreIdent(n *model2.Ident, parentName, parentField, pa
 	r.Dst.Nodes[out.X] = n
 	r.applySpace(n, "Before", n.Decs.Before)
 	r.applyDecorations(out, "Start", n.Decs.Start, false)
-	out.X = r.restoreNode(model2.NewIdent(name), "SelectorExpr", "X", "Expr", allowDuplicate).(ast.Expr)
+	out.X = r.restoreNode(model2.NewIdent(name), "Selector", "X", "Expr", allowDuplicate).(ast.Expr)
 	r.cursor += token.Pos(len(token.PERIOD.String()))
 	r.applyDecorations(out, "X", n.Decs.X, false)
-	out.Sel = r.restoreNode(model2.NewIdent(n.Name), "SelectorExpr", "Sel", "Ident", allowDuplicate).(*ast.Ident)
+	out.Sel = r.restoreNode(model2.NewIdent(n.Name), "Selector", "Sel", "Ident", allowDuplicate).(*ast.Ident)
 	r.applyDecorations(out, "End", n.Decs.End, true)
 	r.applySpace(n, "After", n.Decs.After)
 	return out

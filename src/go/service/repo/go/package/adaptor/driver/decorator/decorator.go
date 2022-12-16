@@ -3,7 +3,7 @@ package decorator
 import (
 	"fmt"
 	resolver2 "github.com/tilau2328/cql/src/go/services/gen/go/package/adaptor/driver/resolver"
-	model2 "github.com/tilau2328/cql/src/go/services/gen/go/package/adaptor/model"
+	model2 "github.com/tilau2328/cql/src/go/services/gen/go/package/domain/model"
 	"go/ast"
 	"go/parser"
 	"go/token"
@@ -127,7 +127,7 @@ func (f *fileDecorator) decorateSelectorExpr(parent ast.Node, parentName, parent
 	if f.Resolver == nil {
 		return nil, nil
 	}
-	path, err := f.resolvePath(true, n, "SelectorExpr", "Sel", "Ident", n.Sel)
+	path, err := f.resolvePath(true, n, "Selector", "Sel", "Ident", n.Sel)
 	if err != nil {
 		return nil, err
 	}

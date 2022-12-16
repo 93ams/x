@@ -3,7 +3,7 @@ package driver
 import (
 	"fmt"
 	"github.com/tilau2328/cql/src/go/services/gen/go/package/adaptor/driver/restorer"
-	"github.com/tilau2328/cql/src/go/services/gen/go/package/adaptor/model"
+	"github.com/tilau2328/cql/src/go/services/gen/go/package/domain/model"
 	"go/ast"
 	"go/format"
 	"go/token"
