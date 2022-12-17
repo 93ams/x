@@ -14,8 +14,8 @@ use (
 	./service/db/cql/cmd/grpc
 	./service/db/cql/cmd/http
 	./service/db/pg
-	./service/repo/go
-	./service/repo/go/cmd/cli
 	./service/repo/files
 	./service/repo/files/cmd/cli
+	./service/repo/go
+	./service/repo/go/cmd/cli
 )

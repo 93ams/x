@@ -2,8 +2,6 @@ package ddl
 
 import (
 	. "github.com/spf13/cobra"
-	. "github.com/tilau2328/cql/src/go/cmd/cli/package/ddl"
-	. "github.com/tilau2328/cql/src/go/package/domain/model"
 )
 
 var (

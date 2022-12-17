@@ -2,7 +2,7 @@ package pretty
 
 import (
 	. "github.com/jedib0t/go-pretty/v6/table"
-	. "github.com/tilau2328/cql/src/go/package/shared/x"
+	. "github.com/tilau2328/x/src/go/package/x"
 	"io"
 )
 

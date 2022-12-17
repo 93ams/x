@@ -1,8 +1,8 @@
 package model
 
 import (
-	"github.com/tilau2328/cql/src/go/package/domain/model"
-	"github.com/tilau2328/cql/src/go/package/shared/data/cql/ddl"
+	"github.com/tilau2328/x/src/go/package/domain/model"
+	"github.com/tilau2328/x/src/go/package/shared/data/cql/ddl"
 	"strconv"
 	"strings"
 )

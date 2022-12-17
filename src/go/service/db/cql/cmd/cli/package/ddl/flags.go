@@ -1,9 +1,5 @@
 package ddl
 
-import (
-	. "github.com/tilau2328/cql/src/go/package/domain/model"
-)
-
 type (
 	KeySpaceFlags struct {
 		Name        string

@@ -1,13 +1,11 @@
 package parser
 
 import (
-	. "github.com/tilau2328/cql/src/go/package/x"
+	. "github.com/tilau2328/x/src/go/package/x"
 	"grpc/package/adaptor/driver/lexer"
-	scanner2 "grpc/package/adaptor/driver/lexer/scanner"
-	. "grpc/package/adaptor/driver/model"
+	"grpc/package/adaptor/driver/lexer/scanner"
 	. "grpc/package/domain/model"
 	"grpc/package/domain/model/meta"
-	. "grpc/package/driver/model"
 	"strings"
 	"unicode/utf8"
 )
@@ -48,7 +46,7 @@ func (p *Parser) ParseComments() []*Comment {
 }
 func (p *Parser) parseComment() (*Comment, error) {
 	p.lex.NextComment()
-	if p.lex.Token == scanner2.TCOMMENT {
+	if p.lex.Token == scanner.TCOMMENT {
 		return &Comment{
 			Raw: p.lex.Text,
 			Meta: meta.Meta{
@@ -62,14 +60,14 @@ func (p *Parser) parseComment() (*Comment, error) {
 }
 
 func (p *Parser) ParseSyntax() (*Syntax, error) {
-	if p.lex.NextKeyword(); p.lex.Token != scanner2.TSYNTAX {
+	if p.lex.NextKeyword(); p.lex.Token != scanner.TSYNTAX {
 		return nil, p.unexpected("syntax")
 	}
 	startPos := p.lex.Pos
-	if p.lex.Next(); p.lex.Token != scanner2.TEQUALS {
+	if p.lex.Next(); p.lex.Token != scanner.TEQUALS {
 		return nil, p.unexpected("=")
 	}
-	if p.lex.Next(); p.lex.Token != scanner2.TQUOTE {
+	if p.lex.Next(); p.lex.Token != scanner.TQUOTE {
 		return nil, p.unexpected("quote")
 	}
 	lq := p.lex.Text
@@ -77,11 +75,11 @@ func (p *Parser) ParseSyntax() (*Syntax, error) {
 		return nil, p.unexpected("proto3 or proto2")
 	}
 	version := p.lex.Text
-	if p.lex.Next(); p.lex.Token != scanner2.TQUOTE {
+	if p.lex.Next(); p.lex.Token != scanner.TQUOTE {
 		return nil, p.unexpected("quote")
 	}
 	tq := p.lex.Text
-	if p.lex.Next(); p.lex.Token != scanner2.TSEMICOLON {
+	if p.lex.Next(); p.lex.Token != scanner.TSEMICOLON {
 		return nil, p.unexpected(";")
 	}
 	return &Syntax{
@@ -95,12 +93,12 @@ func (p *Parser) ParseSyntax() (*Syntax, error) {
 }
 func (p *Parser) ParseEnum() (*Enum, error) {
 	p.lex.NextKeyword()
-	if p.lex.Token != scanner2.TENUM {
+	if p.lex.Token != scanner.TENUM {
 		return nil, p.unexpected("enum")
 	}
 	startPos := p.lex.Pos
 	p.lex.Next()
-	if p.lex.Token != scanner2.TIDENT {
+	if p.lex.Token != scanner.TIDENT {
 		return nil, p.unexpected("enumName")
 	}
 	enumName := p.lex.Text
@@ -122,12 +120,12 @@ func (p *Parser) ParseEnum() (*Enum, error) {
 func (p *Parser) parseEnumBody() (
 	[]Visitee,
 	*Comment,
-	scanner2.Position,
+	scanner.Position,
 	error,
 ) {
 	p.lex.Next()
-	if p.lex.Token != scanner2.TLEFTCURLY {
-		return nil, nil, scanner2.Position{}, p.unexpected("{")
+	if p.lex.Token != scanner.TLEFTCURLY {
+		return nil, nil, scanner.Position{}, p.unexpected("{")
 	}
 	inlineLeftCurly := p.parseInlineComment()
 	var stmts []Visitee
@@ -141,7 +139,7 @@ func (p *Parser) parseEnumBody() (
 			Visitee
 		}
 		switch token {
-		case scanner2.TRIGHTCURLY:
+		case scanner.TRIGHTCURLY:
 			if p.bodyIncludingComments {
 				for _, comment := range comments {
 					stmts = append(stmts, Visitee(comment))
@@ -151,23 +149,23 @@ func (p *Parser) parseEnumBody() (
 			lastPos := p.lex.Pos
 			if p.permissive {
 				// accept a block followed by semicolon. See https://github.com/yoheimuta/go-protoparser/v4/issues/30.
-				p.lex.ConsumeToken(scanner2.TSEMICOLON)
-				if p.lex.Token == scanner2.TSEMICOLON {
+				p.lex.ConsumeToken(scanner.TSEMICOLON)
+				if p.lex.Token == scanner.TSEMICOLON {
 					lastPos = p.lex.Pos
 				}
 			}
 			return stmts, inlineLeftCurly, lastPos, nil
-		case scanner2.TOPTION:
+		case scanner.TOPTION:
 			option, err := p.ParseOption()
 			if err != nil {
-				return nil, nil, scanner2.Position{}, err
+				return nil, nil, scanner.Position{}, err
 			}
 			option.Comments = comments
 			stmt = option
-		case scanner2.TRESERVED:
+		case scanner.TRESERVED:
 			reserved, err := p.ParseReserved()
 			if err != nil {
-				return nil, nil, scanner2.Position{}, err
+				return nil, nil, scanner.Position{}, err
 			}
 			reserved.Comments = comments
 			stmt = reserved
@@ -184,7 +182,7 @@ func (p *Parser) parseEnumBody() (
 				stmt = &EmptyStatement{}
 				break
 			}
-			return nil, nil, scanner2.Position{}, &parseEnumBodyStatementErr{
+			return nil, nil, scanner.Position{}, &parseEnumBodyStatementErr{
 				parseEnumFieldErr:      enumFieldErr,
 				parseEmptyStatementErr: emptyErr,
 			}
@@ -195,22 +193,22 @@ func (p *Parser) parseEnumBody() (
 }
 func (p *Parser) parseEnumField() (*EnumField, error) {
 	p.lex.Next()
-	if p.lex.Token != scanner2.TIDENT {
+	if p.lex.Token != scanner.TIDENT {
 		return nil, p.unexpected("ident")
 	}
 	startPos := p.lex.Pos
 	ident := p.lex.Text
 	p.lex.Next()
-	if p.lex.Token != scanner2.TEQUALS {
+	if p.lex.Token != scanner.TEQUALS {
 		return nil, p.unexpected("=")
 	}
 	var intLit string
-	p.lex.ConsumeToken(scanner2.TMINUS)
-	if p.lex.Token == scanner2.TMINUS {
+	p.lex.ConsumeToken(scanner.TMINUS)
+	if p.lex.Token == scanner.TMINUS {
 		intLit = "-"
 	}
 	p.lex.NextNumberLit()
-	if p.lex.Token != scanner2.TINTLIT {
+	if p.lex.Token != scanner.TINTLIT {
 		return nil, p.unexpected("intLit")
 	}
 	intLit += p.lex.Text
@@ -219,7 +217,7 @@ func (p *Parser) parseEnumField() (*EnumField, error) {
 		return nil, err
 	}
 	p.lex.Next()
-	if p.lex.Token != scanner2.TSEMICOLON {
+	if p.lex.Token != scanner.TSEMICOLON {
 		return nil, p.unexpected(";")
 	}
 	return &EnumField{
@@ -231,7 +229,7 @@ func (p *Parser) parseEnumField() (*EnumField, error) {
 }
 func (p *Parser) parseEnumValueOptions() ([]*EnumValueOption, error) {
 	p.lex.Next()
-	if p.lex.Token != scanner2.TLEFTSQUARE {
+	if p.lex.Token != scanner.TLEFTSQUARE {
 		p.lex.UnNext()
 		return nil, nil
 	}
@@ -243,7 +241,7 @@ func (p *Parser) parseEnumValueOptions() ([]*EnumValueOption, error) {
 	opts = append(opts, opt)
 	for {
 		p.lex.Next()
-		if p.lex.Token != scanner2.TCOMMA {
+		if p.lex.Token != scanner.TCOMMA {
 			p.lex.UnNext()
 			break
 		}
@@ -254,7 +252,7 @@ func (p *Parser) parseEnumValueOptions() ([]*EnumValueOption, error) {
 		opts = append(opts, opt)
 	}
 	p.lex.Next()
-	if p.lex.Token != scanner2.TRIGHTSQUARE {
+	if p.lex.Token != scanner.TRIGHTSQUARE {
 		return nil, p.unexpected("]")
 	}
 	return opts, nil
@@ -266,7 +264,7 @@ func (p *Parser) parseEnumValueOption() (*EnumValueOption, error) {
 		return nil, err
 	}
 	p.lex.Next()
-	if p.lex.Token != scanner2.TEQUALS {
+	if p.lex.Token != scanner.TEQUALS {
 		return nil, p.unexpected("=")
 	}
 	constant, err := p.parseOptionConstant()
@@ -280,7 +278,7 @@ func (p *Parser) parseEnumValueOption() (*EnumValueOption, error) {
 }
 func (p *Parser) ParseExtensions() (*Extensions, error) {
 	p.lex.NextKeyword()
-	if p.lex.Token != scanner2.TEXTENSIONS {
+	if p.lex.Token != scanner.TEXTENSIONS {
 		return nil, p.unexpected("extensions")
 	}
 	startPos := p.lex.Pos
@@ -289,7 +287,7 @@ func (p *Parser) ParseExtensions() (*Extensions, error) {
 		return nil, err
 	}
 	p.lex.Next()
-	if p.lex.Token != scanner2.TSEMICOLON {
+	if p.lex.Token != scanner.TSEMICOLON {
 		return nil, p.unexpected(";")
 	}
 	return &Extensions{
@@ -300,7 +298,7 @@ func (p *Parser) ParseExtensions() (*Extensions, error) {
 
 func (p *Parser) ParseExtend() (*Extend, error) {
 	p.lex.NextKeyword()
-	if p.lex.Token != scanner2.TEXTEND {
+	if p.lex.Token != scanner.TEXTEND {
 		return nil, p.unexpected("extend")
 	}
 	startPos := p.lex.Pos
@@ -323,18 +321,18 @@ func (p *Parser) ParseExtend() (*Extend, error) {
 	}, nil
 }
 
-func (p *Parser) parseExtendBody() ([]Visitee, *Comment, scanner2.Position, error) {
+func (p *Parser) parseExtendBody() ([]Visitee, *Comment, scanner.Position, error) {
 	p.lex.Next()
-	if p.lex.Token != scanner2.TLEFTCURLY {
-		return nil, nil, scanner2.Position{}, p.unexpected("{")
+	if p.lex.Token != scanner.TLEFTCURLY {
+		return nil, nil, scanner.Position{}, p.unexpected("{")
 	}
 	inlineLeftCurly := p.parseInlineComment()
 	p.lex.Next()
-	if p.lex.Token == scanner2.TRIGHTCURLY {
+	if p.lex.Token == scanner.TRIGHTCURLY {
 		lastPos := p.lex.Pos
 		if p.permissive {
-			p.lex.ConsumeToken(scanner2.TSEMICOLON)
-			if p.lex.Token == scanner2.TSEMICOLON {
+			p.lex.ConsumeToken(scanner.TSEMICOLON)
+			if p.lex.Token == scanner.TSEMICOLON {
 				lastPos = p.lex.Pos
 			}
 		}
@@ -352,7 +350,7 @@ func (p *Parser) parseExtendBody() ([]Visitee, *Comment, scanner2.Position, erro
 			Visitee
 		}
 		switch token {
-		case scanner2.TRIGHTCURLY:
+		case scanner.TRIGHTCURLY:
 			if p.bodyIncludingComments {
 				for _, comment := range comments {
 					stmts = append(stmts, Visitee(comment))
@@ -361,8 +359,8 @@ func (p *Parser) parseExtendBody() ([]Visitee, *Comment, scanner2.Position, erro
 			p.lex.Next()
 			lastPos := p.lex.Pos
 			if p.permissive {
-				p.lex.ConsumeToken(scanner2.TSEMICOLON)
-				if p.lex.Token == scanner2.TSEMICOLON {
+				p.lex.ConsumeToken(scanner.TSEMICOLON)
+				if p.lex.Token == scanner.TSEMICOLON {
 					lastPos = p.lex.Pos
 				}
 			}
@@ -381,7 +379,7 @@ func (p *Parser) parseExtendBody() ([]Visitee, *Comment, scanner2.Position, erro
 				break
 			}
 
-			return nil, nil, scanner2.Position{}, &parseExtendBodyStatementErr{
+			return nil, nil, scanner.Position{}, &parseExtendBodyStatementErr{
 				parseFieldErr:          fieldErr,
 				parseEmptyStatementErr: emptyErr,
 			}
@@ -391,99 +389,62 @@ func (p *Parser) parseExtendBody() ([]Visitee, *Comment, scanner2.Position, erro
 		stmts = append(stmts, stmt)
 	}
 }
-func (p *Parser) ParseField() (*Field, error) {
-	var isRepeated bool
-	var isRequired bool
-	var isOptional bool
+func (p *Parser) ParseField() (ret *Field, err error) {
 	p.lex.NextKeyword()
-	startPos := p.lex.Pos
-	if p.lex.Token == scanner2.TREPEATED {
-		isRepeated = true
-	} else if p.lex.Token == scanner2.TREQUIRED {
-		isRequired = true
-	} else if p.lex.Token == scanner2.TOPTIONAL {
-		isOptional = true
-	} else {
+	ret = &Field{Meta: meta.Meta{Pos: p.lex.Pos.Position}}
+	switch p.lex.Token {
+	case scanner.TREPEATED:
+		ret.IsRepeated = true
+	case scanner.TREQUIRED:
+		ret.IsRequired = true
+	case scanner.TOPTIONAL:
+		ret.IsOptional = true
+	default:
 		p.lex.UnNext()
 	}
-	typeValue, _, err := p.parseType()
-	if err != nil {
+	if ret.Type, _, err = p.parseType(); err != nil {
 		return nil, p.unexpected("type")
 	}
-
 	p.lex.Next()
-	if p.lex.Token != scanner2.TIDENT {
+	ret.Name = p.lex.Text
+	if p.lex.Token != scanner.TIDENT {
 		return nil, p.unexpected("fieldName")
-	}
-	fieldName := p.lex.Text
-
-	p.lex.Next()
-	if p.lex.Token != scanner2.TEQUALS {
+	} else if p.lex.Next(); p.lex.Token != scanner.TEQUALS {
 		return nil, p.unexpected("=")
-	}
-
-	fieldNumber, err := p.parseFieldNumber()
-	if err != nil {
+	} else if ret.Number, err = p.parseFieldNumber(); err != nil {
 		return nil, p.unexpected("fieldNumber")
-	}
-
-	fieldOptions, err := p.parseFieldOptionsOption()
-	if err != nil {
+	} else if ret.Options, err = p.parseFieldOptionsOption(); err != nil {
 		return nil, err
-	}
-
-	p.lex.Next()
-	if p.lex.Token != scanner2.TSEMICOLON {
+	} else if p.lex.Next(); p.lex.Token != scanner.TSEMICOLON {
 		return nil, p.unexpected(";")
 	}
-
-	return &Field{
-		IsRepeated: isRepeated,
-		IsRequired: isRequired,
-		IsOptional: isOptional,
-		Type:       typeValue,
-		Name:       fieldName,
-		Number:     fieldNumber,
-		Options:    fieldOptions,
-		Meta:       meta.Meta{Pos: startPos.Position},
-	}, nil
+	return
 }
 func (p *Parser) parseFieldOptionsOption() ([]*FieldOption, error) {
-	p.lex.Next()
-	if p.lex.Token == scanner2.TLEFTSQUARE {
-		fieldOptions, err := p.parseFieldOptions()
-		if err != nil {
+	if p.lex.Next(); p.lex.Token == scanner.TLEFTSQUARE {
+		if fieldOptions, err := p.parseFieldOptions(); err != nil {
 			return nil, err
-		}
-
-		p.lex.Next()
-		if p.lex.Token != scanner2.TRIGHTSQUARE {
+		} else if p.lex.Next(); p.lex.Token != scanner.TRIGHTSQUARE {
 			return nil, p.unexpected("]")
+		} else {
+			return fieldOptions, nil
 		}
-		return fieldOptions, nil
 	}
 	p.lex.UnNext()
 	return nil, nil
 }
 
-func (p *Parser) parseFieldOptions() ([]*FieldOption, error) {
+func (p *Parser) parseFieldOptions() (opts []*FieldOption, err error) {
 	opt, err := p.parseFieldOption()
 	if err != nil {
 		return nil, err
 	}
-
-	var opts []*FieldOption
 	opts = append(opts, opt)
-
 	for {
-		p.lex.Next()
-		if p.lex.Token != scanner2.TCOMMA {
+		if p.lex.Next(); p.lex.Token != scanner.TCOMMA {
 			p.lex.UnNext()
 			break
-		}
-
-		opt, err = p.parseFieldOption()
-		if err != nil {
+		} else if opt, err = p.parseFieldOption(); err != nil {
 			return nil, p.unexpected("fieldOption")
 		}
 		opts = append(opts, opt)
@@ -492,25 +453,15 @@ func (p *Parser) parseFieldOptions() ([]*FieldOption, error) {
 }
 
 func (p *Parser) parseFieldOption() (*FieldOption, error) {
-	optionName, err := p.parseOptionName()
-	if err != nil {
+	if optionName, err := p.parseOptionName(); err != nil {
 		return nil, err
-	}
-
-	p.lex.Next()
-	if p.lex.Token != scanner2.TEQUALS {
+	} else if p.lex.Next(); p.lex.Token != scanner.TEQUALS {
 		return nil, p.unexpected("=")
-	}
-
-	constant, err := p.parseOptionConstant()
-	if err != nil {
+	} else if constant, err := p.parseOptionConstant(); err != nil {
 		return nil, err
+	} else {
+		return &FieldOption{Name: optionName, Constant: constant}, nil
 	}
-
-	return &FieldOption{
-		Name:     optionName,
-		Constant: constant,
-	}, nil
 }
 
 var typeConstants = map[string]struct{}{
@@ -531,7 +482,7 @@ var typeConstants = map[string]struct{}{
 	"bytes":    {},
 }
 
-func (p *Parser) parseType() (string, scanner2.Position, error) {
+func (p *Parser) parseType() (string, scanner.Position, error) {
 	p.lex.Next()
 	if _, ok := typeConstants[p.lex.Text]; ok {
 		return p.lex.Text, p.lex.Pos, nil
@@ -539,13 +490,13 @@ func (p *Parser) parseType() (string, scanner2.Position, error) {
 	p.lex.UnNext()
 	messageOrEnumType, startPos, err := p.lex.ReadMessageType()
 	if err != nil {
-		return "", scanner2.Position{}, err
+		return "", scanner.Position{}, err
 	}
 	return messageOrEnumType, startPos, nil
 }
 
 func (p *Parser) parseFieldNumber() (string, error) {
-	if p.lex.NextNumberLit(); p.lex.Token != scanner2.TINTLIT {
+	if p.lex.NextNumberLit(); p.lex.Token != scanner.TINTLIT {
 		return "", p.unexpected("intLit")
 	}
 	return p.lex.Text, nil
@@ -556,24 +507,23 @@ func (p *Parser) ParseGroupField() (*GroupField, error) {
 	var isOptional bool
 	p.lex.NextKeyword()
 	startPos := p.lex.Pos
-
-	if p.lex.Token == scanner2.TREPEATED {
+	if p.lex.Token == scanner.TREPEATED {
 		isRepeated = true
-	} else if p.lex.Token == scanner2.TREQUIRED {
+	} else if p.lex.Token == scanner.TREQUIRED {
 		isRequired = true
-	} else if p.lex.Token == scanner2.TOPTIONAL {
+	} else if p.lex.Token == scanner.TOPTIONAL {
 		isOptional = true
 	} else {
 		p.lex.UnNext()
 	}
 
 	p.lex.NextKeyword()
-	if p.lex.Token != scanner2.TGROUP {
+	if p.lex.Token != scanner.TGROUP {
 		return nil, p.unexpected("group")
 	}
 
 	p.lex.Next()
-	if p.lex.Token != scanner2.TIDENT {
+	if p.lex.Token != scanner.TIDENT {
 		return nil, p.unexpected("groupName")
 	}
 	if !isCapitalized(p.lex.Text) {
@@ -582,7 +532,7 @@ func (p *Parser) ParseGroupField() (*GroupField, error) {
 	groupName := p.lex.Text
 
 	p.lex.Next()
-	if p.lex.Token != scanner2.TEQUALS {
+	if p.lex.Token != scanner.TEQUALS {
 		return nil, p.unexpected("=")
 	}
 
@@ -614,9 +564,9 @@ func (p *Parser) ParseGroupField() (*GroupField, error) {
 func (p *Parser) peekIsGroup() bool {
 	p.lex.NextKeyword()
 	switch p.lex.Token {
-	case scanner2.TREPEATED,
-		scanner2.TREQUIRED,
-		scanner2.TOPTIONAL:
+	case scanner.TREPEATED,
+		scanner.TREQUIRED,
+		scanner.TOPTIONAL:
 		defer p.lex.UnNextTo(p.lex.RawText)
 	default:
 		p.lex.UnNext()
@@ -624,13 +574,13 @@ func (p *Parser) peekIsGroup() bool {
 
 	p.lex.NextKeyword()
 	defer p.lex.UnNextTo(p.lex.RawText)
-	if p.lex.Token != scanner2.TGROUP {
+	if p.lex.Token != scanner.TGROUP {
 		return false
 	}
 
 	p.lex.Next()
 	defer p.lex.UnNextTo(p.lex.RawText)
-	if p.lex.Token != scanner2.TIDENT {
+	if p.lex.Token != scanner.TIDENT {
 		return false
 	}
 	if !isCapitalized(p.lex.Text) {
@@ -639,7 +589,7 @@ func (p *Parser) peekIsGroup() bool {
 
 	p.lex.Next()
 	defer p.lex.UnNextTo(p.lex.RawText)
-	if p.lex.Token != scanner2.TEQUALS {
+	if p.lex.Token != scanner.TEQUALS {
 		return false
 	}
 
@@ -651,7 +601,7 @@ func (p *Parser) peekIsGroup() bool {
 
 	p.lex.Next()
 	defer p.lex.UnNextTo(p.lex.RawText)
-	if p.lex.Token != scanner2.TLEFTCURLY {
+	if p.lex.Token != scanner.TLEFTCURLY {
 		return false
 	}
 	return true
@@ -671,7 +621,7 @@ func isUpper(r rune) bool {
 
 func (p *Parser) ParseImport() (*Import, error) {
 	p.lex.NextKeyword()
-	if p.lex.Token != scanner2.TIMPORT {
+	if p.lex.Token != scanner.TIMPORT {
 		return nil, p.unexpected(`"import"`)
 	}
 	startPos := p.lex.Pos
@@ -679,23 +629,23 @@ func (p *Parser) ParseImport() (*Import, error) {
 	var modifier ImportModifier
 	p.lex.NextKeywordOrStrLit()
 	switch p.lex.Token {
-	case scanner2.TPUBLIC:
+	case scanner.TPUBLIC:
 		modifier = ImportModifierPublic
-	case scanner2.TWEAK:
+	case scanner.TWEAK:
 		modifier = ImportModifierWeak
-	case scanner2.TSTRLIT:
+	case scanner.TSTRLIT:
 		modifier = ImportModifierNone
 		p.lex.UnNext()
 	}
 
 	p.lex.NextStrLit()
-	if p.lex.Token != scanner2.TSTRLIT {
+	if p.lex.Token != scanner.TSTRLIT {
 		return nil, p.unexpected("strLit")
 	}
 	location := p.lex.Text
 
 	p.lex.Next()
-	if p.lex.Token != scanner2.TSEMICOLON {
+	if p.lex.Token != scanner.TSEMICOLON {
 		return nil, p.unexpected(";")
 	}
 
@@ -729,7 +679,7 @@ func (p *Parser) parseInlineComment() *Comment {
 }
 func (p *Parser) ParsePackage() (*Package, error) {
 	p.lex.NextKeyword()
-	if p.lex.Token != scanner2.TPACKAGE {
+	if p.lex.Token != scanner.TPACKAGE {
 		return nil, p.unexpected("package")
 	}
 	startPos := p.lex.Pos
@@ -740,7 +690,7 @@ func (p *Parser) ParsePackage() (*Package, error) {
 	}
 
 	p.lex.Next()
-	if p.lex.Token != scanner2.TSEMICOLON {
+	if p.lex.Token != scanner.TSEMICOLON {
 		return nil, p.unexpected(";")
 	}
 
@@ -754,13 +704,13 @@ func (p *Parser) ParsePackage() (*Package, error) {
 }
 func (p *Parser) ParseMessage() (*Message, error) {
 	p.lex.NextKeyword()
-	if p.lex.Token != scanner2.TMESSAGE {
+	if p.lex.Token != scanner.TMESSAGE {
 		return nil, p.unexpected("message")
 	}
 	startPos := p.lex.Pos
 
 	p.lex.Next()
-	if p.lex.Token != scanner2.TIDENT {
+	if p.lex.Token != scanner.TIDENT {
 		return nil, p.unexpected("messageName")
 	}
 	messageName := p.lex.Text
@@ -784,21 +734,21 @@ func (p *Parser) ParseMessage() (*Message, error) {
 func (p *Parser) parseMessageBody() (
 	[]Visitee,
 	*Comment,
-	scanner2.Position,
+	scanner.Position,
 	error,
 ) {
 	p.lex.Next()
-	if p.lex.Token != scanner2.TLEFTCURLY {
-		return nil, nil, scanner2.Position{}, p.unexpected("{")
+	if p.lex.Token != scanner.TLEFTCURLY {
+		return nil, nil, scanner.Position{}, p.unexpected("{")
 	}
 	inlineLeftCurly := p.parseInlineComment()
 	p.lex.Next()
-	if p.lex.Token == scanner2.TRIGHTCURLY {
+	if p.lex.Token == scanner.TRIGHTCURLY {
 		lastPos := p.lex.Pos
 		if p.permissive {
 			// accept a block followed by semicolon. See https://github.com/yoheimuta/go-protoparser/v4/issues/30.
-			p.lex.ConsumeToken(scanner2.TSEMICOLON)
-			if p.lex.Token == scanner2.TSEMICOLON {
+			p.lex.ConsumeToken(scanner.TSEMICOLON)
+			if p.lex.Token == scanner.TSEMICOLON {
 				lastPos = p.lex.Pos
 			}
 		}
@@ -817,7 +767,7 @@ func (p *Parser) parseMessageBody() (
 			Visitee
 		}
 		switch token {
-		case scanner2.TRIGHTCURLY:
+		case scanner.TRIGHTCURLY:
 			if p.bodyIncludingComments {
 				for _, comment := range comments {
 					stmts = append(stmts, Visitee(comment))
@@ -828,65 +778,65 @@ func (p *Parser) parseMessageBody() (
 			lastPos := p.lex.Pos
 			if p.permissive {
 				// accept a block followed by semicolon. See https://github.com/yoheimuta/go-protoparser/v4/issues/30.
-				p.lex.ConsumeToken(scanner2.TSEMICOLON)
-				if p.lex.Token == scanner2.TSEMICOLON {
+				p.lex.ConsumeToken(scanner.TSEMICOLON)
+				if p.lex.Token == scanner.TSEMICOLON {
 					lastPos = p.lex.Pos
 				}
 			}
 			return stmts, inlineLeftCurly, lastPos, nil
-		case scanner2.TENUM:
+		case scanner.TENUM:
 			enum, err := p.ParseEnum()
 			if err != nil {
-				return nil, nil, scanner2.Position{}, err
+				return nil, nil, scanner.Position{}, err
 			}
 			enum.Comments = comments
 			stmt = enum
-		case scanner2.TMESSAGE:
+		case scanner.TMESSAGE:
 			message, err := p.ParseMessage()
 			if err != nil {
-				return nil, nil, scanner2.Position{}, err
+				return nil, nil, scanner.Position{}, err
 			}
 			message.Comments = comments
 			stmt = message
-		case scanner2.TOPTION:
+		case scanner.TOPTION:
 			option, err := p.ParseOption()
 			if err != nil {
-				return nil, nil, scanner2.Position{}, err
+				return nil, nil, scanner.Position{}, err
 			}
 			option.Comments = comments
 			stmt = option
-		case scanner2.TONEOF:
+		case scanner.TONEOF:
 			oneof, err := p.ParseOneof()
 			if err != nil {
-				return nil, nil, scanner2.Position{}, err
+				return nil, nil, scanner.Position{}, err
 			}
 			oneof.Comments = comments
 			stmt = oneof
-		case scanner2.TMAP:
+		case scanner.TMAP:
 			mapField, err := p.ParseMapField()
 			if err != nil {
-				return nil, nil, scanner2.Position{}, err
+				return nil, nil, scanner.Position{}, err
 			}
 			mapField.Comments = comments
 			stmt = mapField
-		case scanner2.TEXTEND:
+		case scanner.TEXTEND:
 			extend, err := p.ParseExtend()
 			if err != nil {
-				return nil, nil, scanner2.Position{}, err
+				return nil, nil, scanner.Position{}, err
 			}
 			extend.Comments = comments
 			stmt = extend
-		case scanner2.TRESERVED:
+		case scanner.TRESERVED:
 			reserved, err := p.ParseReserved()
 			if err != nil {
-				return nil, nil, scanner2.Position{}, err
+				return nil, nil, scanner.Position{}, err
 			}
 			reserved.Comments = comments
 			stmt = reserved
-		case scanner2.TEXTENSIONS:
+		case scanner.TEXTENSIONS:
 			extensions, err := p.ParseExtensions()
 			if err != nil {
-				return nil, nil, scanner2.Position{}, err
+				return nil, nil, scanner.Position{}, err
 			}
 			extensions.Comments = comments
 			stmt = extensions
@@ -919,7 +869,7 @@ func (p *Parser) parseMessageBody() (
 				break
 			}
 
-			return nil, nil, scanner2.Position{}, &parseMessageBodyStatementErr{
+			return nil, nil, scanner.Position{}, &parseMessageBodyStatementErr{
 				parseFieldErr:          ferr,
 				parseEmptyStatementErr: emptyErr,
 			}
@@ -932,12 +882,12 @@ func (p *Parser) parseMessageBody() (
 
 func (p *Parser) ParseMapField() (*MapField, error) {
 	p.lex.NextKeyword()
-	if p.lex.Token != scanner2.TMAP {
+	if p.lex.Token != scanner.TMAP {
 		return nil, p.unexpected("map")
 	}
 	startPos := p.lex.Pos
 	p.lex.Next()
-	if p.lex.Token != scanner2.TLESS {
+	if p.lex.Token != scanner.TLESS {
 		return nil, p.unexpected("<")
 	}
 	keyType, err := p.parseKeyType()
@@ -945,7 +895,7 @@ func (p *Parser) ParseMapField() (*MapField, error) {
 		return nil, err
 	}
 	p.lex.Next()
-	if p.lex.Token != scanner2.TCOMMA {
+	if p.lex.Token != scanner.TCOMMA {
 		return nil, p.unexpected(",")
 	}
 	typeValue, _, err := p.parseType()
@@ -953,16 +903,16 @@ func (p *Parser) ParseMapField() (*MapField, error) {
 		return nil, p.unexpected("type")
 	}
 	p.lex.Next()
-	if p.lex.Token != scanner2.TGREATER {
+	if p.lex.Token != scanner.TGREATER {
 		return nil, p.unexpected(">")
 	}
 	p.lex.Next()
-	if p.lex.Token != scanner2.TIDENT {
+	if p.lex.Token != scanner.TIDENT {
 		return nil, p.unexpected("mapName")
 	}
 	mapName := p.lex.Text
 	p.lex.Next()
-	if p.lex.Token != scanner2.TEQUALS {
+	if p.lex.Token != scanner.TEQUALS {
 		return nil, p.unexpected("=")
 	}
 	fieldNumber, err := p.parseFieldNumber()
@@ -974,7 +924,7 @@ func (p *Parser) ParseMapField() (*MapField, error) {
 		return nil, err
 	}
 	p.lex.Next()
-	if p.lex.Token != scanner2.TSEMICOLON {
+	if p.lex.Token != scanner.TSEMICOLON {
 		return nil, p.unexpected(";")
 	}
 	return &MapField{
@@ -1012,12 +962,12 @@ func (p *Parser) parseKeyType() (string, error) {
 
 func (p *Parser) ParseService() (*Service, error) {
 	p.lex.NextKeyword()
-	if p.lex.Token != scanner2.TSERVICE {
+	if p.lex.Token != scanner.TSERVICE {
 		return nil, p.unexpected("service")
 	}
 	startPos := p.lex.Pos
 	p.lex.Next()
-	if p.lex.Token != scanner2.TIDENT {
+	if p.lex.Token != scanner.TIDENT {
 		return nil, p.unexpected("serviceName")
 	}
 	serviceName := p.lex.Text
@@ -1039,12 +989,12 @@ func (p *Parser) ParseService() (*Service, error) {
 func (p *Parser) parseServiceBody() (
 	[]Visitee,
 	*Comment,
-	scanner2.Position,
+	scanner.Position,
 	error,
 ) {
 	p.lex.Next()
-	if p.lex.Token != scanner2.TLEFTCURLY {
-		return nil, nil, scanner2.Position{}, p.unexpected("{")
+	if p.lex.Token != scanner.TLEFTCURLY {
+		return nil, nil, scanner.Position{}, p.unexpected("{")
 	}
 
 	inlineLeftCurly := p.parseInlineComment()
@@ -1063,7 +1013,7 @@ func (p *Parser) parseServiceBody() (
 		}
 
 		switch token {
-		case scanner2.TRIGHTCURLY:
+		case scanner.TRIGHTCURLY:
 			if p.bodyIncludingComments {
 				for _, comment := range comments {
 					stmts = append(stmts, Visitee(comment))
@@ -1074,30 +1024,30 @@ func (p *Parser) parseServiceBody() (
 			lastPos := p.lex.Pos
 			if p.permissive {
 				// accept a block followed by semicolon. See https://github.com/yoheimuta/go-protoparser/v4/issues/30.
-				p.lex.ConsumeToken(scanner2.TSEMICOLON)
-				if p.lex.Token == scanner2.TSEMICOLON {
+				p.lex.ConsumeToken(scanner.TSEMICOLON)
+				if p.lex.Token == scanner.TSEMICOLON {
 					lastPos = p.lex.Pos
 				}
 			}
 			return stmts, inlineLeftCurly, lastPos, nil
-		case scanner2.TOPTION:
+		case scanner.TOPTION:
 			option, err := p.ParseOption()
 			if err != nil {
-				return nil, nil, scanner2.Position{}, err
+				return nil, nil, scanner.Position{}, err
 			}
 			option.Comments = comments
 			stmt = option
-		case scanner2.TRPC:
+		case scanner.TRPC:
 			rpc, err := p.parseRPC()
 			if err != nil {
-				return nil, nil, scanner2.Position{}, err
+				return nil, nil, scanner.Position{}, err
 			}
 			rpc.Comments = comments
 			stmt = rpc
 		default:
 			err := p.lex.ReadEmptyStatement()
 			if err != nil {
-				return nil, nil, scanner2.Position{}, err
+				return nil, nil, scanner.Position{}, err
 			}
 		}
 
@@ -1107,13 +1057,13 @@ func (p *Parser) parseServiceBody() (
 }
 func (p *Parser) parseRPC() (*RPC, error) {
 	p.lex.NextKeyword()
-	if p.lex.Token != scanner2.TRPC {
+	if p.lex.Token != scanner.TRPC {
 		return nil, p.unexpected("rpc")
 	}
 	startPos := p.lex.Pos
 
 	p.lex.Next()
-	if p.lex.Token != scanner2.TIDENT {
+	if p.lex.Token != scanner.TIDENT {
 		return nil, p.unexpected("serviceName")
 	}
 	rpcName := p.lex.Text
@@ -1124,7 +1074,7 @@ func (p *Parser) parseRPC() (*RPC, error) {
 	}
 
 	p.lex.NextKeyword()
-	if p.lex.Token != scanner2.TRETURNS {
+	if p.lex.Token != scanner.TRETURNS {
 		return nil, p.unexpected("returns")
 	}
 
@@ -1138,7 +1088,7 @@ func (p *Parser) parseRPC() (*RPC, error) {
 	p.lex.Next()
 	lastPos := p.lex.Pos
 	switch p.lex.Token {
-	case scanner2.TLEFTCURLY:
+	case scanner.TLEFTCURLY:
 		p.lex.UnNext()
 		opts, inlineLeftCurly, err = p.parseRPCOptions()
 		if err != nil {
@@ -1147,12 +1097,12 @@ func (p *Parser) parseRPC() (*RPC, error) {
 		lastPos = p.lex.Pos
 		if p.permissive {
 			// accept a block followed by semicolon. See https://github.com/yoheimuta/go-protoparser/v4/issues/30.
-			p.lex.ConsumeToken(scanner2.TSEMICOLON)
-			if p.lex.Token == scanner2.TSEMICOLON {
+			p.lex.ConsumeToken(scanner.TSEMICOLON)
+			if p.lex.Token == scanner.TSEMICOLON {
 				lastPos = p.lex.Pos
 			}
 		}
-	case scanner2.TSEMICOLON:
+	case scanner.TSEMICOLON:
 		break
 	default:
 		return nil, p.unexpected("{ or ;")
@@ -1172,14 +1122,14 @@ func (p *Parser) parseRPC() (*RPC, error) {
 }
 func (p *Parser) parseRPCRequest() (*Request, error) {
 	p.lex.Next()
-	if p.lex.Token != scanner2.TLEFTPAREN {
+	if p.lex.Token != scanner.TLEFTPAREN {
 		return nil, p.unexpected("(")
 	}
 	startPos := p.lex.Pos
 
 	p.lex.NextKeyword()
 	isStream := true
-	if p.lex.Token != scanner2.TSTREAM {
+	if p.lex.Token != scanner.TSTREAM {
 		isStream = false
 		p.lex.UnNext()
 	}
@@ -1190,7 +1140,7 @@ func (p *Parser) parseRPCRequest() (*Request, error) {
 	}
 
 	p.lex.Next()
-	if p.lex.Token != scanner2.TRIGHTPAREN {
+	if p.lex.Token != scanner.TRIGHTPAREN {
 		return nil, p.unexpected(")")
 	}
 
@@ -1202,14 +1152,14 @@ func (p *Parser) parseRPCRequest() (*Request, error) {
 }
 func (p *Parser) parseRPCResponse() (*Response, error) {
 	p.lex.Next()
-	if p.lex.Token != scanner2.TLEFTPAREN {
+	if p.lex.Token != scanner.TLEFTPAREN {
 		return nil, p.unexpected("(")
 	}
 	startPos := p.lex.Pos
 
 	p.lex.NextKeyword()
 	isStream := true
-	if p.lex.Token != scanner2.TSTREAM {
+	if p.lex.Token != scanner.TSTREAM {
 		isStream = false
 		p.lex.UnNext()
 	}
@@ -1220,7 +1170,7 @@ func (p *Parser) parseRPCResponse() (*Response, error) {
 	}
 
 	p.lex.Next()
-	if p.lex.Token != scanner2.TRIGHTPAREN {
+	if p.lex.Token != scanner.TRIGHTPAREN {
 		return nil, p.unexpected(")")
 	}
 
@@ -1232,7 +1182,7 @@ func (p *Parser) parseRPCResponse() (*Response, error) {
 }
 func (p *Parser) parseRPCOptions() ([]*Option, *Comment, error) {
 	p.lex.Next()
-	if p.lex.Token != scanner2.TLEFTCURLY {
+	if p.lex.Token != scanner.TLEFTCURLY {
 		return nil, nil, p.unexpected("{")
 	}
 
@@ -1245,13 +1195,13 @@ func (p *Parser) parseRPCOptions() ([]*Option, *Comment, error) {
 		p.lex.UnNext()
 
 		switch token {
-		case scanner2.TOPTION:
+		case scanner.TOPTION:
 			option, err := p.ParseOption()
 			if err != nil {
 				return nil, nil, err
 			}
 			options = append(options, option)
-		case scanner2.TRIGHTCURLY:
+		case scanner.TRIGHTCURLY:
 			// This spec is not documented, but allowed in general.
 			break
 		default:
@@ -1262,7 +1212,7 @@ func (p *Parser) parseRPCOptions() ([]*Option, *Comment, error) {
 		}
 
 		p.lex.Next()
-		if p.lex.Token == scanner2.TRIGHTCURLY {
+		if p.lex.Token == scanner.TRIGHTCURLY {
 			return options, inlineLeftCurly, nil
 		}
 		p.lex.UnNext()
@@ -1270,7 +1220,7 @@ func (p *Parser) parseRPCOptions() ([]*Option, *Comment, error) {
 }
 func (p *Parser) ParseOption() (*Option, error) {
 	p.lex.NextKeyword()
-	if p.lex.Token != scanner2.TOPTION {
+	if p.lex.Token != scanner.TOPTION {
 		return nil, p.unexpected("option")
 	}
 	startPos := p.lex.Pos
@@ -1281,7 +1231,7 @@ func (p *Parser) ParseOption() (*Option, error) {
 	}
 
 	p.lex.Next()
-	if p.lex.Token != scanner2.TEQUALS {
+	if p.lex.Token != scanner.TEQUALS {
 		return nil, p.unexpected("=")
 	}
 
@@ -1291,7 +1241,7 @@ func (p *Parser) ParseOption() (*Option, error) {
 	}
 
 	p.lex.Next()
-	if p.lex.Token != scanner2.TSEMICOLON {
+	if p.lex.Token != scanner.TSEMICOLON {
 		return nil, p.unexpected(";")
 	}
 
@@ -1308,14 +1258,14 @@ func (p *Parser) parseCloudEndpointsOptionConstant() (string, error) {
 	var ret string
 
 	p.lex.Next()
-	if p.lex.Token != scanner2.TLEFTCURLY {
+	if p.lex.Token != scanner.TLEFTCURLY {
 		return "", p.unexpected("{")
 	}
 	ret += p.lex.Text
 
 	for {
 		p.lex.Next()
-		if p.lex.Token != scanner2.TIDENT {
+		if p.lex.Token != scanner.TIDENT {
 			return "", p.unexpected("ident")
 		}
 		ret += p.lex.Text
@@ -1323,14 +1273,14 @@ func (p *Parser) parseCloudEndpointsOptionConstant() (string, error) {
 		needSemi := false
 		p.lex.Next()
 		switch p.lex.Token {
-		case scanner2.TLEFTCURLY:
+		case scanner.TLEFTCURLY:
 			if !p.permissive {
 				return "", p.unexpected(":")
 			}
 			p.lex.UnNext()
-		case scanner2.TCOLON:
+		case scanner.TCOLON:
 			ret += p.lex.Text
-			if p.lex.Peek() == scanner2.TLEFTCURLY && p.permissive {
+			if p.lex.Peek() == scanner.TLEFTCURLY && p.permissive {
 				needSemi = true
 			}
 		default:
@@ -1347,20 +1297,20 @@ func (p *Parser) parseCloudEndpointsOptionConstant() (string, error) {
 		ret += constant
 
 		p.lex.Next()
-		if p.lex.Token == scanner2.TSEMICOLON && needSemi && p.permissive {
+		if p.lex.Token == scanner.TSEMICOLON && needSemi && p.permissive {
 			ret += p.lex.Text
 			p.lex.Next()
 		}
 
 		switch {
-		case p.lex.Token == scanner2.TCOMMA, p.lex.Token == scanner2.TSEMICOLON:
+		case p.lex.Token == scanner.TCOMMA, p.lex.Token == scanner.TSEMICOLON:
 			ret += p.lex.Text
-			if p.lex.Peek() == scanner2.TRIGHTCURLY && p.permissive {
+			if p.lex.Peek() == scanner.TRIGHTCURLY && p.permissive {
 				p.lex.Next()
 				ret += p.lex.Text
 				return ret, nil
 			}
-		case p.lex.Token == scanner2.TRIGHTCURLY:
+		case p.lex.Token == scanner.TRIGHTCURLY:
 			ret += p.lex.Text
 			return ret, nil
 		default:
@@ -1373,15 +1323,15 @@ func (p *Parser) parseOptionName() (string, error) {
 	var optionName string
 	p.lex.Next()
 	switch p.lex.Token {
-	case scanner2.TIDENT:
+	case scanner.TIDENT:
 		optionName = p.lex.Text
-	case scanner2.TLEFTPAREN:
+	case scanner.TLEFTPAREN:
 		optionName = p.lex.Text
 
 		// protoc accepts "(." fullIndent ")". See #63
 		if p.permissive {
 			p.lex.Next()
-			if p.lex.Token == scanner2.TDOT {
+			if p.lex.Token == scanner.TDOT {
 				optionName += "."
 			} else {
 				p.lex.UnNext()
@@ -1395,7 +1345,7 @@ func (p *Parser) parseOptionName() (string, error) {
 		optionName += fullIdent
 
 		p.lex.Next()
-		if p.lex.Token != scanner2.TRIGHTPAREN {
+		if p.lex.Token != scanner.TRIGHTPAREN {
 			return "", p.unexpected(")")
 		}
 		optionName += p.lex.Text
@@ -1405,14 +1355,14 @@ func (p *Parser) parseOptionName() (string, error) {
 
 	for {
 		p.lex.Next()
-		if p.lex.Token != scanner2.TDOT {
+		if p.lex.Token != scanner.TDOT {
 			p.lex.UnNext()
 			break
 		}
 		optionName += p.lex.Text
 
 		p.lex.Next()
-		if p.lex.Token != scanner2.TIDENT {
+		if p.lex.Token != scanner.TIDENT {
 			return "", p.unexpected("ident")
 		}
 		optionName += p.lex.Text
@@ -1421,13 +1371,13 @@ func (p *Parser) parseOptionName() (string, error) {
 }
 func (p *Parser) parseOptionConstant() (constant string, err error) {
 	switch p.lex.Peek() {
-	case scanner2.TLEFTCURLY:
+	case scanner.TLEFTCURLY:
 		if !p.permissive {
 			return "", p.unexpected("constant or permissive mode")
 		}
 
 		// parses empty fields within an option
-		if p.lex.PeekN(2) == scanner2.TRIGHTCURLY {
+		if p.lex.PeekN(2) == scanner.TRIGHTCURLY {
 			p.lex.NextN(2)
 			return "{}", nil
 		}
@@ -1437,14 +1387,14 @@ func (p *Parser) parseOptionConstant() (constant string, err error) {
 			return "", err
 		}
 
-	case scanner2.TLEFTSQUARE:
+	case scanner.TLEFTSQUARE:
 		if !p.permissive {
 			return "", p.unexpected("constant or permissive mode")
 		}
 		p.lex.Next()
 
 		// parses empty fields within an option
-		if p.lex.Peek() == scanner2.TRIGHTSQUARE {
+		if p.lex.Peek() == scanner.TRIGHTSQUARE {
 			p.lex.Next()
 			return "[]", nil
 		}
@@ -1473,7 +1423,7 @@ func (p *Parser) parseOptionConstants() (constant string, err error) {
 	opts = append(opts, opt)
 	for {
 		p.lex.Next()
-		if p.lex.Token != scanner2.TCOMMA {
+		if p.lex.Token != scanner.TCOMMA {
 			p.lex.UnNext()
 			break
 		}
@@ -1488,18 +1438,18 @@ func (p *Parser) parseOptionConstants() (constant string, err error) {
 
 func (p *Parser) ParseOneof() (*OneOf, error) {
 	p.lex.NextKeyword()
-	if p.lex.Token != scanner2.TONEOF {
+	if p.lex.Token != scanner.TONEOF {
 		return nil, p.unexpected("oneof")
 	}
 	startPos := p.lex.Pos
 	p.lex.Next()
-	if p.lex.Token != scanner2.TIDENT {
+	if p.lex.Token != scanner.TIDENT {
 		return nil, p.unexpected("oneofName")
 	}
 	oneofName := p.lex.Text
 
 	p.lex.Next()
-	if p.lex.Token != scanner2.TLEFTCURLY {
+	if p.lex.Token != scanner.TLEFTCURLY {
 		return nil, p.unexpected("{")
 	}
 
@@ -1518,7 +1468,7 @@ func (p *Parser) ParseOneof() (*OneOf, error) {
 		p.lex.NextKeyword()
 		token := p.lex.Token
 		p.lex.UnNext()
-		if token == scanner2.TOPTION {
+		if token == scanner.TOPTION {
 			// See https://github.com/yoheimuta/go-protoparser/issues/57
 			option, err := p.ParseOption()
 			if err != nil {
@@ -1538,7 +1488,7 @@ func (p *Parser) ParseOneof() (*OneOf, error) {
 		}
 
 		p.lex.Next()
-		if p.lex.Token == scanner2.TRIGHTCURLY {
+		if p.lex.Token == scanner.TRIGHTCURLY {
 			break
 		} else {
 			p.lex.UnNext()
@@ -1548,8 +1498,8 @@ func (p *Parser) ParseOneof() (*OneOf, error) {
 	lastPos := p.lex.Pos
 	if p.permissive {
 		// accept a block followed by semicolon. See https://github.com/yoheimuta/go-protoparser/v4/issues/30.
-		p.lex.ConsumeToken(scanner2.TSEMICOLON)
-		if p.lex.Token == scanner2.TSEMICOLON {
+		p.lex.ConsumeToken(scanner.TSEMICOLON)
+		if p.lex.Token == scanner.TSEMICOLON {
 			lastPos = p.lex.Pos
 		}
 	}
@@ -1572,13 +1522,13 @@ func (p *Parser) parseOneofField() (*OneOfField, error) {
 	}
 
 	p.lex.Next()
-	if p.lex.Token != scanner2.TIDENT {
+	if p.lex.Token != scanner.TIDENT {
 		return nil, p.unexpected("fieldName")
 	}
 	fieldName := p.lex.Text
 
 	p.lex.Next()
-	if p.lex.Token != scanner2.TEQUALS {
+	if p.lex.Token != scanner.TEQUALS {
 		return nil, p.unexpected("=")
 	}
 
@@ -1593,7 +1543,7 @@ func (p *Parser) parseOneofField() (*OneOfField, error) {
 	}
 
 	p.lex.Next()
-	if p.lex.Token != scanner2.TSEMICOLON {
+	if p.lex.Token != scanner.TSEMICOLON {
 		return nil, p.unexpected(";")
 	}
 
@@ -1648,49 +1598,49 @@ func (p *Parser) parseProtoBody() ([]Visitee, error) {
 			Visitee
 		}
 		switch token {
-		case scanner2.TIMPORT:
+		case scanner.TIMPORT:
 			importValue, err := p.ParseImport()
 			if err != nil {
 				return nil, err
 			}
 			importValue.Comments = comments
 			stmt = importValue
-		case scanner2.TPACKAGE:
+		case scanner.TPACKAGE:
 			packageValue, err := p.ParsePackage()
 			if err != nil {
 				return nil, err
 			}
 			packageValue.Comments = comments
 			stmt = packageValue
-		case scanner2.TOPTION:
+		case scanner.TOPTION:
 			option, err := p.ParseOption()
 			if err != nil {
 				return nil, err
 			}
 			option.Comments = comments
 			stmt = option
-		case scanner2.TMESSAGE:
+		case scanner.TMESSAGE:
 			message, err := p.ParseMessage()
 			if err != nil {
 				return nil, err
 			}
 			message.Comments = comments
 			stmt = message
-		case scanner2.TENUM:
+		case scanner.TENUM:
 			enum, err := p.ParseEnum()
 			if err != nil {
 				return nil, err
 			}
 			enum.Comments = comments
 			stmt = enum
-		case scanner2.TSERVICE:
+		case scanner.TSERVICE:
 			service, err := p.ParseService()
 			if err != nil {
 				return nil, err
 			}
 			service.Comments = comments
 			stmt = service
-		case scanner2.TEXTEND:
+		case scanner.TEXTEND:
 			extend, err := p.ParseExtend()
 			if err != nil {
 				return nil, err
@@ -1710,7 +1660,7 @@ func (p *Parser) parseProtoBody() ([]Visitee, error) {
 }
 func (p *Parser) ParseReserved() (*Reserved, error) {
 	p.lex.NextKeyword()
-	if p.lex.Token != scanner2.TRESERVED {
+	if p.lex.Token != scanner.TRESERVED {
 		return nil, p.unexpected("reserved")
 	}
 	startPos := p.lex.Pos
@@ -1736,7 +1686,7 @@ func (p *Parser) ParseReserved() (*Reserved, error) {
 	}
 
 	p.lex.Next()
-	if p.lex.Token != scanner2.TSEMICOLON {
+	if p.lex.Token != scanner.TSEMICOLON {
 		return nil, p.unexpected(";")
 	}
 	return &Reserved{
@@ -1755,7 +1705,7 @@ func (p *Parser) parseRanges() ([]*Range, error) {
 
 	for {
 		p.lex.Next()
-		if p.lex.Token != scanner2.TCOMMA {
+		if p.lex.Token != scanner.TCOMMA {
 			p.lex.UnNext()
 			break
 		}
@@ -1770,7 +1720,7 @@ func (p *Parser) parseRanges() ([]*Range, error) {
 }
 func (p *Parser) parseRange() (*Range, error) {
 	p.lex.NextNumberLit()
-	if p.lex.Token != scanner2.TINTLIT {
+	if p.lex.Token != scanner.TINTLIT {
 		p.lex.UnNext()
 		return nil, p.unexpected("intLit")
 	}
@@ -1786,7 +1736,7 @@ func (p *Parser) parseRange() (*Range, error) {
 
 	p.lex.NextNumberLit()
 	switch {
-	case p.lex.Token == scanner2.TINTLIT,
+	case p.lex.Token == scanner.TINTLIT,
 		p.lex.Text == "max":
 		return &Range{
 			Begin: begin,
@@ -1808,7 +1758,7 @@ func (p *Parser) parseFieldNames() ([]string, error) {
 
 	for {
 		p.lex.Next()
-		if p.lex.Token != scanner2.TCOMMA {
+		if p.lex.Token != scanner.TCOMMA {
 			p.lex.UnNext()
 			break
 		}
@@ -1823,7 +1773,7 @@ func (p *Parser) parseFieldNames() ([]string, error) {
 }
 func (p *Parser) parseQuotedFieldName() (string, error) {
 	p.lex.NextStrLit()
-	if p.lex.Token != scanner2.TSTRLIT {
+	if p.lex.Token != scanner.TSTRLIT {
 		p.lex.UnNext()
 		return "", p.unexpected("quotedFieldName")
 	}

@@ -1,9 +1,9 @@
 package node
 
 import (
-	. "github.com/tilau2328/cql/src/go/package/x"
-	. "github.com/tilau2328/cql/src/go/services/gen/go/package/domain/builder"
-	"github.com/tilau2328/cql/src/go/services/gen/go/package/domain/model"
+	. "github.com/tilau2328/x/src/go/package/x"
+	. "github.com/tilau2328/x/src/go/services/gen/go/package/domain/builder"
+	"github.com/tilau2328/x/src/go/services/gen/go/package/domain/model"
 )
 
 type packageBuilder Builder[*model.Package]

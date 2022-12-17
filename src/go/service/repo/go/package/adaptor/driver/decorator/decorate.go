@@ -1,7 +1,7 @@
 package decorator
 
 import (
-	"github.com/tilau2328/cql/src/go/services/gen/go/package/domain/model"
+	"github.com/tilau2328/x/src/go/services/gen/go/package/domain/model"
 	"go/ast"
 	"go/token"
 )

@@ -1,9 +1,7 @@
 package lexer
 
 import (
-	. "github.com/tilau2328/cql/src/go/package/x"
-	scanner2 "grpc/package/adaptor/driver/lexer/scanner"
-	"grpc/package/driver/lexer/scanner"
+	"grpc/package/adaptor/driver/lexer/scanner"
 	"io"
 	"log"
 	"path/filepath"
@@ -11,20 +9,20 @@ import (
 )
 
 type Lexer struct {
-	Token       scanner2.Token
+	Token       scanner.Token
 	Text        string
 	RawText     []rune
-	Pos         scanner2.Position
+	Pos         scanner.Position
 	Error       func(lexer *Lexer, err error)
-	scanner     *scanner2.Scanner
-	scannerOpts []scanner.Option
+	scanner     *scanner.Scanner
+	scannerOpts []Opt[*scanner.Scanner]
 	scanErr     error
 	debug       bool
 }
 
 func WithDebug(debug bool) Opt[*Lexer] { return func(l *Lexer) { l.debug = debug } }
 func WithFilename(filename string) Opt[*Lexer] {
-	return func(l *Lexer) { l.scannerOpts = append(l.scannerOpts, scanner2.WithFilename(filename)) }
+	return func(l *Lexer) { l.scannerOpts = append(l.scannerOpts, scanner.WithFilename(filename)) }
 }
 func NewLexer(input io.Reader, opts ...Opt[*Lexer]) *Lexer {
 	lex := new(Lexer)
@@ -32,7 +30,7 @@ func NewLexer(input io.Reader, opts ...Opt[*Lexer]) *Lexer {
 		opt(lex)
 	}
 	lex.Error = func(_ *Lexer, err error) { log.Printf(`Lexer encountered the error "%v"`, err) }
-	lex.scanner = scanner2.NewScanner(input, lex.scannerOpts...)
+	lex.scanner = scanner.NewScanner(input, lex.scannerOpts...)
 	return lex
 }
 func (l *Lexer) Next() {
@@ -63,14 +61,14 @@ func (l *Lexer) NextN(n int) {
 	}
 }
 func (l *Lexer) NextKeywordOrStrLit() {
-	l.nextWithSpecificMode(scanner2.ScanKeyword | scanner2.ScanStrLit)
+	l.nextWithSpecificMode(scanner.ScanKeyword | scanner.ScanStrLit)
 }
-func (l *Lexer) NextKeyword()   { l.nextWithSpecificMode(scanner2.ScanKeyword) }
-func (l *Lexer) NextStrLit()    { l.nextWithSpecificMode(scanner2.ScanStrLit) }
-func (l *Lexer) NextLit()       { l.nextWithSpecificMode(scanner2.ScanLit) }
-func (l *Lexer) NextNumberLit() { l.nextWithSpecificMode(scanner2.ScanNumberLit) }
-func (l *Lexer) NextComment()   { l.nextWithSpecificMode(scanner2.ScanComment) }
-func (l *Lexer) nextWithSpecificMode(nextMode scanner2.Mode) {
+func (l *Lexer) NextKeyword()   { l.nextWithSpecificMode(scanner.ScanKeyword) }
+func (l *Lexer) NextStrLit()    { l.nextWithSpecificMode(scanner.ScanStrLit) }
+func (l *Lexer) NextLit()       { l.nextWithSpecificMode(scanner.ScanLit) }
+func (l *Lexer) NextNumberLit() { l.nextWithSpecificMode(scanner.ScanNumberLit) }
+func (l *Lexer) NextComment()   { l.nextWithSpecificMode(scanner.ScanComment) }
+func (l *Lexer) nextWithSpecificMode(nextMode scanner.Mode) {
 	mode := l.scanner.Mode
 	defer func() {
 		l.scanner.Mode = mode
@@ -79,14 +77,14 @@ func (l *Lexer) nextWithSpecificMode(nextMode scanner2.Mode) {
 	l.scanner.Mode = nextMode
 	l.Next()
 }
-func (l *Lexer) IsEOF() bool      { return l.Token == scanner2.TEOF }
+func (l *Lexer) IsEOF() bool      { return l.Token == scanner.TEOF }
 func (l *Lexer) LatestErr() error { return l.scanErr }
-func (l *Lexer) Peek() scanner2.Token {
+func (l *Lexer) Peek() scanner.Token {
 	l.Next()
 	defer l.UnNext()
 	return l.Token
 }
-func (l *Lexer) PeekN(n int) scanner2.Token {
+func (l *Lexer) PeekN(n int) scanner.Token {
 	var lasts [][]rune
 	for 0 < n {
 		l.Next()
@@ -101,13 +99,13 @@ func (l *Lexer) PeekN(n int) scanner2.Token {
 }
 func (l *Lexer) UnNext() {
 	l.Pos = l.scanner.UnScan()
-	l.Token = scanner2.TILLEGAL
+	l.Token = scanner.TILLEGAL
 }
 func (l *Lexer) UnNextTo(lastScan []rune) {
 	l.scanner.SetLastScanRaw(lastScan)
 	l.UnNext()
 }
-func (l *Lexer) ConsumeToken(t scanner2.Token) {
+func (l *Lexer) ConsumeToken(t scanner.Token) {
 	l.Next()
 	if l.Token == t {
 		return

@@ -1,11 +1,6 @@
 package spec
 
-import "github.com/tilau2328/cql/src/go/services/gen/go/package/domain/model"
-
-import (
-	. "github.com/tilau2328/cql/src/go/package/x"
-	. "github.com/tilau2328/cql/src/go/services/gen/go/package/domain/builder"
-)
+import "github.com/tilau2328/x/src/go/services/gen/go/package/domain/model"
 
 type importBuilder Builder[*model.Import]
 

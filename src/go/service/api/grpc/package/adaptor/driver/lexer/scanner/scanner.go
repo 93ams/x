@@ -2,7 +2,6 @@ package scanner
 
 import (
 	"bufio"
-	. "github.com/tilau2328/cql/src/go/package/x"
 	"io"
 	"unicode"
 )

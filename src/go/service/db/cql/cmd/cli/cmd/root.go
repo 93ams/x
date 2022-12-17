@@ -2,8 +2,11 @@ package cmd
 
 import (
 	"github.com/gocql/gocql"
-	"github.com/tilau2328/cql/src/go/cmd/cli/cmd/ddl"
-	"github.com/tilau2328/cql/src/go/cmd/cli/cmd/dml"
+	"github.com/samber/lo"
+	"github.com/tilau2328/x/src/go/cmd/cli/cmd/ddl"
+	"github.com/tilau2328/x/src/go/cmd/cli/cmd/dml"
+	. "github.com/tilau2328/x/src/go/package/cmd"
+	. "github.com/tilau2328/x/src/go/package/cmd/flags"
 )
 
 var (
@@ -26,11 +29,11 @@ var (
 // Execute runs Command
 func Execute() error {
 	//return GenDocument(RootCmd, "./cmd")
-	//session, fn := lo.Must2(cql.NewSession(cql.NewCluster(cql.options{
-	//	Consistency: gocql.Consistency(consistency),
-	//	KeySpace:    cql.KeySpace(ks),
-	//	Hosts:       hosts,
-	//})))
-	//defer fn()
-	//return RootCmd.Execute()
+	session, fn := lo.Must2(cql.NewSession(cql.NewCluster(cql.options{
+		Consistency: gocql.Consistency(consistency),
+		KeySpace:    cql.KeySpace(ks),
+		Hosts:       hosts,
+	})))
+	defer fn()
+	return RootCmd.Execute()
 }

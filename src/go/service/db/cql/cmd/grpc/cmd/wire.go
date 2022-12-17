@@ -5,10 +5,10 @@ package cmd
 
 import (
 	"github.com/google/wire"
-	"github.com/tilau2328/cql/src/go/cmd/grpc/package/handler"
-	"github.com/tilau2328/cql/src/go/package/adaptor/data/cql"
-	"github.com/tilau2328/cql/src/go/package/domain"
-	cql2 "github.com/tilau2328/cql/src/go/package/shared/data/cql"
+	"github.com/tilau2328/x/src/go/cmd/grpc/package/handler"
+	"github.com/tilau2328/x/src/go/package/adaptor/data/cql"
+	"github.com/tilau2328/x/src/go/package/domain"
+	cql2 "github.com/tilau2328/x/src/go/package/shared/data/cql"
 )
 
 var Set = wire.NewSet(

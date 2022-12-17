@@ -1,7 +1,7 @@
 package resolver
 
 import (
-	"github.com/tilau2328/cql/src/go/package/domain/provider"
+	"github.com/tilau2328/x/src/go/package/domain/provider"
 )
 
 type Resolver struct {

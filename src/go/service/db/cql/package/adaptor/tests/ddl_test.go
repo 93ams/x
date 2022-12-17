@@ -3,8 +3,6 @@ package tests
 import (
 	"context"
 	"github.com/stretchr/testify/require"
-	. "github.com/tilau2328/cql/src/go/package/adaptor/data/cql/repo/ddl"
-	. "github.com/tilau2328/cql/src/go/package/domain/model"
 	"strconv"
 	"testing"
 	"time"

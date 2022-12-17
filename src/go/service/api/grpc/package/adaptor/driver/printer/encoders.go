@@ -75,7 +75,7 @@ func (p *Printer) Message(dst io.Writer, e model.Message) error {
 		return err
 	}
 	for i, v := range e.oneOfs {
-		if err := v.Encode(indent+1, dst); err != nil {
+		if err := p.OneOf(dst, v); err != nil {
 			return fmt.Errorf(`failed to encode nested oneof declaration %d for message %q: %w`, i, e.name, err)
 		}
 	}

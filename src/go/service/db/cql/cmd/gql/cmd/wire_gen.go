@@ -9,12 +9,12 @@ package cmd
 import (
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/google/wire"
-	"github.com/tilau2328/cql/src/go/cmd/gql/package/exec"
-	"github.com/tilau2328/cql/src/go/cmd/gql/package/resolver"
-	"github.com/tilau2328/cql/src/go/package/adaptor/data/cql/repo/ddl"
-	"github.com/tilau2328/cql/src/go/package/domain/service"
-	"github.com/tilau2328/cql/src/go/package/shared/api/gql"
-	"github.com/tilau2328/cql/src/go/package/shared/data/cql"
+	"github.com/tilau2328/x/src/go/cmd/gql/package/exec"
+	"github.com/tilau2328/x/src/go/cmd/gql/package/resolver"
+	"github.com/tilau2328/x/src/go/package/adaptor/data/cql/repo/ddl"
+	"github.com/tilau2328/x/src/go/package/domain/service"
+	"github.com/tilau2328/x/src/go/package/shared/api/gql"
+	"github.com/tilau2328/x/src/go/package/shared/data/cql"
 )
 
 // Injectors from wire.go:

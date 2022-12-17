@@ -1,6 +1,6 @@
 package model
 
-import "github.com/tilau2328/cql/src/go/cmd/gql/package/model"
+import "github.com/tilau2328/x/src/go/cmd/gql/package/model"
 
 func ToKeySpace(space KeySpace) model.KeySpace {
 	return model.KeySpace{}

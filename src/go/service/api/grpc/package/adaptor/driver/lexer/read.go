@@ -1,79 +1,79 @@
 package lexer
 
 import (
-	scanner2 "grpc/package/adaptor/driver/lexer/scanner"
+	"grpc/package/adaptor/driver/lexer/scanner"
 	"grpc/package/domain/model/meta"
 	"runtime"
 	"strings"
 )
 
-func (l *Lexer) ReadConstant(permissive bool) (string, scanner2.Position, error) {
+func (l *Lexer) ReadConstant(permissive bool) (string, scanner.Position, error) {
 	l.NextLit()
 	startPos, cons := l.Pos, l.Text
 	switch {
-	case l.Token == scanner2.TSTRLIT:
+	case l.Token == scanner.TSTRLIT:
 		if permissive {
 			return l.mergeMultilineStrLit(), startPos, nil
 		}
 		return cons, startPos, nil
-	case l.Token == scanner2.TBOOLLIT:
+	case l.Token == scanner.TBOOLLIT:
 		return cons, startPos, nil
-	case l.Token == scanner2.TIDENT:
+	case l.Token == scanner.TIDENT:
 		l.UnNext()
 		fullIdent, pos, err := l.ReadFullIdent()
 		if err != nil {
-			return "", scanner2.Position{}, err
+			return "", scanner.Position{}, err
 		}
 		return fullIdent, pos, nil
-	case l.Token == scanner2.TINTLIT, l.Token == scanner2.TFLOATLIT:
+	case l.Token == scanner.TINTLIT, l.Token == scanner.TFLOATLIT:
 		return cons, startPos, nil
 	case l.Text == "-" || l.Text == "+":
 		l.NextLit()
 		switch l.Token {
-		case scanner2.TINTLIT, scanner2.TFLOATLIT:
+		case scanner.TINTLIT, scanner.TFLOATLIT:
 			cons += l.Text
 			return cons, startPos, nil
 		default:
-			return "", scanner2.Position{}, l.unexpected(l.Text, "TINTLIT or TFLOATLIT")
+			return "", scanner.Position{}, l.unexpected(l.Text, "TINTLIT or TFLOATLIT")
 		}
 	default:
-		return "", scanner2.Position{}, l.unexpected(l.Text, "constant")
+		return "", scanner.Position{}, l.unexpected(l.Text, "constant")
 	}
 }
 func (l *Lexer) ReadEmptyStatement() error {
 	l.Next()
-	if l.Token == scanner2.TSEMICOLON {
+	if l.Token == scanner.TSEMICOLON {
 		return nil
 	}
 	l.UnNext()
 	return l.unexpected(l.Text, ";")
 }
-func (l *Lexer) ReadEnumType() (string, scanner2.Position, error) { return l.ReadMessageType() }
-func (l *Lexer) ReadFullIdent() (string, scanner2.Position, error) {
-	if l.Next(); l.Token != scanner2.TIDENT {
-		return "", scanner2.Position{}, l.unexpected(l.Text, "TIDENT")
+func (l *Lexer) ReadEnumType() (string, scanner.Position, error) { return l.ReadMessageType() }
+func (l *Lexer) ReadFullIdent() (string, scanner.Position, error) {
+	if l.Next(); l.Token != scanner.TIDENT {
+		return "", scanner.Position{}, l.unexpected(l.Text, "TIDENT")
 	}
 	startPos, fullIdent := l.Pos, l.Text
 	l.Next()
 	for !l.IsEOF() {
-		if l.Token != scanner2.TDOT {
+		if l.Token != scanner.TDOT {
 			l.UnNext()
 			break
 		}
-		if l.Next(); l.Token != scanner2.TIDENT {
-			return "", scanner2.Position{}, l.unexpected(l.Text, "TIDENT")
+		if l.Next(); l.Token != scanner.TIDENT {
+			return "", scanner.Position{}, l.unexpected(l.Text, "TIDENT")
 		}
 		fullIdent += "." + l.Text
 		l.Next()
 	}
 	return fullIdent, startPos, nil
 }
-func (l *Lexer) ReadMessageType() (string, scanner2.Position, error) {
+func (l *Lexer) ReadMessageType() (string, scanner.Position, error) {
 	l.Next()
 	startPos := l.Pos
 
 	var messageType string
-	if l.Token == scanner2.TDOT {
+	if l.Token == scanner.TDOT {
 		messageType = l.Text
 	} else {
 		l.UnNext()
@@ -81,13 +81,13 @@ func (l *Lexer) ReadMessageType() (string, scanner2.Position, error) {
 
 	l.Next()
 	for !l.IsEOF() {
-		if l.Token != scanner2.TIDENT {
-			return "", scanner2.Position{}, l.unexpected(l.Text, "ident")
+		if l.Token != scanner.TIDENT {
+			return "", scanner.Position{}, l.unexpected(l.Text, "ident")
 		}
 		messageType += l.Text
 
 		l.Next()
-		if l.Token != scanner2.TDOT {
+		if l.Token != scanner.TDOT {
 			l.UnNext()
 			break
 		}
@@ -106,7 +106,7 @@ func (l *Lexer) mergeMultilineStrLit() string {
 	}
 	var b strings.Builder
 	b.WriteString(q)
-	for l.Token == scanner2.TSTRLIT {
+	for l.Token == scanner.TSTRLIT {
 		strippedString := strings.Trim(l.Text, q)
 		b.WriteString(strippedString)
 		l.NextLit()

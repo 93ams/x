@@ -2,8 +2,8 @@ package decorator
 
 import (
 	"fmt"
-	resolver2 "github.com/tilau2328/cql/src/go/services/gen/go/package/adaptor/driver/resolver"
-	model2 "github.com/tilau2328/cql/src/go/services/gen/go/package/domain/model"
+	"github.com/tilau2328/x/src/go/services/gen/go/package/adaptor/driver/resolver"
+	"github.com/tilau2328/x/src/go/services/gen/go/package/domain/model"
 	"go/ast"
 	"go/parser"
 	"go/token"
@@ -14,10 +14,10 @@ import (
 
 type (
 	Decorator struct {
-		model2.Map
-		Filenames        map[*model2.File]string
+		model.Map
+		Filenames        map[*model.File]string
 		Fset             *token.FileSet
-		Resolver         resolver2.DecoratorResolver
+		Resolver         resolver.DecoratorResolver
 		Path             string
 		ResolveLocalPath bool
 	}
@@ -28,7 +28,7 @@ type (
 		fragments     []fragment
 		startIndents  map[ast.Node]int
 		endIndents    map[ast.Node]int
-		before, after map[ast.Node]model2.SpaceType
+		before, after map[ast.Node]model.SpaceType
 		decorations   map[ast.Node]map[string][]string
 	}
 )
@@ -38,24 +38,24 @@ func NewDecorator(fset *token.FileSet) *Decorator {
 		fset = token.NewFileSet()
 	}
 	return &Decorator{
-		Map:       model2.NewMap(),
-		Filenames: map[*model2.File]string{},
+		Map:       model.NewMap(),
+		Filenames: map[*model.File]string{},
 		Fset:      fset,
 	}
 }
-func NewDecoratorWithImports(fset *token.FileSet, path string, resolver resolver2.DecoratorResolver) *Decorator {
+func NewDecoratorWithImports(fset *token.FileSet, path string, resolver resolver.DecoratorResolver) *Decorator {
 	dec := NewDecorator(fset)
 	dec.Path = path
 	dec.Resolver = resolver
 	return dec
 }
 func NewDecoratorFromPackage(pkg *packages.Package) *Decorator {
-	return NewDecoratorWithImports(pkg.Fset, pkg.PkgPath, resolver2.NewTypesResolver(pkg.TypesInfo.Uses))
+	return NewDecoratorWithImports(pkg.Fset, pkg.PkgPath, resolver.NewTypesResolver(pkg.TypesInfo.Uses))
 }
-func (d *Decorator) Parse(src interface{}) (*model2.File, error) {
+func (d *Decorator) Parse(src interface{}) (*model.File, error) {
 	return d.ParseFile("", src, parser.ParseComments)
 }
-func (d *Decorator) ParseFile(filename string, src interface{}, mode parser.Mode) (*model2.File, error) {
+func (d *Decorator) ParseFile(filename string, src interface{}, mode parser.Mode) (*model.File, error) {
 	if f, perr := parser.ParseFile(d.Fset, filename, src, mode|parser.ParseComments); perr != nil && f == nil {
 		return nil, perr
 	} else if file, err := d.DecorateFile(f); err != nil {
@@ -64,29 +64,29 @@ func (d *Decorator) ParseFile(filename string, src interface{}, mode parser.Mode
 		return file, perr
 	}
 }
-func (d *Decorator) ParseDir(dir string, filter func(os.FileInfo) bool, mode parser.Mode) (map[string]*model2.Package, error) {
+func (d *Decorator) ParseDir(dir string, filter func(os.FileInfo) bool, mode parser.Mode) (map[string]*model.Package, error) {
 	pkgs, err := parser.ParseDir(d.Fset, dir, filter, mode|parser.ParseComments)
 	if err != nil {
 		return nil, err
 	}
-	out := map[string]*model2.Package{}
+	out := map[string]*model.Package{}
 	for k, v := range pkgs {
 		pkg, err := d.DecorateNode(v)
 		if err != nil {
 			return nil, err
 		}
-		out[k] = pkg.(*model2.Package)
+		out[k] = pkg.(*model.Package)
 	}
 	return out, nil
 }
-func (d *Decorator) DecorateFile(f *ast.File) (*model2.File, error) {
+func (d *Decorator) DecorateFile(f *ast.File) (*model.File, error) {
 	file, err := d.DecorateNode(f)
 	if err != nil {
 		return nil, err
 	}
-	return file.(*model2.File), nil
+	return file.(*model.File), nil
 }
-func (d *Decorator) DecorateNode(n ast.Node) (model2.Node, error) {
+func (d *Decorator) DecorateNode(n ast.Node) (model.Node, error) {
 	if d.Resolver == nil && d.Path != "" {
 		panic("Decorator Path should be empty when Resolver is nil")
 	} else if d.Resolver != nil && d.Path == "" {
@@ -105,10 +105,10 @@ func (d *Decorator) DecorateNode(n ast.Node) (model2.Node, error) {
 	switch n := n.(type) {
 	case *ast.Package:
 		for k, v := range n.Files {
-			d.Filenames[d.Dst.Nodes[v].(*model2.File)] = k
+			d.Filenames[d.Dst.Nodes[v].(*model.File)] = k
 		}
 	case *ast.File:
-		d.Filenames[out.(*model2.File)] = d.Fset.File(n.Pos()).Name()
+		d.Filenames[out.(*model.File)] = d.Fset.File(n.Pos()).Name()
 	}
 
 	return out, nil
@@ -118,12 +118,12 @@ func (pd *Decorator) newFileDecorator() *fileDecorator {
 		Decorator:    pd,
 		startIndents: map[ast.Node]int{},
 		endIndents:   map[ast.Node]int{},
-		before:       map[ast.Node]model2.SpaceType{},
-		after:        map[ast.Node]model2.SpaceType{},
+		before:       map[ast.Node]model.SpaceType{},
+		after:        map[ast.Node]model.SpaceType{},
 		decorations:  map[ast.Node]map[string][]string{},
 	}
 }
-func (f *fileDecorator) decorateSelectorExpr(parent ast.Node, parentName, parentField, parentFieldType string, n *ast.SelectorExpr) (model2.Node, error) {
+func (f *fileDecorator) decorateSelectorExpr(parent ast.Node, parentName, parentField, parentFieldType string, n *ast.SelectorExpr) (model.Node, error) {
 	if f.Resolver == nil {
 		return nil, nil
 	}
@@ -135,7 +135,7 @@ func (f *fileDecorator) decorateSelectorExpr(parent ast.Node, parentName, parent
 	if path == "" {
 		return nil, nil
 	}
-	out := &model2.Ident{}
+	out := &model.Ident{}
 	f.Dst.Nodes[n] = out
 	f.Dst.Nodes[n.X] = out
 	f.Dst.Nodes[n.Sel] = out
@@ -182,7 +182,7 @@ func (f *fileDecorator) resolvePath(force bool, parent ast.Node, parentName, par
 	if f.Resolver == nil {
 		panic("resolvePath needs a Resolver")
 	} else if !force {
-		if model2.Avoid[parentName+"."+parentField] {
+		if model.Avoid[parentName+"."+parentField] {
 			return "", nil
 		} else if parentFieldType != "Expr" {
 			panic(fmt.Sprintf("decorateIdent: unsupported parentName %s, parentField %s, parentFieldType %s", parentName, parentField, parentFieldType))
@@ -212,16 +212,16 @@ func stripVendor(path string) string {
 	}
 	return path[i+len("vendor/"):]
 }
-func (f *fileDecorator) decorateObject(o *ast.Object) (*model2.Object, error) {
+func (f *fileDecorator) decorateObject(o *ast.Object) (*model.Object, error) {
 	if o == nil {
 		return nil, nil
 	} else if do, ok := f.Dst.Objects[o]; ok {
 		return do, nil
 	}
-	out := &model2.Object{}
+	out := &model.Object{}
 	f.Dst.Objects[o] = out
 	f.Ast.Objects[out] = o
-	out.Kind = model2.ObjKind(o.Kind)
+	out.Kind = model.ObjKind(o.Kind)
 	out.Name = o.Name
 	switch decl := o.Decl.(type) {
 	case *ast.Scope:
@@ -261,13 +261,13 @@ func (f *fileDecorator) decorateObject(o *ast.Object) (*model2.Object, error) {
 	}
 	return out, nil
 }
-func (f *fileDecorator) decorateScope(s *ast.Scope) (*model2.Scope, error) {
+func (f *fileDecorator) decorateScope(s *ast.Scope) (*model.Scope, error) {
 	if s == nil {
 		return nil, nil
 	} else if ds, ok := f.Dst.Scopes[s]; ok {
 		return ds, nil
 	}
-	out := &model2.Scope{}
+	out := &model.Scope{}
 	f.Dst.Scopes[s] = out
 	f.Ast.Scopes[out] = s
 	outer, err := f.decorateScope(s.Outer)
@@ -275,7 +275,7 @@ func (f *fileDecorator) decorateScope(s *ast.Scope) (*model2.Scope, error) {
 		return nil, err
 	}
 	out.Outer = outer
-	out.Objects = map[string]*model2.Object{}
+	out.Objects = map[string]*model.Object{}
 	for k, v := range s.Objects {
 		ob, err := f.decorateObject(v)
 		if err != nil {
@@ -297,16 +297,16 @@ func mergeDecorations(decorationsOrLineSpace ...interface{}) []string {
 			}
 			out = append(out, v...)
 			endsWithNewLine = v[len(v)-1] == "\n" || strings.HasPrefix(v[len(v)-1], "//")
-		case model2.SpaceType:
+		case model.SpaceType:
 			switch v {
-			case model2.NewLine:
+			case model.NewLine:
 				if endsWithNewLine {
 					// nothing to do
 				} else {
 					out = append(out, "\n")
 				}
 				endsWithNewLine = true
-			case model2.EmptyLine:
+			case model.EmptyLine:
 				if endsWithNewLine {
 					out = append(out, "\n")
 				} else {

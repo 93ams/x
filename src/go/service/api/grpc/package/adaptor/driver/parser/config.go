@@ -1,7 +1,6 @@
 package parser
 
 import (
-	. "github.com/tilau2328/cql/src/go/package/x"
 	"grpc/package/adaptor/driver/lexer"
 	"grpc/package/domain/model"
 	"io"

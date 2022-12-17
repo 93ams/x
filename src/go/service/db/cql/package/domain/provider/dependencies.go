@@ -2,8 +2,6 @@ package provider
 
 import (
 	. "context"
-	. "github.com/tilau2328/cql/src/go/package/domain/model"
-	. "github.com/tilau2328/cql/src/go/package/shared/patch"
 )
 
 //go:generate mockgen -source=dependencies.go -destination=dependencies_mock.go -package=provider

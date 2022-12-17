@@ -2,7 +2,6 @@ package ddl
 
 import (
 	. "github.com/samber/lo"
-	. "github.com/tilau2328/cql/src/go/package/domain/model"
 	"os"
 )
 

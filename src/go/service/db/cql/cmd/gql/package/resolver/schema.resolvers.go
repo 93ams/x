@@ -7,7 +7,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/tilau2328/cql/src/go/cmd/gql/package/exec"
+	"github.com/tilau2328/x/src/go/cmd/gql/package/exec"
 )
 
 // Noop is the resolver for the noop field.

@@ -2,9 +2,7 @@ package request
 
 import (
 	"context"
-	"github.com/tilau2328/cql/src/go/cmd/grpc/package/model"
-	. "github.com/tilau2328/cql/src/go/package/domain/model"
-	. "github.com/tilau2328/cql/src/go/package/domain/provider"
+	"github.com/tilau2328/x/src/go/cmd/grpc/package/model"
 )
 
 type DDLRequester struct {

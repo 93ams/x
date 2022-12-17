@@ -1,7 +1,6 @@
 package builder
 
 import (
-	. "github.com/tilau2328/cql/src/go/package/x"
 	"grpc/package/domain/model"
 )
 

@@ -4,7 +4,7 @@ import (
 	"github.com/samber/lo"
 	. "github.com/spf13/cobra"
 	. "github.com/spf13/pflag"
-	. "github.com/tilau2328/cql/src/go/package/shared/x"
+	. "github.com/tilau2328/x/src/go/package/x"
 )
 
 type Fn func(*Command, []string)

@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/samber/lo"
-	"github.com/tilau2328/cql/src/go/cmd/gql/cmd"
+	"github.com/tilau2328/x/src/go/cmd/gql/cmd"
 )
 
 //go:generate gqlgen generate --config gencfg.yaml
