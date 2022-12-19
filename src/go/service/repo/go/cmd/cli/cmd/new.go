@@ -3,8 +3,8 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 	. "github.com/tilau2328/x/src/go/package/cmd"
-	"github.com/tilau2328/x/src/go/services/gen/go/package/adaptor/driver/resolver"
-	"github.com/tilau2328/x/src/go/services/gen/go/package/adaptor/driver/restorer"
+	"github.com/tilau2328/x/src/go/services/repo/go/package/wrapper/coding/resolver"
+	"github.com/tilau2328/x/src/go/services/repo/go/package/wrapper/coding/restorer"
 )
 
 var NewCmd = New(
@@ -16,4 +16,5 @@ var NewCmd = New(
 
 func runNew(*cobra.Command, []string) {
 	r := restorer.NewRestorerWithImports("root", resolver.NewGuessResolver())
+	r.Print()
 }

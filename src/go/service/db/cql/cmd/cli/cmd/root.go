@@ -3,10 +3,6 @@ package cmd
 import (
 	"github.com/gocql/gocql"
 	"github.com/samber/lo"
-	"github.com/tilau2328/x/src/go/cmd/cli/cmd/ddl"
-	"github.com/tilau2328/x/src/go/cmd/cli/cmd/dml"
-	. "github.com/tilau2328/x/src/go/package/cmd"
-	. "github.com/tilau2328/x/src/go/package/cmd/flags"
 )
 
 var (

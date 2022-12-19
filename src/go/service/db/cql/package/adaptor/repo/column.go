@@ -2,8 +2,6 @@ package repo
 
 import (
 	. "context"
-	"github.com/scylladb/gocqlx/v2"
-	"github.com/tilau2328/x/src/go/package/adaptor/data/cql/model"
 )
 
 type ColumnRepo struct{ session gocqlx.Session }

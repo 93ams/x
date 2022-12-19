@@ -8,16 +8,12 @@ require (
 	github.com/google/wire v0.5.0
 	github.com/samber/lo v1.36.0
 	github.com/spf13/cobra v1.6.1
-	github.com/tilau2328/x/src/go v0.0.0-20221205132135-84f5e1d38e14
-	github.com/tilau2328/x/src/go/package/adaptor/data/cql v0.0.0-20221205132135-84f5e1d38e14
-	github.com/tilau2328/x/src/go/package/domain v0.0.0-20221205132135-84f5e1d38e14
 	github.com/vektah/gqlparser/v2 v2.5.1
 )
 
 require (
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.2 // indirect
-	github.com/golang/mock v1.6.0 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/hailocab/go-hostpool v0.0.0-20160125115350-e80d13ce29ed // indirect
@@ -25,8 +21,6 @@ require (
 	github.com/inconshreveable/mousetrap v1.0.1 // indirect
 	github.com/mitchellh/mapstructure v1.3.1 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
-	github.com/scylladb/go-reflectx v1.0.1 // indirect
-	github.com/scylladb/gocqlx/v2 v2.7.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/urfave/cli/v2 v2.8.1 // indirect
 	github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 // indirect

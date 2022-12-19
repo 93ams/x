@@ -1,33 +1,39 @@
 package service
 
-import "context"
+import (
+	"github.com/tilau2328/x/src/go/services/repo/go/package/adaptor/driver/mapper"
+	"github.com/tilau2328/x/src/go/services/repo/go/package/wrapper"
+	"github.com/tilau2328/x/src/go/services/repo/go/package/wrapper/builder"
+	"io"
+	"os"
+)
 
 type (
-	CreateIn struct {
+	CreateReq struct {
+		Pkg, File string
+		Props     any
 	}
-	SearchIn struct {
+	TransformReq struct {
 	}
-	UpdateIn struct {
-	}
-	DeleteIn struct {
-	}
-	GoService struct {
+	Service struct {
 	}
 )
 
-func NewGoService() *GoService {
-	return &GoService{}
+func NewService() *Service {
+	return &Service{}
 }
-func (s *GoService) Create(ctx context.Context, in CreateIn) error {
 
-	return nil
+func (d *Service) Create(req CreateReq) error {
+	f, err := os.OpenFile(req.File, os.O_CREATE, 0666)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+	return WriteDecls(f, req.Pkg, mapper.NewDecls(req.Props)...)
 }
-func (s *GoService) Search(ctx context.Context, in SearchIn) error {
-	return nil
+func (d *Service) Transform(req TransformReq) {
+
 }
-func (s *GoService) Update(ctx context.Context, in UpdateIn) error {
-	return nil
-}
-func (s *GoService) Delete(ctx context.Context, in DeleteIn) error {
-	return nil
+func WriteDecls(w io.Writer, pkg string, d ...builder.DeclBuilder) error {
+	return wrapper.Write(w, builder.File(builder.Ident(pkg)).Decls(d...).Build())
 }

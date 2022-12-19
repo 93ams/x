@@ -1,4 +1,4 @@
-module cql
+module github.com/tilau2328/x/src/go/service/db/cql
 
 go 1.19
 
@@ -9,13 +9,12 @@ require (
 	github.com/samber/lo v1.36.0
 	github.com/scylladb/gocqlx/v2 v2.7.0
 	github.com/stretchr/testify v1.8.0
-	github.com/tilau2328/x/src/go/package/adaptor/data/cql v0.0.0-20221205132135-84f5e1d38e14
-	github.com/tilau2328/x/src/go/package/domain v0.0.0-20221205132135-84f5e1d38e14
 )
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
+	github.com/google/go-cmp v0.5.6 // indirect
 	github.com/hailocab/go-hostpool v0.0.0-20160125115350-e80d13ce29ed // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/scylladb/go-reflectx v1.0.1 // indirect

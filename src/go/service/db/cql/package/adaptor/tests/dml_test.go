@@ -1,7 +1,6 @@
 package tests
 
 import (
-	"github.com/tilau2328/x/src/go/package/adaptor/data/cql/repo/ddl"
 	"testing"
 )
 

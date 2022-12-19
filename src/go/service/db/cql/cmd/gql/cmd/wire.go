@@ -7,7 +7,6 @@ import (
 	"github.com/google/wire"
 	"github.com/tilau2328/x/src/go/cmd/gql/package/exec"
 	"github.com/tilau2328/x/src/go/cmd/gql/package/resolver"
-	"github.com/tilau2328/x/src/go/package/adaptor/data/cql"
 	"github.com/tilau2328/x/src/go/package/domain"
 	"github.com/tilau2328/x/src/go/package/shared/api/gql"
 	cql2 "github.com/tilau2328/x/src/go/package/shared/data/cql"

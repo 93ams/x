@@ -1,7 +1,5 @@
 package model
 
-import "github.com/tilau2328/x/src/go/package/domain/model"
-
 func ToKeySpace(in KeySpace) model.KeySpace {
 	return model.KeySpace{}
 }

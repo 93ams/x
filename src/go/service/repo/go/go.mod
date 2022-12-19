@@ -1,4 +1,4 @@
-module github.com/tilau2328/x/src/go/services/gen/go
+module github.com/tilau2328/x/src/go/services/repo/go
 
 go 1.19
 

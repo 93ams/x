@@ -6,7 +6,6 @@ package resolver
 import (
 	"context"
 	"fmt"
-	"github.com/tilau2328/x/src/go/package/domain/model"
 )
 
 // CreateKeySpace is the resolver for the createKeySpace field.

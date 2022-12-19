@@ -1,9 +1,5 @@
 package resolver
 
-import (
-	"github.com/tilau2328/x/src/go/package/domain/provider"
-)
-
 type Resolver struct {
 	ddl provider.DDL
 	dml provider.DML
