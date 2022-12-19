@@ -13,6 +13,8 @@ type (
 		Pkg, File string
 		Props     any
 	}
+	SearchReq struct {
+	}
 	TransformReq struct {
 	}
 	Service struct {
@@ -30,6 +32,9 @@ func (d *Service) Create(req CreateReq) error {
 	}
 	defer f.Close()
 	return WriteDecls(f, req.Pkg, mapper.NewDecls(req.Props)...)
+}
+func (d *Service) Search(req SearchReq) {
+
 }
 func (d *Service) Transform(req TransformReq) {
 

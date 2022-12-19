@@ -6,3 +6,6 @@ This library contains:
 - adaptor
   - driver
     - mapper - Mappers to/from domain from/to wrapped AST 
+
+# Commands 
+`xgo new [pattern] [input]`

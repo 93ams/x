@@ -1,6 +1,12 @@
 package model
 
 type (
+	TypeProps struct {
+		Name     string
+		Path     string
+		Ptr      bool
+		Repeated bool
+	}
 	File struct {
 		Pkg, Name string
 	}
@@ -17,16 +23,6 @@ type (
 		Receiver *TypeProps
 		Body     any
 	}
-	Builder struct {
-		Name string
-	}
-	Options struct {
-		Struct
-	}
-	Service struct {
-		Struct
-		Methods []Method
-	}
 	StructField struct {
 		Names []string
 		Type  TypeProps
@@ -34,22 +30,5 @@ type (
 	Struct struct {
 		Fields     []StructField
 		Path, Name string
-	}
-	CommandProps struct {
-	}
-	Interface struct {
-		Methods []MethodDef
-		Name    string
-	}
-	TypeProps struct {
-		Name     string
-		Path     string
-		Ptr      bool
-		Repeated bool
-	}
-	Enum struct {
-	}
-	Mapper struct {
-		From, To Struct
 	}
 )
