@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	strategyFlags model.Strategy
+	strategyFlags model.Service
 	StrategyCmd   = cmd.New(
 		cmd.Use("strategy"),
 		cmd.Alias("s"),

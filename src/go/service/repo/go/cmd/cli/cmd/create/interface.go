@@ -69,7 +69,7 @@ func mapMethodTypes(s string) []model.Field {
 		}
 		return model.Field{
 			Names: names,
-			Type: model.Type{
+			Type: model.Ident{
 				Name: typ,
 				Path: path,
 			},

@@ -5,10 +5,12 @@ type (
 		Names []string
 		Type  Ident
 	}
-	FuncType struct{ In, Out []Field }
-	Func     struct {
+	FuncType struct {
+		Name    string
+		In, Out []Field
+	}
+	Func struct {
 		Receiver *Ident
-		Name     string
 		Body     any
 		FuncType
 	}

@@ -18,7 +18,7 @@ type (
 	}
 	Enum struct {
 	}
-	Strategy struct {
+	Service struct {
 		Struct
 		Methods []Func
 	}
