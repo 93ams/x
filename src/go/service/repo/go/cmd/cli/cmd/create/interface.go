@@ -47,11 +47,11 @@ func mapInterfaceArgs(args []string) []model.FuncType {
 	})
 }
 
-func mapMethodTypes(s string) []model.MethodType {
+func mapMethodTypes(s string) []model.Field {
 	return lo.Map(strings.Split(
 		strings.TrimSuffix(strings.TrimPrefix(
 			strings.TrimSpace(s),
-			"("), ")"), ","), func(item string, _ int) model.MethodType {
+			"("), ")"), ","), func(item string, _ int) model.Field {
 		parts := strings.Split(strings.TrimSpace(item), " ")
 		var typ string
 		var names []string
@@ -67,7 +67,7 @@ func mapMethodTypes(s string) []model.MethodType {
 		if len(parts) == 2 {
 			path, typ = parts[0], parts[1]
 		}
-		return model.MethodType{
+		return model.Field{
 			Names: names,
 			Type: model.Type{
 				Name: typ,

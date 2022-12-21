@@ -2,10 +2,10 @@ package mapper_test
 
 import (
 	"github.com/samber/lo"
-	"github.com/tilau2328/x/src/go/service/repo/go/package/adaptor/driver/mapper"
+	"github.com/tilau2328/x/src/go/service/repo/go/package/adaptor/driver/model/builder"
+	"github.com/tilau2328/x/src/go/service/repo/go/package/adaptor/driver/model/mapper"
 	"github.com/tilau2328/x/src/go/service/repo/go/package/domain/model"
 	"github.com/tilau2328/x/src/go/service/repo/go/package/service"
-	"github.com/tilau2328/x/src/go/service/repo/go/package/wrapper/builder"
 	"os"
 	"testing"
 )

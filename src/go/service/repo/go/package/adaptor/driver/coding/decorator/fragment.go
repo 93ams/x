@@ -1,7 +1,7 @@
 package decorator
 
 import (
-	"github.com/tilau2328/x/src/go/service/repo/go/package/wrapper/model"
+	"github.com/tilau2328/x/src/go/service/repo/go/package/adaptor/driver/model"
 	"go/ast"
 	"go/token"
 	"sort"

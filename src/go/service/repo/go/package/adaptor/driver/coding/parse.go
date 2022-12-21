@@ -1,12 +1,12 @@
-package wrapper
+package coding
 
 import (
 	"bytes"
 	"errors"
-	"github.com/tilau2328/x/src/go/service/repo/go/package/wrapper/coding/decorator"
-	"github.com/tilau2328/x/src/go/service/repo/go/package/wrapper/coding/resolver"
-	"github.com/tilau2328/x/src/go/service/repo/go/package/wrapper/coding/restorer"
-	"github.com/tilau2328/x/src/go/service/repo/go/package/wrapper/model"
+	"github.com/tilau2328/x/src/go/service/repo/go/package/adaptor/driver/coding/decorator"
+	resolver2 "github.com/tilau2328/x/src/go/service/repo/go/package/adaptor/driver/coding/resolver"
+	"github.com/tilau2328/x/src/go/service/repo/go/package/adaptor/driver/coding/restorer"
+	"github.com/tilau2328/x/src/go/service/repo/go/package/adaptor/driver/model"
 	"go/ast"
 	"go/parser"
 	"go/token"
@@ -34,7 +34,7 @@ func DecorateFile(fset *token.FileSet, f *ast.File) (*model.File, error) {
 }
 func Load(cfg *packages.Config, patterns ...string) ([]*Package, error) {
 	if cfg == nil {
-		cfg = &packages.Config{Mode: resolver.LoadMode}
+		cfg = &packages.Config{Mode: resolver2.LoadMode}
 	}
 	if cfg.Mode&packages.NeedSyntax == 0 {
 		return nil, errors.New("config mode should include NeedSyntax")
@@ -103,13 +103,13 @@ type Package struct {
 }
 
 func (p *Package) Save() error {
-	return p.save(resolver.NewPackagesResolver(p.Dir), ioutil.WriteFile)
+	return p.save(resolver2.NewPackagesResolver(p.Dir), ioutil.WriteFile)
 }
-func (p *Package) SaveWithResolver(resolver resolver.RestorerResolver) error {
+func (p *Package) SaveWithResolver(resolver resolver2.RestorerResolver) error {
 	return p.save(resolver, ioutil.WriteFile)
 }
 
-func (p *Package) save(resolver resolver.RestorerResolver, writeFile func(filename string, data []byte, perm os.FileMode) error) error {
+func (p *Package) save(resolver resolver2.RestorerResolver, writeFile func(filename string, data []byte, perm os.FileMode) error) error {
 	r := restorer.NewRestorerWithImports(p.PkgPath, resolver)
 	for _, file := range p.Syntax {
 		buf := &bytes.Buffer{}

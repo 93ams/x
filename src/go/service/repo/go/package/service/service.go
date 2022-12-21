@@ -1,11 +1,11 @@
 package service
 
 import (
-	"github.com/tilau2328/x/src/go/service/repo/go/package/adaptor/driver/mapper"
+	"github.com/tilau2328/x/src/go/service/repo/go/package/adaptor/driver/coding"
+	"github.com/tilau2328/x/src/go/service/repo/go/package/adaptor/driver/model/builder"
+	"github.com/tilau2328/x/src/go/service/repo/go/package/adaptor/driver/model/mapper"
 	"github.com/tilau2328/x/src/go/service/repo/go/package/domain/model"
 	"github.com/tilau2328/x/src/go/service/repo/go/package/domain/provider"
-	"github.com/tilau2328/x/src/go/service/repo/go/package/wrapper"
-	"github.com/tilau2328/x/src/go/service/repo/go/package/wrapper/builder"
 	"io"
 )
 
@@ -33,5 +33,5 @@ func (d *Service) Modify(w io.Writer, req model.ModifyReq) error {
 	return nil
 }
 func WriteDecls(w io.Writer, pkg string, d ...builder.DeclBuilder) error {
-	return wrapper.Write(w, builder.File(builder.Ident(pkg)).Decls(d...).Build())
+	return coding.Write(w, builder.File(builder.Ident(pkg)).Decls(d...).Build())
 }

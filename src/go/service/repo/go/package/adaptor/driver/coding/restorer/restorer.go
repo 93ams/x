@@ -2,8 +2,8 @@ package restorer
 
 import (
 	"fmt"
-	"github.com/tilau2328/x/src/go/service/repo/go/package/wrapper/coding/resolver"
-	"github.com/tilau2328/x/src/go/service/repo/go/package/wrapper/model"
+	resolver2 "github.com/tilau2328/x/src/go/service/repo/go/package/adaptor/driver/coding/resolver"
+	model2 "github.com/tilau2328/x/src/go/service/repo/go/package/adaptor/driver/model"
 	"go/ast"
 	"go/format"
 	"go/token"
@@ -16,61 +16,61 @@ import (
 
 type (
 	Restorer struct {
-		Resolver resolver.RestorerResolver
+		Resolver resolver2.RestorerResolver
 		Fset     *token.FileSet
 		Path     string
 		Extras   bool
-		model.Map
+		model2.Map
 	}
 	FileRestorer struct {
 		*Restorer
 		Alias           map[string]string
 		Name            string
-		file            *model.File
+		file            *model2.File
 		lines           []int
 		comments        []*ast.CommentGroup
 		base            int
 		cursor          token.Pos
-		nodeDecl        map[*ast.Object]model.Node
-		nodeData        map[*ast.Object]model.Node
+		nodeDecl        map[*ast.Object]model2.Node
+		nodeData        map[*ast.Object]model2.Node
 		cursorAtNewLine token.Pos
 		packageNames    map[string]string
 	}
 )
 
 func NewRestorer() *Restorer {
-	return &Restorer{Map: model.NewMap(), Fset: token.NewFileSet(), Resolver: resolver.NewGuessResolver(), Path: "root"}
+	return &Restorer{Map: model2.NewMap(), Fset: token.NewFileSet(), Resolver: resolver2.NewGuessResolver(), Path: "root"}
 }
-func NewRestorerWithImports(path string, resolver resolver.RestorerResolver) *Restorer {
+func NewRestorerWithImports(path string, resolver resolver2.RestorerResolver) *Restorer {
 	res := NewRestorer()
 	res.Path = path
 	res.Resolver = resolver
 	return res
 }
-func (pr *Restorer) Print(f *model.File) error { return pr.Fprint(os.Stdout, f) }
-func (pr *Restorer) Fprint(w io.Writer, f *model.File) error {
+func (pr *Restorer) Print(f *model2.File) error { return pr.Fprint(os.Stdout, f) }
+func (pr *Restorer) Fprint(w io.Writer, f *model2.File) error {
 	af, err := pr.RestoreFile(f)
 	if err != nil {
 		return err
 	}
 	return format.Node(w, pr.Fset, af)
 }
-func (pr *Restorer) RestoreFile(file *model.File) (*ast.File, error) {
+func (pr *Restorer) RestoreFile(file *model2.File) (*ast.File, error) {
 	return pr.FileRestorer().RestoreFile(file)
 }
 func (pr *Restorer) FileRestorer() *FileRestorer {
 	return &FileRestorer{Restorer: pr, Alias: map[string]string{}}
 }
 
-func (r *FileRestorer) Print(f *model.File) error { return r.Fprint(os.Stdout, f) }
-func (r *FileRestorer) Fprint(w io.Writer, f *model.File) error {
+func (r *FileRestorer) Print(f *model2.File) error { return r.Fprint(os.Stdout, f) }
+func (r *FileRestorer) Fprint(w io.Writer, f *model2.File) error {
 	af, err := r.RestoreFile(f)
 	if err != nil {
 		return err
 	}
 	return format.Node(w, r.Fset, af)
 }
-func (r *FileRestorer) RestoreFile(file *model.File) (*ast.File, error) {
+func (r *FileRestorer) RestoreFile(file *model2.File) (*ast.File, error) {
 	if r.Resolver == nil && r.Path != "" {
 		panic("Restorer Path should be empty when Resolver is nil")
 	}
@@ -82,8 +82,8 @@ func (r *FileRestorer) RestoreFile(file *model.File) (*ast.File, error) {
 	}
 	r.file = file
 	r.lines = []int{0}
-	r.nodeDecl = map[*ast.Object]model.Node{}
-	r.nodeData = map[*ast.Object]model.Node{}
+	r.nodeDecl = map[*ast.Object]model2.Node{}
+	r.nodeData = map[*ast.Object]model2.Node{}
 	r.packageNames = map[string]string{}
 	r.comments = []*ast.CommentGroup{}
 	r.cursorAtNewLine = 0
@@ -116,14 +116,14 @@ func (r *FileRestorer) updateImports() error {
 	if r.Resolver == nil {
 		return nil
 	}
-	var blocks []*model.Gen
+	var blocks []*model2.Gen
 	var hasCgoBlock bool
 	importsFound := map[string]string{}
 	packagesInUse := map[string]bool{}
 	importsRequired := map[string]bool{}
-	model.Inspect(r.file, func(n model.Node) bool {
+	model2.Inspect(r.file, func(n model2.Node) bool {
 		switch n := n.(type) {
-		case *model.Ident:
+		case *model2.Ident:
 			if n.Path == "" {
 				return true
 			}
@@ -133,16 +133,16 @@ func (r *FileRestorer) updateImports() error {
 			packagesInUse[n.Path] = true
 			importsRequired[n.Path] = true
 
-		case *model.Gen:
+		case *model2.Gen:
 			if n.Tok != token.IMPORT {
 				return true
 			}
-			if len(n.Specs) == 1 && mustUnquote(n.Specs[0].(*model.Import).Path.Value) == "C" {
+			if len(n.Specs) == 1 && mustUnquote(n.Specs[0].(*model2.Import).Path.Value) == "C" {
 				hasCgoBlock = true
 				return true
 			}
 			blocks = append(blocks, n)
-		case *model.Import:
+		case *model2.Import:
 			path := mustUnquote(n.Path.Value)
 			if n.Name == nil {
 				importsFound[path] = ""
@@ -237,24 +237,24 @@ func (r *FileRestorer) updateImports() error {
 		}
 		added = true
 		if len(blocks) == 0 {
-			gd := &model.Gen{
+			gd := &model2.Gen{
 				Tok: token.IMPORT,
-				Decs: model.GenDecorations{
-					NodeDecs: model.NodeDecs{Before: model.EmptyLine, After: model.EmptyLine},
+				Decs: model2.GenDecorations{
+					NodeDecs: model2.NodeDecs{Before: model2.EmptyLine, After: model2.EmptyLine},
 				},
 			}
 			if hasCgoBlock {
-				r.file.Decls = append([]model.Decl{r.file.Decls[0], gd}, r.file.Decls[1:]...)
+				r.file.Decls = append([]model2.Decl{r.file.Decls[0], gd}, r.file.Decls[1:]...)
 			} else {
-				r.file.Decls = append([]model.Decl{gd}, r.file.Decls...)
+				r.file.Decls = append([]model2.Decl{gd}, r.file.Decls...)
 			}
 			blocks = append(blocks, gd)
 		}
-		is := &model.Import{
-			Path: &model.Lit{Kind: token.STRING, Value: fmt.Sprintf("%q", path)},
+		is := &model2.Import{
+			Path: &model2.Lit{Kind: token.STRING, Value: fmt.Sprintf("%q", path)},
 		}
 		if aliases[path] != "" {
-			is.Name = &model.Ident{
+			is.Name = &model2.Ident{
 				Name: aliases[path],
 			}
 		}
@@ -263,21 +263,21 @@ func (r *FileRestorer) updateImports() error {
 	if added {
 		sort.Slice(blocks[0].Specs, func(i, j int) bool {
 			return packagePathOrderLess(
-				mustUnquote(blocks[0].Specs[i].(*model.Import).Path.Value),
-				mustUnquote(blocks[0].Specs[j].(*model.Import).Path.Value),
+				mustUnquote(blocks[0].Specs[i].(*model2.Import).Path.Value),
+				mustUnquote(blocks[0].Specs[j].(*model2.Import).Path.Value),
 			)
 		})
 	}
-	deleteBlocks := map[model.Decl]bool{}
+	deleteBlocks := map[model2.Decl]bool{}
 	for _, block := range blocks {
-		specs := make([]model.Spec, 0, len(block.Specs))
+		specs := make([]model2.Spec, 0, len(block.Specs))
 		for _, spec := range block.Specs {
-			spec := spec.(*model.Import)
+			spec := spec.(*model2.Import)
 			path := mustUnquote(spec.Path.Value)
 			if importsRequired[path] {
 				if spec.Name == nil && aliases[path] != "" {
 
-					spec.Name = &model.Ident{Name: aliases[path]}
+					spec.Name = &model2.Ident{Name: aliases[path]}
 				} else if spec.Name != nil && aliases[path] == "" {
 
 					spec.Name = nil
@@ -305,15 +305,15 @@ func (r *FileRestorer) updateImports() error {
 	if added {
 		var foundDomainImport bool
 		for _, spec := range blocks[0].Specs {
-			path := mustUnquote(spec.(*model.Import).Path.Value)
+			path := mustUnquote(spec.(*model2.Import).Path.Value)
 			if strings.Contains(path, ".") && !foundDomainImport {
-				spec.Decorations().Before = model.EmptyLine
-				spec.Decorations().After = model.NewLine
+				spec.Decorations().Before = model2.EmptyLine
+				spec.Decorations().After = model2.NewLine
 				foundDomainImport = true
 				continue
 			}
-			spec.Decorations().Before = model.NewLine
-			spec.Decorations().After = model.NewLine
+			spec.Decorations().Before = model2.NewLine
+			spec.Decorations().After = model2.NewLine
 		}
 		if len(blocks[0].Specs) == 1 {
 			blocks[0].Lparen = false
@@ -324,7 +324,7 @@ func (r *FileRestorer) updateImports() error {
 		}
 	}
 	if len(deleteBlocks) > 0 {
-		decls := make([]model.Decl, 0, len(r.file.Decls))
+		decls := make([]model2.Decl, 0, len(r.file.Decls))
 		for _, decl := range r.file.Decls {
 			if deleteBlocks[decl] {
 				continue
@@ -335,13 +335,13 @@ func (r *FileRestorer) updateImports() error {
 	}
 	return nil
 }
-func (r *FileRestorer) restoreIdent(n *model.Ident, parentName, parentField, parentFieldType string, allowDuplicate bool) ast.Node {
+func (r *FileRestorer) restoreIdent(n *model2.Ident, parentName, parentField, parentFieldType string, allowDuplicate bool) ast.Node {
 	if r.Resolver == nil && n.Path != "" {
 		panic("This syntax has been decorated with import management enabled, but the restorer does not have import management enabled. Use NewRestorerWithImports to create a restorer with import management. See the Imports section of the readme for more information.")
 	}
 	var name string
 	if r.Resolver != nil && n.Path != "" {
-		if model.Avoid[parentName+"."+parentField] {
+		if model2.Avoid[parentName+"."+parentField] {
 			panic(fmt.Sprintf("Path %s set on illegal Ident %s: parentName %s, parentField %s, parentFieldType %s", n.Path, n.Name, parentName, parentField, parentFieldType))
 		}
 		if n.Path != r.Path {
@@ -361,10 +361,10 @@ func (r *FileRestorer) restoreIdent(n *model.Ident, parentName, parentField, par
 	r.Dst.Nodes[out.X] = n
 	r.applySpace(n, "Before", n.Decs.Before)
 	r.applyDecorations(out, "Start", n.Decs.Start, false)
-	out.X = r.restoreNode(model.NewIdent(name), "Selector", "X", "Expr", allowDuplicate).(ast.Expr)
+	out.X = r.restoreNode(model2.NewIdent(name), "Selector", "X", "Expr", allowDuplicate).(ast.Expr)
 	r.cursor += token.Pos(len(token.PERIOD.String()))
 	r.applyDecorations(out, "X", n.Decs.X, false)
-	out.Sel = r.restoreNode(model.NewIdent(n.Name), "Selector", "Sel", "Ident", allowDuplicate).(*ast.Ident)
+	out.Sel = r.restoreNode(model2.NewIdent(n.Name), "Selector", "Sel", "Ident", allowDuplicate).(*ast.Ident)
 	r.applyDecorations(out, "End", n.Decs.End, true)
 	r.applySpace(n, "After", n.Decs.After)
 	return out
@@ -444,7 +444,7 @@ func (r *FileRestorer) addCommentField(n ast.Node, slash token.Pos, text string)
 	}
 }
 
-func (r *FileRestorer) applyDecorations(node ast.Node, name string, decorations model.Decs, end bool) {
+func (r *FileRestorer) applyDecorations(node ast.Node, name string, decorations model2.Decs, end bool) {
 	firstLine := true
 	_, isNodeFile := node.(*ast.File)
 	isPackageComment := isNodeFile && name == "Start"
@@ -498,19 +498,19 @@ func (r *FileRestorer) applyDecorations(node ast.Node, name string, decorations 
 	}
 }
 
-func (r *FileRestorer) applySpace(node model.Node, position string, space model.SpaceType) {
+func (r *FileRestorer) applySpace(node model2.Node, position string, space model2.SpaceType) {
 	switch node.(type) {
-	case *model.BadDecl, *model.BadExpr, *model.BadStmt:
+	case *model2.BadDecl, *model2.BadExpr, *model2.BadStmt:
 		if position == "After" {
 
-			space = model.EmptyLine
+			space = model2.EmptyLine
 		}
 	}
 	var newlines int
 	switch space {
-	case model.NewLine:
+	case model2.NewLine:
 		newlines = 1
-	case model.EmptyLine:
+	case model2.EmptyLine:
 		newlines = 2
 	}
 	if r.cursor == r.cursorAtNewLine {
@@ -527,7 +527,7 @@ func (r *FileRestorer) applySpace(node model.Node, position string, space model.
 	}
 }
 
-func (r *FileRestorer) restoreObject(o *model.Object) *ast.Object {
+func (r *FileRestorer) restoreObject(o *model2.Object) *ast.Object {
 	if !r.Extras {
 		return nil
 	} else if o == nil {
@@ -542,9 +542,9 @@ func (r *FileRestorer) restoreObject(o *model.Object) *ast.Object {
 	out.Name = o.Name
 
 	switch decl := o.Decl.(type) {
-	case *model.Scope:
+	case *model2.Scope:
 		out.Decl = r.restoreScope(decl)
-	case model.Node:
+	case model2.Node:
 		r.nodeDecl[out] = decl
 	case nil:
 	default:
@@ -553,9 +553,9 @@ func (r *FileRestorer) restoreObject(o *model.Object) *ast.Object {
 	switch data := o.Data.(type) {
 	case int:
 		out.Data = data
-	case *model.Scope:
+	case *model2.Scope:
 		out.Data = r.restoreScope(data)
-	case model.Node:
+	case model2.Node:
 		r.nodeData[out] = data
 	case nil:
 	default:
@@ -563,7 +563,7 @@ func (r *FileRestorer) restoreObject(o *model.Object) *ast.Object {
 	}
 	return out
 }
-func (r *FileRestorer) restoreScope(s *model.Scope) *ast.Scope {
+func (r *FileRestorer) restoreScope(s *model2.Scope) *ast.Scope {
 	if !r.Extras {
 		return nil
 	}

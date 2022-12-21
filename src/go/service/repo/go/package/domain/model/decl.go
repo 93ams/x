@@ -1,14 +1,12 @@
 package model
 
 type (
-	MethodType struct {
+	Field struct {
 		Names []string
 		Type  Ident
 	}
-	FuncType struct {
-		In, Out []MethodType
-	}
-	Func struct {
+	FuncType struct{ In, Out []Field }
+	Func     struct {
 		Receiver *Ident
 		Name     string
 		Body     any
@@ -27,12 +25,8 @@ type (
 		Name    string
 		Ident
 	}
-	StructField struct {
-		Names []string
-		Type  Ident
-	}
 	Struct struct {
-		Fields []StructField
+		Fields []Field
 		Ident
 	}
 	Interface struct {
