@@ -1,6 +1,8 @@
 package model
 
-import "go/token"
+import (
+	"go/token"
+)
 
 type (
 	Node interface{ Decorations() *NodeDecs }
@@ -87,12 +89,12 @@ type (
 	Index struct {
 		X     Expr
 		Index Expr
-		Decs  IndexExprDecorations
+		Decs  IndexDecs
 	}
 	IndexList struct {
 		X       Expr
 		Indices []Expr
-		Decs    IndexListExprDecorations
+		Decs    IndexListDecs
 	}
 	Slice struct {
 		X      Expr
@@ -177,6 +179,23 @@ type (
 	}
 )
 
+func NewCall(fun Expr, args []Expr) *Call { return &Call{Fun: fun, Args: args} }
+func NewCompositeLit(t Expr, elts []Expr) *CompositeLit {
+	return &CompositeLit{Type: t, Elts: elts}
+}
+func NewFuncType() *FuncType { return &FuncType{} }
+func NewKeyValue(key Expr, value Expr) *KeyValue {
+	return &KeyValue{Key: key, Value: value}
+}
+func NewSelector(x Expr, sel *Ident) *Selector {
+	return &Selector{X: x, Sel: sel}
+}
+func NewStruct(fields *FieldList) *Struct {
+	return &Struct{Fields: fields}
+}
+func NewIndex(x Expr, i Expr) *Index {
+	return &Index{X: x, Index: i}
+}
 func (*BadExpr) exprNode()      {}
 func (*Ident) exprNode()        {}
 func (*Ellipsis) exprNode()     {}
@@ -419,3 +438,9 @@ type Package struct {
 	Files   map[string]*File
 	Decs    PackageDecorations
 }
+
+func NewBlock(stmts []Stmt) *Block             { return &Block{List: stmts} }
+func NewType(t Expr) *Type                     { return &Type{Type: t} }
+func NewImport(name *Ident, path *Lit) *Import { return &Import{Name: name, Path: path} }
+func NewGen(t token.Token, specs []Spec) *Gen  { return &Gen{Tok: t, Specs: specs} }
+func NewFunc(name *Ident) *Func                { return &Func{Name: name, Type: &FuncType{}, Body: &Block{}} }

@@ -1,8 +1,11 @@
 package create
 
-import "github.com/tilau2328/x/src/go/package/cmd"
+import (
+	"github.com/tilau2328/x/src/go/package/cmd"
+	"github.com/tilau2328/x/src/go/service/repo/go/cmd/cli/cmd/create/pattern"
+)
 
 var RootCmd = cmd.New(
-	cmd.Use("new"),
-	cmd.Add(MethodCmd, StructCmd, InterfaceCmd),
+	cmd.Use("create"),
+	cmd.Add(MethodCmd, StructCmd, InterfaceCmd, pattern.RootCmd),
 )

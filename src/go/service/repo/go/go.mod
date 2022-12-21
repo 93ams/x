@@ -1,9 +1,10 @@
-module github.com/tilau2328/x/src/go/services/repo/go
+module github.com/tilau2328/x/src/go/service/repo/go
 
 go 1.19
 
 require (
 	github.com/samber/lo v1.36.0
+	github.com/tilau2328/x/src/go v0.0.0-20221219120245-a5da46c244a9
 	golang.org/x/tools v0.1.12
 )
 

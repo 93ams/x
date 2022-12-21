@@ -3,7 +3,7 @@ package builder
 import (
 	"github.com/samber/lo"
 	"github.com/tilau2328/x/src/go/package/x"
-	"github.com/tilau2328/x/src/go/services/repo/go/package/wrapper/model"
+	"github.com/tilau2328/x/src/go/service/repo/go/package/wrapper/model"
 	"go/token"
 )
 
@@ -17,14 +17,10 @@ type (
 func MapDecls(builders []DeclBuilder) []model.Decl {
 	return lo.Map(builders, func(item DeclBuilder, _ int) model.Decl { return item.AsDecl() })
 }
-func NewGen(t token.Token, specs []model.Spec) *model.Gen { return &model.Gen{Tok: t, Specs: specs} }
 func Gen(t token.Token, specs ...SpecBuilder) *GenBuilder {
-	return &GenBuilder{T: NewGen(t, MapSpecs(specs))}
+	return &GenBuilder{T: model.NewGen(t, MapSpecs(specs))}
 }
-func NewFunc(name *model.Ident) *model.Func {
-	return &model.Func{Name: name, Type: &model.FuncType{}, Body: &model.Block{}}
-}
-func Func(name *IdentBuilder) *FuncBuilder { return &FuncBuilder{T: NewFunc(name.Build())} }
+func Func(name *IdentBuilder) *FuncBuilder { return &FuncBuilder{T: model.NewFunc(name.Build())} }
 func FuncDecs() *FuncDecsBuilder           { return &FuncDecsBuilder{} }
 func (b *GenBuilder) Decs(decs model.GenDecorations) *GenBuilder {
 	b.T.Decs = decs
@@ -83,3 +79,7 @@ func (b *GenBuilder) AsDecl() model.Decl         { return b.T }
 func (b *FuncBuilder) Build() *model.Func        { return b.T }
 func (b *FuncBuilder) AsDecl() model.Decl        { return b.T }
 func (f *FuncDecsBuilder) Build() model.FuncDecs { return f.T }
+
+func NewFunc(name string, t *FuncTypeBuilder, body *BlockBuilder) *FuncBuilder {
+	return Func(Ident(name)).Type(t).Body(body)
+}

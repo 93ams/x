@@ -2,8 +2,8 @@ package decorator
 
 import (
 	"fmt"
-	"github.com/tilau2328/x/src/go/services/repo/go/package/wrapper/coding/resolver"
-	"github.com/tilau2328/x/src/go/services/repo/go/package/wrapper/model"
+	"github.com/tilau2328/x/src/go/service/repo/go/package/wrapper/coding/resolver"
+	"github.com/tilau2328/x/src/go/service/repo/go/package/wrapper/model"
 	"go/ast"
 	"go/parser"
 	"go/token"

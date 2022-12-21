@@ -52,7 +52,7 @@ func (mr *MockKeySpaceProviderMockRecorder) Alter(arg0, arg1, arg2 interface{}) 
 // Create mocks base method.
 func (m *MockKeySpaceProvider) Create(arg0 Context, arg1 KeySpace) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Create", arg0, arg1)
+	ret := m.ctrl.Call(m, "Boilerplate", arg0, arg1)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
@@ -60,7 +60,7 @@ func (m *MockKeySpaceProvider) Create(arg0 Context, arg1 KeySpace) error {
 // Create indicates an expected call of Create.
 func (mr *MockKeySpaceProviderMockRecorder) Create(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockKeySpaceProvider)(nil).Create), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Boilerplate", reflect.TypeOf((*MockKeySpaceProvider)(nil).Create), arg0, arg1)
 }
 
 // Drop mocks base method.
@@ -147,7 +147,7 @@ func (mr *MockTableProviderMockRecorder) Alter(arg0, arg1, arg2 interface{}) *go
 // Create mocks base method.
 func (m *MockTableProvider) Create(arg0 Context, arg1 Table) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Create", arg0, arg1)
+	ret := m.ctrl.Call(m, "Boilerplate", arg0, arg1)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
@@ -155,7 +155,7 @@ func (m *MockTableProvider) Create(arg0 Context, arg1 Table) error {
 // Create indicates an expected call of Create.
 func (mr *MockTableProviderMockRecorder) Create(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockTableProvider)(nil).Create), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Boilerplate", reflect.TypeOf((*MockTableProvider)(nil).Create), arg0, arg1)
 }
 
 // Drop mocks base method.

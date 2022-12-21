@@ -3,11 +3,13 @@ package builder
 import (
 	"github.com/samber/lo"
 	"github.com/tilau2328/x/src/go/package/x"
-	"github.com/tilau2328/x/src/go/services/repo/go/package/wrapper/model"
+	"github.com/tilau2328/x/src/go/service/repo/go/package/wrapper/model"
+	"go/token"
 )
 
 type (
 	StmtBuilder       interface{ AsStmt() model.Stmt }
+	AssignBuilder     x.Builder[*model.Assign]
 	BlockBuilder      x.Builder[*model.Block]
 	ExprStmtBuilder   x.Builder[*model.ExprStmt]
 	ReturnBuilder     x.Builder[*model.Return]
@@ -17,9 +19,11 @@ type (
 func MapStmts(builders []StmtBuilder) []model.Stmt {
 	return lo.Map(builders, func(item StmtBuilder, _ int) model.Stmt { return item.AsStmt() })
 }
-func NewBlock(stmts []model.Stmt) *model.Block { return &model.Block{List: stmts} }
+func Assign(t token.Token, lhs, rhs []ExprBuilder) *AssignBuilder {
+	return &AssignBuilder{T: &model.Assign{Lhs: MapExprs(lhs), Tok: t, Rhs: MapExprs(rhs)}}
+}
 func Block(stmts ...StmtBuilder) *BlockBuilder {
-	return &BlockBuilder{T: NewBlock(MapStmts(stmts))}
+	return &BlockBuilder{T: model.NewBlock(MapStmts(stmts))}
 }
 func NewExpr(expr model.Expr) *model.ExprStmt { return &model.ExprStmt{X: expr} }
 func Expr(expr ExprBuilder) *ExprStmtBuilder {
@@ -54,6 +58,8 @@ func (b *ReturnDecsBuilder) After(d model.SpaceType) *ReturnDecsBuilder {
 func (b *ReturnDecsBuilder) Start(d model.Decs) *ReturnDecsBuilder { b.T.Start = d; return b }
 func (b *ReturnDecsBuilder) End(d model.Decs) *ReturnDecsBuilder   { b.T.End = d; return b }
 
+func (b *AssignBuilder) Build() *model.Assign        { return b.T }
+func (b *AssignBuilder) AsStmt() model.Stmt          { return b.T }
 func (b *BlockBuilder) Build() *model.Block          { return b.T }
 func (b *BlockBuilder) AsStmt() model.Stmt           { return b.T }
 func (b *ExprStmtBuilder) Build() *model.ExprStmt    { return b.T }

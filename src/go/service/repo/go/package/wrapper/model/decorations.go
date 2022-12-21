@@ -140,13 +140,13 @@ type (
 		NodeDecs
 		X Decs
 	}
-	IndexExprDecorations struct {
+	IndexDecs struct {
 		NodeDecs
 		X      Decs
 		Lbrack Decs
 		Index  Decs
 	}
-	IndexListExprDecorations struct {
+	IndexListDecs struct {
 		NodeDecs
 		X       Decs
 		Lbrack  Decs

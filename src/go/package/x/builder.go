@@ -7,8 +7,6 @@ type (
 	IBuilder[T any] interface{ Build() T }
 )
 
-func (b *Builder[T]) Build() T { return b.T }
-
 func MapBuilder[T any, B IBuilder[T]](builders []B) []T {
 	return lo.Map(builders, func(item B, _ int) T { return item.Build() })
 }

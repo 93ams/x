@@ -3,7 +3,8 @@ package builder
 import (
 	"github.com/samber/lo"
 	"github.com/tilau2328/x/src/go/package/x"
-	"github.com/tilau2328/x/src/go/services/repo/go/package/wrapper/model"
+	"github.com/tilau2328/x/src/go/service/repo/go/package/wrapper/model"
+	"go/token"
 )
 
 type (
@@ -16,15 +17,11 @@ type (
 func MapSpecs(builders []SpecBuilder) []model.Spec {
 	return lo.Map(builders, func(item SpecBuilder, _ int) model.Spec { return item.AsSpec() })
 }
-func NewImport(name *model.Ident) *model.Import {
-	return &model.Import{Name: name, Path: &model.Lit{}}
+func Import(name *IdentBuilder, path *LitBuilder) *ImportBuilder {
+	return &ImportBuilder{T: model.NewImport(name.Build(), path.Build())}
 }
-func Import(name IdentBuilder) *ImportBuilder {
-	return &ImportBuilder{T: NewImport(name.Build())}
-}
-func NewType(t model.Expr) *model.Type { return &model.Type{Type: t} }
 func Type(t ExprBuilder) *TypeBuilder {
-	return &TypeBuilder{T: NewType(t.AsExpr())}
+	return &TypeBuilder{T: model.NewType(t.AsExpr())}
 }
 func NewValue(t model.Expr, names []*model.Ident) *model.Value {
 	return &model.Value{Names: names, Type: t}
@@ -35,6 +32,10 @@ func Value(t ExprBuilder, names ...x.IBuilder[*model.Ident]) *ValueBuilder {
 
 func (b *ImportBuilder) Decs(decs model.ImportDecorations) *ImportBuilder {
 	b.T.Decs = decs
+	return b
+}
+func (b *ImportBuilder) Name(path *IdentBuilder) *ImportBuilder {
+	b.T.Name = path.Build()
 	return b
 }
 func (b *ImportBuilder) Path(path *LitBuilder) *ImportBuilder {
@@ -72,3 +73,13 @@ func (b *TypeBuilder) Build() *model.Type     { return b.T }
 func (b *TypeBuilder) AsSpec() model.Spec     { return b.T }
 func (b *ValueBuilder) Build() *model.Value   { return b.T }
 func (b *ValueBuilder) AsSpec() model.Spec    { return b.T }
+
+func NewType(name string, t ExprBuilder) *GenBuilder {
+	return Gen(token.TYPE, Type(t).Name(Ident(name)))
+}
+func NewStruct(name string, fields ...*FieldBuilder) *GenBuilder {
+	return NewType(name, Struct(FieldList(fields...)))
+}
+func NewInterface(name string, fields ...*FieldBuilder) *GenBuilder {
+	return NewType(name, Interface(FieldList(fields...)))
+}

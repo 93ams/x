@@ -3,7 +3,7 @@ package builder
 import (
 	"github.com/samber/lo"
 	"github.com/tilau2328/x/src/go/package/x"
-	"github.com/tilau2328/x/src/go/services/repo/go/package/wrapper/model"
+	"github.com/tilau2328/x/src/go/service/repo/go/package/wrapper/model"
 	"go/token"
 )
 
@@ -14,58 +14,59 @@ type (
 	CompositeLitDecsBuilder x.Builder[model.CompositeLitDecs]
 	FuncTypeBuilder         x.Builder[*model.FuncType]
 	IdentBuilder            x.Builder[*model.Ident]
+	IndexBuilder            x.Builder[*model.Index]
+	IndexListBuilder        x.Builder[*model.IndexList]
 	InterfaceBuilder        x.Builder[*model.Interface]
 	KeyValueBuilder         x.Builder[*model.KeyValue]
 	KeyValueDecsBuilder     x.Builder[model.KeyValueDecs]
 	LitBuilder              x.Builder[*model.Lit]
 	SelectorBuilder         x.Builder[*model.Selector]
 	SelectorDecsBuilder     x.Builder[model.SelectorDecs]
+	StarBuilder             x.Builder[*model.Star]
 	StructBuilder           x.Builder[*model.Struct]
+	UnaryBuilder            x.Builder[*model.Unary]
 )
 
 func MapExprs(builders []ExprBuilder) []model.Expr {
 	return lo.Map(builders, func(item ExprBuilder, _ int) model.Expr { return item.AsExpr() })
 }
-func NewCall(fun model.Expr, args []model.Expr) *model.Call { return &model.Call{Fun: fun, Args: args} }
 func Call(fun ExprBuilder, args ...ExprBuilder) *CallBuilder {
-	return &CallBuilder{T: NewCall(fun.AsExpr(), MapExprs(args))}
-}
-func NewCompositeLit(t model.Expr, elts []model.Expr) *model.CompositeLit {
-	return &model.CompositeLit{Type: t, Elts: elts}
+	return &CallBuilder{T: model.NewCall(fun.AsExpr(), MapExprs(args))}
 }
 func CompositeLit(t ExprBuilder, elts ...ExprBuilder) *CompositeLitBuilder {
-	return &CompositeLitBuilder{T: NewCompositeLit(t.AsExpr(), MapExprs(elts))}
+	return &CompositeLitBuilder{T: model.NewCompositeLit(t.AsExpr(), MapExprs(elts))}
 }
 func CompositeLitDecs() *CompositeLitDecsBuilder { return &CompositeLitDecsBuilder{} }
-func NewFuncType() *model.FuncType               { return &model.FuncType{} }
-func FuncType() *FuncTypeBuilder                 { return &FuncTypeBuilder{T: NewFuncType()} }
+func FuncType() *FuncTypeBuilder                 { return &FuncTypeBuilder{T: model.NewFuncType()} }
 func Ident(name string) *IdentBuilder            { return &IdentBuilder{T: &model.Ident{Name: name}} }
 func Interface(methods *FieldListBuilder) *InterfaceBuilder {
 	return &InterfaceBuilder{T: &model.Interface{Methods: methods.Build()}}
 }
-func NewKeyValue(key model.Expr, value model.Expr) *model.KeyValue {
-	return &model.KeyValue{Key: key, Value: value}
-}
 func KeyValue(t ExprBuilder, value ExprBuilder) *KeyValueBuilder {
-	return &KeyValueBuilder{T: NewKeyValue(t.AsExpr(), value.AsExpr())}
+	return &KeyValueBuilder{T: model.NewKeyValue(t.AsExpr(), value.AsExpr())}
 }
 func KeyValueDecs() *KeyValueDecsBuilder { return &KeyValueDecsBuilder{} }
 func Lit(kind token.Token, value string) *LitBuilder {
 	return &LitBuilder{T: &model.Lit{Value: value, Kind: kind}}
 }
-func NewSelector(x model.Expr, sel *model.Ident) *model.Selector {
-	return &model.Selector{X: x, Sel: sel}
+func IndexList(x ExprBuilder, indicies ...ExprBuilder) *IndexListBuilder {
+	return &IndexListBuilder{T: &model.IndexList{X: x.AsExpr(), Indices: MapExprs(indicies)}}
 }
 func Selector(x ExprBuilder, sel *IdentBuilder) *SelectorBuilder {
-	return &SelectorBuilder{T: NewSelector(x.AsExpr(), sel.Build())}
+	return &SelectorBuilder{T: model.NewSelector(x.AsExpr(), sel.Build())}
 }
-func NewStruct(fields *model.FieldList) *model.Struct {
-	return &model.Struct{Fields: fields}
+func Star(x ExprBuilder) *StarBuilder {
+	return &StarBuilder{T: &model.Star{X: x.AsExpr()}}
 }
 func Struct(fields *FieldListBuilder) *StructBuilder {
-	return &StructBuilder{T: NewStruct(fields.Build())}
+	return &StructBuilder{T: model.NewStruct(fields.Build())}
 }
-
+func Index(x ExprBuilder, i ExprBuilder) *IndexBuilder {
+	return &IndexBuilder{T: model.NewIndex(x.AsExpr(), i.AsExpr())}
+}
+func Unary(op token.Token, x ExprBuilder) *UnaryBuilder {
+	return &UnaryBuilder{T: &model.Unary{X: x.AsExpr(), Op: op}}
+}
 func (b *CallBuilder) Decs(decs model.CallDecs) *CallBuilder {
 	b.T.Decs = decs
 	return b
@@ -188,15 +189,26 @@ func (b *FuncTypeBuilder) Build() *model.FuncType                { return b.T }
 func (b *FuncTypeBuilder) AsExpr() model.Expr                    { return b.T }
 func (b *IdentBuilder) Build() *model.Ident                      { return b.T }
 func (b *IdentBuilder) AsExpr() model.Expr                       { return b.T }
+func (b *IndexBuilder) Build() *model.Index                      { return b.T }
+func (b *IndexBuilder) AsExpr() model.Expr                       { return b.T }
+func (b *IndexListBuilder) Build() *model.IndexList              { return b.T }
+func (b *IndexListBuilder) AsExpr() model.Expr                   { return b.T }
 func (b *InterfaceBuilder) Build() *model.Interface              { return b.T }
 func (b *InterfaceBuilder) AsExpr() model.Expr                   { return b.T }
+func (b *KeyValueBuilder) Build() *model.KeyValue                { return b.T }
+func (b *KeyValueBuilder) AsExpr() model.Expr                    { return b.T }
+func (b *KeyValueDecsBuilder) Build() model.KeyValueDecs         { return b.T }
+func (b *LitBuilder) Build() *model.Lit                          { return b.T }
+func (b *LitBuilder) AsExpr() model.Expr                         { return b.T }
+func (b *SelectorBuilder) Build() *model.Selector                { return b.T }
+func (b *SelectorBuilder) AsExpr() model.Expr                    { return b.T }
+func (b *StarBuilder) Build() *model.Star                        { return b.T }
+func (b *StarBuilder) AsExpr() model.Expr                        { return b.T }
+func (b *StructBuilder) Build() *model.Struct                    { return b.T }
+func (b *StructBuilder) AsExpr() model.Expr                      { return b.T }
+func (b *UnaryBuilder) Build() *model.Unary                      { return b.T }
+func (b *UnaryBuilder) AsExpr() model.Expr                       { return b.T }
 
-func (b *KeyValueBuilder) Build() *model.KeyValue        { return b.T }
-func (b *KeyValueBuilder) AsExpr() model.Expr            { return b.T }
-func (b *KeyValueDecsBuilder) Build() model.KeyValueDecs { return b.T }
-func (b *LitBuilder) Build() *model.Lit                  { return b.T }
-func (b *LitBuilder) AsExpr() model.Expr                 { return b.T }
-func (b *SelectorBuilder) Build() *model.Selector        { return b.T }
-func (b *SelectorBuilder) AsExpr() model.Expr            { return b.T }
-func (b *StructBuilder) Build() *model.Struct            { return b.T }
-func (b *StructBuilder) AsExpr() model.Expr              { return b.T }
+func NewFuncType(params, results []*FieldBuilder) *FuncTypeBuilder {
+	return FuncType().Params(FieldList(params...)).Results(FieldList(results...))
+}
