@@ -10,10 +10,9 @@ var RootCmd = cmd.New(
 	cmd.Use("pattern"),
 	cmd.Alias("p"),
 	cmd.Add(
+		EnumCmd,
 		MapperCmd,
-		service.BuilderCmd,
-		option.OptionsCmd,
-		option.CommandCmd,
-		service.StrategyCmd,
+		option.RootCmd,
+		service.RootCmd,
 	),
 )

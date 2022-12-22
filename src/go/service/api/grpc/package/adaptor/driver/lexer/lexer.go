@@ -1,7 +1,8 @@
 package lexer
 
 import (
-	scanner2 "grpc/package/wrapper/lexer/scanner"
+	"github.com/tilau2328/x/src/go/package/x"
+	scanner2 "github.com/tilau2328/x/src/go/service/api/grpc/package/adaptor/driver/lexer/scanner"
 	"io"
 	"log"
 	"path/filepath"
@@ -15,16 +16,16 @@ type Lexer struct {
 	Pos         scanner2.Position
 	Error       func(lexer *Lexer, err error)
 	scanner     *scanner2.Scanner
-	scannerOpts []Opt[*scanner2.Scanner]
+	scannerOpts []x.Opt[*scanner2.Scanner]
 	scanErr     error
 	debug       bool
 }
 
-func WithDebug(debug bool) Opt[*Lexer] { return func(l *Lexer) { l.debug = debug } }
-func WithFilename(filename string) Opt[*Lexer] {
+func WithDebug(debug bool) x.Opt[*Lexer] { return func(l *Lexer) { l.debug = debug } }
+func WithFilename(filename string) x.Opt[*Lexer] {
 	return func(l *Lexer) { l.scannerOpts = append(l.scannerOpts, scanner2.WithFilename(filename)) }
 }
-func NewLexer(input io.Reader, opts ...Opt[*Lexer]) *Lexer {
+func NewLexer(input io.Reader, opts ...x.Opt[*Lexer]) *Lexer {
 	lex := new(Lexer)
 	for _, opt := range opts {
 		opt(lex)

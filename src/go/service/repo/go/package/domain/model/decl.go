@@ -32,7 +32,11 @@ type (
 		Ident
 	}
 	Interface struct {
-		Methods    []FuncType
-		Path, Name string
+		Methods []FuncType
+		Ident
+	}
+	Types struct {
+		Struct     []Struct
+		Interfaces []Interface
 	}
 )

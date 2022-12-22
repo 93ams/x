@@ -1,7 +1,7 @@
 package scanner
 
 import (
-	"grpc/package/wrapper/model/meta"
+	"github.com/tilau2328/x/src/go/service/api/grpc/package/adaptor/driver/model/meta"
 	"unicode/utf8"
 )
 

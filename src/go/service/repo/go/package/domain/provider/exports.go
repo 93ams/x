@@ -6,7 +6,7 @@ import (
 )
 
 type GolangProvider interface {
-	Create(io.Writer, model.CreateReq) error
-	Search(io.Writer, model.SearchReq) error
-	Modify(io.Writer, model.ModifyReq) error
+	Create(io.Writer, model.CreateReq, any) error
+	Search(io.Writer, model.SearchReq, any) error
+	Modify(io.Writer, model.ModifyReq, any) error
 }

@@ -2,10 +2,10 @@ package parser
 
 import (
 	. "github.com/tilau2328/x/src/go/package/x"
-	"grpc/package/wrapper/lexer"
-	scanner2 "grpc/package/wrapper/lexer/scanner"
-	. "grpc/package/wrapper/model"
-	"grpc/package/wrapper/model/meta"
+	"github.com/tilau2328/x/src/go/service/api/grpc/package/adaptor/driver/lexer"
+	scanner2 "github.com/tilau2328/x/src/go/service/api/grpc/package/adaptor/driver/lexer/scanner"
+	model2 "github.com/tilau2328/x/src/go/service/api/grpc/package/adaptor/driver/model"
+	"github.com/tilau2328/x/src/go/service/api/grpc/package/adaptor/driver/model/meta"
 	"strings"
 	"unicode/utf8"
 )
@@ -34,8 +34,8 @@ func (p *Parser) IsEOF() bool {
 	defer p.lex.UnNext()
 	return p.lex.IsEOF()
 }
-func (p *Parser) ParseComments() []*Comment {
-	var comments []*Comment
+func (p *Parser) ParseComments() []*model2.Comment {
+	var comments []*model2.Comment
 	for {
 		comment, err := p.parseComment()
 		if err != nil {
@@ -44,10 +44,10 @@ func (p *Parser) ParseComments() []*Comment {
 		comments = append(comments, comment)
 	}
 }
-func (p *Parser) parseComment() (*Comment, error) {
+func (p *Parser) parseComment() (*model2.Comment, error) {
 	p.lex.NextComment()
 	if p.lex.Token == scanner2.TCOMMENT {
-		return &Comment{
+		return &model2.Comment{
 			Raw: p.lex.Text,
 			Meta: meta.Meta{
 				Pos:     p.lex.Pos.Position,
@@ -59,7 +59,7 @@ func (p *Parser) parseComment() (*Comment, error) {
 	return nil, p.unexpected("comment")
 }
 
-func (p *Parser) ParseSyntax() (*Syntax, error) {
+func (p *Parser) ParseSyntax() (*model2.Syntax, error) {
 	if p.lex.NextKeyword(); p.lex.Token != scanner2.TSYNTAX {
 		return nil, p.unexpected("syntax")
 	}
@@ -82,7 +82,7 @@ func (p *Parser) ParseSyntax() (*Syntax, error) {
 	if p.lex.Next(); p.lex.Token != scanner2.TSEMICOLON {
 		return nil, p.unexpected(";")
 	}
-	return &Syntax{
+	return &model2.Syntax{
 		ProtobufVersion: version,
 		VersionQuote:    lq + version + tq,
 		Meta: meta.Meta{
@@ -91,7 +91,7 @@ func (p *Parser) ParseSyntax() (*Syntax, error) {
 		},
 	}, nil
 }
-func (p *Parser) ParseEnum() (*Enum, error) {
+func (p *Parser) ParseEnum() (*model2.Enum, error) {
 	p.lex.NextKeyword()
 	if p.lex.Token != scanner2.TENUM {
 		return nil, p.unexpected("enum")
@@ -107,7 +107,7 @@ func (p *Parser) ParseEnum() (*Enum, error) {
 		return nil, err
 	}
 
-	return &Enum{
+	return &model2.Enum{
 		Name:       enumName,
 		Body:       enumBody,
 		CommentBLC: inlineLeftCurly,
@@ -118,8 +118,8 @@ func (p *Parser) ParseEnum() (*Enum, error) {
 	}, nil
 }
 func (p *Parser) parseEnumBody() (
-	[]Visitee,
-	*Comment,
+	[]model2.Visitee,
+	*model2.Comment,
 	scanner2.Position,
 	error,
 ) {
@@ -128,21 +128,21 @@ func (p *Parser) parseEnumBody() (
 		return nil, nil, scanner2.Position{}, p.unexpected("{")
 	}
 	inlineLeftCurly := p.parseInlineComment()
-	var stmts []Visitee
+	var stmts []model2.Visitee
 	for {
 		comments := p.ParseComments()
 		p.lex.NextKeyword()
 		token := p.lex.Token
 		p.lex.UnNext()
 		var stmt interface {
-			HasInlineCommentSetter
-			Visitee
+			model2.HasInlineCommentSetter
+			model2.Visitee
 		}
 		switch token {
 		case scanner2.TRIGHTCURLY:
 			if p.bodyIncludingComments {
 				for _, comment := range comments {
-					stmts = append(stmts, Visitee(comment))
+					stmts = append(stmts, model2.Visitee(comment))
 				}
 			}
 			p.lex.Next()
@@ -179,7 +179,7 @@ func (p *Parser) parseEnumBody() (
 			p.lex.UnNext()
 			emptyErr := p.lex.ReadEmptyStatement()
 			if emptyErr == nil {
-				stmt = &EmptyStatement{}
+				stmt = &model2.EmptyStatement{}
 				break
 			}
 			return nil, nil, scanner2.Position{}, &parseEnumBodyStatementErr{
@@ -191,7 +191,7 @@ func (p *Parser) parseEnumBody() (
 		stmts = append(stmts, stmt)
 	}
 }
-func (p *Parser) parseEnumField() (*EnumField, error) {
+func (p *Parser) parseEnumField() (*model2.EnumField, error) {
 	p.lex.Next()
 	if p.lex.Token != scanner2.TIDENT {
 		return nil, p.unexpected("ident")
@@ -220,14 +220,14 @@ func (p *Parser) parseEnumField() (*EnumField, error) {
 	if p.lex.Token != scanner2.TSEMICOLON {
 		return nil, p.unexpected(";")
 	}
-	return &EnumField{
+	return &model2.EnumField{
 		Ident:   ident,
 		Number:  intLit,
 		Options: enumValueOptions,
 		Meta:    meta.Meta{Pos: startPos.Position},
 	}, nil
 }
-func (p *Parser) parseEnumValueOptions() ([]*EnumValueOption, error) {
+func (p *Parser) parseEnumValueOptions() ([]*model2.EnumValueOption, error) {
 	p.lex.Next()
 	if p.lex.Token != scanner2.TLEFTSQUARE {
 		p.lex.UnNext()
@@ -237,7 +237,7 @@ func (p *Parser) parseEnumValueOptions() ([]*EnumValueOption, error) {
 	if err != nil {
 		return nil, p.unexpected("enumValueOption")
 	}
-	var opts []*EnumValueOption
+	var opts []*model2.EnumValueOption
 	opts = append(opts, opt)
 	for {
 		p.lex.Next()
@@ -258,7 +258,7 @@ func (p *Parser) parseEnumValueOptions() ([]*EnumValueOption, error) {
 	return opts, nil
 }
 
-func (p *Parser) parseEnumValueOption() (*EnumValueOption, error) {
+func (p *Parser) parseEnumValueOption() (*model2.EnumValueOption, error) {
 	optionName, err := p.parseOptionName()
 	if err != nil {
 		return nil, err
@@ -271,12 +271,12 @@ func (p *Parser) parseEnumValueOption() (*EnumValueOption, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &EnumValueOption{
+	return &model2.EnumValueOption{
 		Name:     optionName,
 		Constant: constant,
 	}, nil
 }
-func (p *Parser) ParseExtensions() (*Extensions, error) {
+func (p *Parser) ParseExtensions() (*model2.Extensions, error) {
 	p.lex.NextKeyword()
 	if p.lex.Token != scanner2.TEXTENSIONS {
 		return nil, p.unexpected("extensions")
@@ -290,13 +290,13 @@ func (p *Parser) ParseExtensions() (*Extensions, error) {
 	if p.lex.Token != scanner2.TSEMICOLON {
 		return nil, p.unexpected(";")
 	}
-	return &Extensions{
+	return &model2.Extensions{
 		Ranges: ranges,
 		Meta:   meta.Meta{Pos: startPos.Position},
 	}, nil
 }
 
-func (p *Parser) ParseExtend() (*Extend, error) {
+func (p *Parser) ParseExtend() (*model2.Extend, error) {
 	p.lex.NextKeyword()
 	if p.lex.Token != scanner2.TEXTEND {
 		return nil, p.unexpected("extend")
@@ -310,7 +310,7 @@ func (p *Parser) ParseExtend() (*Extend, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Extend{
+	return &model2.Extend{
 		Type:       messageType,
 		Body:       extendBody,
 		CommentBLC: inlineLeftCurly,
@@ -321,7 +321,7 @@ func (p *Parser) ParseExtend() (*Extend, error) {
 	}, nil
 }
 
-func (p *Parser) parseExtendBody() ([]Visitee, *Comment, scanner2.Position, error) {
+func (p *Parser) parseExtendBody() ([]model2.Visitee, *model2.Comment, scanner2.Position, error) {
 	p.lex.Next()
 	if p.lex.Token != scanner2.TLEFTCURLY {
 		return nil, nil, scanner2.Position{}, p.unexpected("{")
@@ -339,21 +339,21 @@ func (p *Parser) parseExtendBody() ([]Visitee, *Comment, scanner2.Position, erro
 		return nil, nil, lastPos, nil
 	}
 	p.lex.UnNext()
-	var stmts []Visitee
+	var stmts []model2.Visitee
 	for {
 		comments := p.ParseComments()
 		p.lex.NextKeyword()
 		token := p.lex.Token
 		p.lex.UnNext()
 		var stmt interface {
-			HasInlineCommentSetter
-			Visitee
+			model2.HasInlineCommentSetter
+			model2.Visitee
 		}
 		switch token {
 		case scanner2.TRIGHTCURLY:
 			if p.bodyIncludingComments {
 				for _, comment := range comments {
-					stmts = append(stmts, Visitee(comment))
+					stmts = append(stmts, model2.Visitee(comment))
 				}
 			}
 			p.lex.Next()
@@ -375,7 +375,7 @@ func (p *Parser) parseExtendBody() ([]Visitee, *Comment, scanner2.Position, erro
 			p.lex.UnNext()
 			emptyErr := p.lex.ReadEmptyStatement()
 			if emptyErr == nil {
-				stmt = &EmptyStatement{}
+				stmt = &model2.EmptyStatement{}
 				break
 			}
 
@@ -389,9 +389,9 @@ func (p *Parser) parseExtendBody() ([]Visitee, *Comment, scanner2.Position, erro
 		stmts = append(stmts, stmt)
 	}
 }
-func (p *Parser) ParseField() (ret *Field, err error) {
+func (p *Parser) ParseField() (ret *model2.Field, err error) {
 	p.lex.NextKeyword()
-	ret = &Field{Meta: meta.Meta{Pos: p.lex.Pos.Position}}
+	ret = &model2.Field{Meta: meta.Meta{Pos: p.lex.Pos.Position}}
 	switch p.lex.Token {
 	case scanner2.TREPEATED:
 		ret.IsRepeated = true
@@ -420,7 +420,7 @@ func (p *Parser) ParseField() (ret *Field, err error) {
 	}
 	return
 }
-func (p *Parser) parseFieldOptionsOption() ([]*FieldOption, error) {
+func (p *Parser) parseFieldOptionsOption() ([]*model2.FieldOption, error) {
 	if p.lex.Next(); p.lex.Token == scanner2.TLEFTSQUARE {
 		if fieldOptions, err := p.parseFieldOptions(); err != nil {
 			return nil, err
@@ -434,7 +434,7 @@ func (p *Parser) parseFieldOptionsOption() ([]*FieldOption, error) {
 	return nil, nil
 }
 
-func (p *Parser) parseFieldOptions() (opts []*FieldOption, err error) {
+func (p *Parser) parseFieldOptions() (opts []*model2.FieldOption, err error) {
 	opt, err := p.parseFieldOption()
 	if err != nil {
 		return nil, err
@@ -452,7 +452,7 @@ func (p *Parser) parseFieldOptions() (opts []*FieldOption, err error) {
 	return opts, nil
 }
 
-func (p *Parser) parseFieldOption() (*FieldOption, error) {
+func (p *Parser) parseFieldOption() (*model2.FieldOption, error) {
 	if optionName, err := p.parseOptionName(); err != nil {
 		return nil, err
 	} else if p.lex.Next(); p.lex.Token != scanner2.TEQUALS {
@@ -460,7 +460,7 @@ func (p *Parser) parseFieldOption() (*FieldOption, error) {
 	} else if constant, err := p.parseOptionConstant(); err != nil {
 		return nil, err
 	} else {
-		return &FieldOption{Name: optionName, Constant: constant}, nil
+		return &model2.FieldOption{Name: optionName, Constant: constant}, nil
 	}
 }
 
@@ -501,7 +501,7 @@ func (p *Parser) parseFieldNumber() (string, error) {
 	}
 	return p.lex.Text, nil
 }
-func (p *Parser) ParseGroupField() (*GroupField, error) {
+func (p *Parser) ParseGroupField() (*model2.GroupField, error) {
 	var isRepeated bool
 	var isRequired bool
 	var isOptional bool
@@ -546,7 +546,7 @@ func (p *Parser) ParseGroupField() (*GroupField, error) {
 		return nil, err
 	}
 
-	return &GroupField{
+	return &model2.GroupField{
 		IsRepeated: isRepeated,
 		IsRequired: isRequired,
 		IsOptional: isOptional,
@@ -619,22 +619,22 @@ func isUpper(r rune) bool {
 	return 'A' <= r && r <= 'Z'
 }
 
-func (p *Parser) ParseImport() (*Import, error) {
+func (p *Parser) ParseImport() (*model2.Import, error) {
 	p.lex.NextKeyword()
 	if p.lex.Token != scanner2.TIMPORT {
 		return nil, p.unexpected(`"import"`)
 	}
 	startPos := p.lex.Pos
 
-	var modifier ImportModifier
+	var modifier model2.ImportModifier
 	p.lex.NextKeywordOrStrLit()
 	switch p.lex.Token {
 	case scanner2.TPUBLIC:
-		modifier = ImportModifierPublic
+		modifier = model2.ImportModifierPublic
 	case scanner2.TWEAK:
-		modifier = ImportModifierWeak
+		modifier = model2.ImportModifierWeak
 	case scanner2.TSTRLIT:
-		modifier = ImportModifierNone
+		modifier = model2.ImportModifierNone
 		p.lex.UnNext()
 	}
 
@@ -649,7 +649,7 @@ func (p *Parser) ParseImport() (*Import, error) {
 		return nil, p.unexpected(";")
 	}
 
-	return &Import{
+	return &model2.Import{
 		Modifier: modifier,
 		Location: location,
 		Meta: meta.Meta{
@@ -658,14 +658,14 @@ func (p *Parser) ParseImport() (*Import, error) {
 		},
 	}, nil
 }
-func (p *Parser) MaybeScanInlineComment(hasSetter HasInlineCommentSetter) {
+func (p *Parser) MaybeScanInlineComment(hasSetter model2.HasInlineCommentSetter) {
 	inlineComment := p.parseInlineComment()
 	if inlineComment == nil {
 		return
 	}
 	hasSetter.SetComment(inlineComment)
 }
-func (p *Parser) parseInlineComment() *Comment {
+func (p *Parser) parseInlineComment() *model2.Comment {
 	currentPos := p.lex.Pos
 	comment, err := p.parseComment()
 	if err != nil {
@@ -677,7 +677,7 @@ func (p *Parser) parseInlineComment() *Comment {
 	}
 	return comment
 }
-func (p *Parser) ParsePackage() (*Package, error) {
+func (p *Parser) ParsePackage() (*model2.Package, error) {
 	p.lex.NextKeyword()
 	if p.lex.Token != scanner2.TPACKAGE {
 		return nil, p.unexpected("package")
@@ -694,7 +694,7 @@ func (p *Parser) ParsePackage() (*Package, error) {
 		return nil, p.unexpected(";")
 	}
 
-	return &Package{
+	return &model2.Package{
 		Name: ident,
 		Meta: meta.Meta{
 			Pos:     startPos.Position,
@@ -702,7 +702,7 @@ func (p *Parser) ParsePackage() (*Package, error) {
 		},
 	}, nil
 }
-func (p *Parser) ParseMessage() (*Message, error) {
+func (p *Parser) ParseMessage() (*model2.Message, error) {
 	p.lex.NextKeyword()
 	if p.lex.Token != scanner2.TMESSAGE {
 		return nil, p.unexpected("message")
@@ -720,7 +720,7 @@ func (p *Parser) ParseMessage() (*Message, error) {
 		return nil, err
 	}
 
-	return &Message{
+	return &model2.Message{
 		MessageName: messageName,
 		MessageBody: messageBody,
 		CommentBLC:  inlineLeftCurly,
@@ -732,8 +732,8 @@ func (p *Parser) ParseMessage() (*Message, error) {
 }
 
 func (p *Parser) parseMessageBody() (
-	[]Visitee,
-	*Comment,
+	[]model2.Visitee,
+	*model2.Comment,
 	scanner2.Position,
 	error,
 ) {
@@ -756,21 +756,21 @@ func (p *Parser) parseMessageBody() (
 		return nil, nil, lastPos, nil
 	}
 	p.lex.UnNext()
-	var stmts []Visitee
+	var stmts []model2.Visitee
 	for {
 		comments := p.ParseComments()
 		p.lex.NextKeyword()
 		token := p.lex.Token
 		p.lex.UnNext()
 		var stmt interface {
-			HasInlineCommentSetter
-			Visitee
+			model2.HasInlineCommentSetter
+			model2.Visitee
 		}
 		switch token {
 		case scanner2.TRIGHTCURLY:
 			if p.bodyIncludingComments {
 				for _, comment := range comments {
-					stmts = append(stmts, Visitee(comment))
+					stmts = append(stmts, model2.Visitee(comment))
 				}
 			}
 			p.lex.Next()
@@ -865,7 +865,7 @@ func (p *Parser) parseMessageBody() (
 
 			emptyErr := p.lex.ReadEmptyStatement()
 			if emptyErr == nil {
-				stmt = &EmptyStatement{}
+				stmt = &model2.EmptyStatement{}
 				break
 			}
 
@@ -880,7 +880,7 @@ func (p *Parser) parseMessageBody() (
 	}
 }
 
-func (p *Parser) ParseMapField() (*MapField, error) {
+func (p *Parser) ParseMapField() (*model2.MapField, error) {
 	p.lex.NextKeyword()
 	if p.lex.Token != scanner2.TMAP {
 		return nil, p.unexpected("map")
@@ -927,7 +927,7 @@ func (p *Parser) ParseMapField() (*MapField, error) {
 	if p.lex.Token != scanner2.TSEMICOLON {
 		return nil, p.unexpected(";")
 	}
-	return &MapField{
+	return &model2.MapField{
 		KeyType:      keyType,
 		Type:         typeValue,
 		MapName:      mapName,
@@ -960,7 +960,7 @@ func (p *Parser) parseKeyType() (string, error) {
 	return "", p.unexpected("keyType constant")
 }
 
-func (p *Parser) ParseService() (*Service, error) {
+func (p *Parser) ParseService() (*model2.Service, error) {
 	p.lex.NextKeyword()
 	if p.lex.Token != scanner2.TSERVICE {
 		return nil, p.unexpected("service")
@@ -975,7 +975,7 @@ func (p *Parser) ParseService() (*Service, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Service{
+	return &model2.Service{
 		Name:       serviceName,
 		Body:       serviceBody,
 		CommentBLC: inlineLeftCurly,
@@ -987,8 +987,8 @@ func (p *Parser) ParseService() (*Service, error) {
 }
 
 func (p *Parser) parseServiceBody() (
-	[]Visitee,
-	*Comment,
+	[]model2.Visitee,
+	*model2.Comment,
 	scanner2.Position,
 	error,
 ) {
@@ -999,7 +999,7 @@ func (p *Parser) parseServiceBody() (
 
 	inlineLeftCurly := p.parseInlineComment()
 
-	var stmts []Visitee
+	var stmts []model2.Visitee
 	for {
 		comments := p.ParseComments()
 
@@ -1008,15 +1008,15 @@ func (p *Parser) parseServiceBody() (
 		p.lex.UnNext()
 
 		var stmt interface {
-			HasInlineCommentSetter
-			Visitee
+			model2.HasInlineCommentSetter
+			model2.Visitee
 		}
 
 		switch token {
 		case scanner2.TRIGHTCURLY:
 			if p.bodyIncludingComments {
 				for _, comment := range comments {
-					stmts = append(stmts, Visitee(comment))
+					stmts = append(stmts, model2.Visitee(comment))
 				}
 			}
 			p.lex.Next()
@@ -1055,7 +1055,7 @@ func (p *Parser) parseServiceBody() (
 		stmts = append(stmts, stmt)
 	}
 }
-func (p *Parser) parseRPC() (*RPC, error) {
+func (p *Parser) parseRPC() (*model2.RPC, error) {
 	p.lex.NextKeyword()
 	if p.lex.Token != scanner2.TRPC {
 		return nil, p.unexpected("rpc")
@@ -1083,8 +1083,8 @@ func (p *Parser) parseRPC() (*RPC, error) {
 		return nil, err
 	}
 
-	var opts []*Option
-	var inlineLeftCurly *Comment
+	var opts []*model2.Option
+	var inlineLeftCurly *model2.Comment
 	p.lex.Next()
 	lastPos := p.lex.Pos
 	switch p.lex.Token {
@@ -1108,7 +1108,7 @@ func (p *Parser) parseRPC() (*RPC, error) {
 		return nil, p.unexpected("{ or ;")
 	}
 
-	return &RPC{
+	return &model2.RPC{
 		Name:       rpcName,
 		Request:    rpcRequest,
 		Response:   rpcResponse,
@@ -1120,7 +1120,7 @@ func (p *Parser) parseRPC() (*RPC, error) {
 		},
 	}, nil
 }
-func (p *Parser) parseRPCRequest() (*Request, error) {
+func (p *Parser) parseRPCRequest() (*model2.Request, error) {
 	p.lex.Next()
 	if p.lex.Token != scanner2.TLEFTPAREN {
 		return nil, p.unexpected("(")
@@ -1144,13 +1144,13 @@ func (p *Parser) parseRPCRequest() (*Request, error) {
 		return nil, p.unexpected(")")
 	}
 
-	return &Request{
+	return &model2.Request{
 		IsStream:    isStream,
 		MessageType: messageType,
 		Meta:        meta.Meta{Pos: startPos.Position},
 	}, nil
 }
-func (p *Parser) parseRPCResponse() (*Response, error) {
+func (p *Parser) parseRPCResponse() (*model2.Response, error) {
 	p.lex.Next()
 	if p.lex.Token != scanner2.TLEFTPAREN {
 		return nil, p.unexpected("(")
@@ -1174,13 +1174,13 @@ func (p *Parser) parseRPCResponse() (*Response, error) {
 		return nil, p.unexpected(")")
 	}
 
-	return &Response{
+	return &model2.Response{
 		IsStream: isStream,
 		Type:     messageType,
 		Meta:     meta.Meta{Pos: startPos.Position},
 	}, nil
 }
-func (p *Parser) parseRPCOptions() ([]*Option, *Comment, error) {
+func (p *Parser) parseRPCOptions() ([]*model2.Option, *model2.Comment, error) {
 	p.lex.Next()
 	if p.lex.Token != scanner2.TLEFTCURLY {
 		return nil, nil, p.unexpected("{")
@@ -1188,7 +1188,7 @@ func (p *Parser) parseRPCOptions() ([]*Option, *Comment, error) {
 
 	inlineLeftCurly := p.parseInlineComment()
 
-	var options []*Option
+	var options []*model2.Option
 	for {
 		p.lex.NextKeyword()
 		token := p.lex.Token
@@ -1218,7 +1218,7 @@ func (p *Parser) parseRPCOptions() ([]*Option, *Comment, error) {
 		p.lex.UnNext()
 	}
 }
-func (p *Parser) ParseOption() (*Option, error) {
+func (p *Parser) ParseOption() (*model2.Option, error) {
 	p.lex.NextKeyword()
 	if p.lex.Token != scanner2.TOPTION {
 		return nil, p.unexpected("option")
@@ -1245,7 +1245,7 @@ func (p *Parser) ParseOption() (*Option, error) {
 		return nil, p.unexpected(";")
 	}
 
-	return &Option{
+	return &model2.Option{
 		Name:     optionName,
 		Constant: constant,
 		Meta: meta.Meta{
@@ -1436,7 +1436,7 @@ func (p *Parser) parseOptionConstants() (constant string, err error) {
 	return strings.Join(opts, ","), nil
 }
 
-func (p *Parser) ParseOneof() (*OneOf, error) {
+func (p *Parser) ParseOneof() (*model2.OneOf, error) {
 	p.lex.NextKeyword()
 	if p.lex.Token != scanner2.TONEOF {
 		return nil, p.unexpected("oneof")
@@ -1455,8 +1455,8 @@ func (p *Parser) ParseOneof() (*OneOf, error) {
 
 	inlineLeftCurly := p.parseInlineComment()
 
-	var oneofFields []*OneOfField
-	var options []*Option
+	var oneofFields []*model2.OneOfField
+	var options []*model2.Option
 	for {
 		comments := p.ParseComments()
 
@@ -1504,7 +1504,7 @@ func (p *Parser) ParseOneof() (*OneOf, error) {
 		}
 	}
 
-	return &OneOf{
+	return &model2.OneOf{
 		OneofFields: oneofFields,
 		OneofName:   oneofName,
 		Options:     options,
@@ -1515,7 +1515,7 @@ func (p *Parser) ParseOneof() (*OneOf, error) {
 		},
 	}, nil
 }
-func (p *Parser) parseOneofField() (*OneOfField, error) {
+func (p *Parser) parseOneofField() (*model2.OneOfField, error) {
 	typeValue, startPos, err := p.parseType()
 	if err != nil {
 		return nil, p.unexpected("type")
@@ -1547,7 +1547,7 @@ func (p *Parser) parseOneofField() (*OneOfField, error) {
 		return nil, p.unexpected(";")
 	}
 
-	return &OneOfField{
+	return &model2.OneOfField{
 		Type:    typeValue,
 		Name:    fieldName,
 		Number:  fieldNumber,
@@ -1556,7 +1556,7 @@ func (p *Parser) parseOneofField() (*OneOfField, error) {
 	}, nil
 }
 
-func (p *Parser) ParseProto() (*Proto, error) {
+func (p *Parser) ParseProto() (*model2.Proto, error) {
 	syntaxComments := p.ParseComments()
 	syntax, err := p.ParseSyntax()
 	if err != nil {
@@ -1570,22 +1570,22 @@ func (p *Parser) ParseProto() (*Proto, error) {
 		return nil, err
 	}
 
-	return &Proto{
+	return &model2.Proto{
 		Syntax:    syntax,
 		ProtoBody: protoBody,
-		Meta: &ProtoMeta{
+		Meta: &model2.ProtoMeta{
 			Filename: p.lex.Pos.Filename,
 		},
 	}, nil
 }
-func (p *Parser) parseProtoBody() ([]Visitee, error) {
-	var protoBody []Visitee
+func (p *Parser) parseProtoBody() ([]model2.Visitee, error) {
+	var protoBody []model2.Visitee
 	for {
 		comments := p.ParseComments()
 		if p.IsEOF() {
 			if p.bodyIncludingComments {
 				for _, comment := range comments {
-					protoBody = append(protoBody, Visitee(comment))
+					protoBody = append(protoBody, model2.Visitee(comment))
 				}
 			}
 			return protoBody, nil
@@ -1594,8 +1594,8 @@ func (p *Parser) parseProtoBody() ([]Visitee, error) {
 		token := p.lex.Token
 		p.lex.UnNext()
 		var stmt interface {
-			HasInlineCommentSetter
-			Visitee
+			model2.HasInlineCommentSetter
+			model2.Visitee
 		}
 		switch token {
 		case scanner2.TIMPORT:
@@ -1652,20 +1652,20 @@ func (p *Parser) parseProtoBody() ([]Visitee, error) {
 			if err != nil {
 				return nil, err
 			}
-			protoBody = append(protoBody, &EmptyStatement{})
+			protoBody = append(protoBody, &model2.EmptyStatement{})
 		}
 		p.MaybeScanInlineComment(stmt)
 		protoBody = append(protoBody, stmt)
 	}
 }
-func (p *Parser) ParseReserved() (*Reserved, error) {
+func (p *Parser) ParseReserved() (*model2.Reserved, error) {
 	p.lex.NextKeyword()
 	if p.lex.Token != scanner2.TRESERVED {
 		return nil, p.unexpected("reserved")
 	}
 	startPos := p.lex.Pos
 
-	parse := func() ([]*Range, []string, error) {
+	parse := func() ([]*model2.Range, []string, error) {
 		ranges, err := p.parseRanges()
 		if err == nil {
 			return ranges, nil, nil
@@ -1689,14 +1689,14 @@ func (p *Parser) ParseReserved() (*Reserved, error) {
 	if p.lex.Token != scanner2.TSEMICOLON {
 		return nil, p.unexpected(";")
 	}
-	return &Reserved{
+	return &model2.Reserved{
 		Ranges:     ranges,
 		FieldNames: fieldNames,
 		Meta:       meta.Meta{Pos: startPos.Position},
 	}, nil
 }
-func (p *Parser) parseRanges() ([]*Range, error) {
-	var ranges []*Range
+func (p *Parser) parseRanges() ([]*model2.Range, error) {
+	var ranges []*model2.Range
 	rangeValue, err := p.parseRange()
 	if err != nil {
 		return nil, err
@@ -1718,7 +1718,7 @@ func (p *Parser) parseRanges() ([]*Range, error) {
 	}
 	return ranges, nil
 }
-func (p *Parser) parseRange() (*Range, error) {
+func (p *Parser) parseRange() (*model2.Range, error) {
 	p.lex.NextNumberLit()
 	if p.lex.Token != scanner2.TINTLIT {
 		p.lex.UnNext()
@@ -1729,7 +1729,7 @@ func (p *Parser) parseRange() (*Range, error) {
 	p.lex.Next()
 	if p.lex.Text != "to" {
 		p.lex.UnNext()
-		return &Range{
+		return &model2.Range{
 			Begin: begin,
 		}, nil
 	}
@@ -1738,7 +1738,7 @@ func (p *Parser) parseRange() (*Range, error) {
 	switch {
 	case p.lex.Token == scanner2.TINTLIT,
 		p.lex.Text == "max":
-		return &Range{
+		return &model2.Range{
 			Begin: begin,
 			End:   p.lex.Text,
 		}, nil

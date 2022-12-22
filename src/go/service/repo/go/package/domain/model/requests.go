@@ -4,9 +4,10 @@ type (
 	CreateReq struct {
 		Pattern bool
 		Pkg     string
-		Props   any
 	}
 	SearchReq struct {
+		File string
+		Name string
 	}
 	ModifyReq struct {
 	}

@@ -2,6 +2,7 @@ package scanner
 
 import (
 	"bufio"
+	"github.com/tilau2328/x/src/go/package/x"
 	"io"
 	"unicode"
 )
@@ -16,10 +17,10 @@ type Scanner struct {
 	Mode           Mode
 }
 
-func WithFilename(filename string) Opt[*Scanner] {
+func WithFilename(filename string) x.Opt[*Scanner] {
 	return func(l *Scanner) { l.pos.Filename = filename }
 }
-func NewScanner(r io.Reader, opts ...Opt[*Scanner]) *Scanner {
+func NewScanner(r io.Reader, opts ...x.Opt[*Scanner]) *Scanner {
 	s := &Scanner{
 		r:   bufio.NewReader(r),
 		pos: NewPosition(),

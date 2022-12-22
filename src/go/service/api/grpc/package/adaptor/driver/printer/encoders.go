@@ -3,8 +3,8 @@ package printer
 import (
 	"bufio"
 	"fmt"
-	"grpc/package/domain/model"
-	model2 "grpc/package/wrapper/model"
+	"github.com/tilau2328/x/src/go/service/repo/go/package/adaptor/driver/model"
+	model2 "github.com/tilau2328/x/src/go/service/repo/go/package/domain/model"
 	"io"
 	"strings"
 )

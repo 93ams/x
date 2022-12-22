@@ -4,11 +4,6 @@ import (
 	"github.com/tilau2328/x/src/go/service/repo/go/package/adaptor/driver/model"
 )
 
-type TypeProps struct {
-	Name string
-	Res  *model.Type
-}
-
 func OnInterface(fn func(*model.Type, *model.Interface) bool) func(model.Node) bool {
 	return OnType(func(m *model.Type) bool {
 		if s, ok := m.Type.(*model.Interface); ok {
@@ -17,9 +12,9 @@ func OnInterface(fn func(*model.Type, *model.Interface) bool) func(model.Node) b
 		return true
 	})
 }
-func OnStruct(fn func(*model.Type, *model.Struct) bool) func(model.Node) bool {
+func OnSpecificType[T any](fn func(*model.Type, T) bool) func(model.Node) bool {
 	return OnType(func(m *model.Type) bool {
-		if s, ok := m.Type.(*model.Struct); ok {
+		if s, ok := m.Type.(T); ok {
 			return fn(m, s)
 		}
 		return true

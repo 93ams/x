@@ -22,7 +22,7 @@ type (
 		Struct
 		Methods []Func
 	}
-	Command struct {
+	Apply struct {
 	}
 	Visitor struct {
 	}

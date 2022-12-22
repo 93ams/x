@@ -1,8 +1,8 @@
 package lexer
 
 import (
-	scanner2 "grpc/package/wrapper/lexer/scanner"
-	"grpc/package/wrapper/model/meta"
+	scanner2 "github.com/tilau2328/x/src/go/service/api/grpc/package/adaptor/driver/lexer/scanner"
+	"github.com/tilau2328/x/src/go/service/api/grpc/package/adaptor/driver/model/meta"
 	"runtime"
 	"strings"
 )
