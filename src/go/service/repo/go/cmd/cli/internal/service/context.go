@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"github.com/tilau2328/x/src/go/service/repo/go/package/domain/provider"
+	"github.com/tilau2328/x/src/go/service/repo/go/package/provider"
 )
 
 type ctxKey struct{}

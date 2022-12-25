@@ -5,13 +5,13 @@ package cmd
 
 import (
 	"github.com/google/wire"
-	"github.com/tilau2328/x/src/go/service/repo/go/package/domain/provider"
-	"github.com/tilau2328/x/src/go/service/repo/go/package/service"
+	"github.com/tilau2328/x/src/go/service/repo/go/package/provider"
+	"github.com/tilau2328/x/src/go/service/repo/go/package/services"
 )
 
 var Set = wire.NewSet(
-	service.NewService,
-	wire.Bind(new(provider.GolangProvider), new(*service.Service)),
+	services.NewService,
+	wire.Bind(new(provider.GolangProvider), new(*services.Service)),
 )
 
 func Init() (provider.GolangProvider, func(), error) {

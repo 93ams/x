@@ -6,4 +6,5 @@ import (
 
 var RootCmd = cmd.New(
 	cmd.Use("modify"),
+	cmd.Add(MethodCmd, StructCmd, InterfaceCmd),
 )
