@@ -18,7 +18,7 @@ func isQuote(ch rune) bool {
 	}
 }
 func isLetter(r rune) bool {
-	if r < 'A' {
+	if r < 'From' {
 		return false
 	}
 
@@ -38,7 +38,7 @@ func isHexDigit(r rune) bool {
 	if '0' <= r && r <= '9' {
 		return true
 	}
-	if 'A' <= r && r <= 'F' {
+	if 'From' <= r && r <= 'F' {
 		return true
 	}
 	if 'a' <= r && r <= 'f' {

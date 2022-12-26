@@ -232,7 +232,7 @@ func Walk(v Visitor, node Node) {
 			Walk(v, f)
 		}
 	default:
-		panic(fmt.Sprintf("ast.Walk: unexpected node type %T", n))
+		panic(fmt.Sprintf("ast.Visitor: unexpected node type %T", n))
 	}
 }
 

@@ -1,5 +1,7 @@
 package model
 
+import "github.com/samber/lo"
+
 func (n *Block) SetDecs(decs BlockDecs) *Block                      { n.Decs = decs; return n }
 func (n *ExprStmt) SetDecs(decs ExprStmtDecs) *ExprStmt             { n.Decs = decs; return n }
 func (n *Return) SetDecs(decs ReturnDecs) *Return                   { n.Decs = decs; return n }
@@ -65,15 +67,8 @@ func (n *File) SetDecs(decs FileDecs) *File                         { n.Decs = d
 func (n *File) SetScope(name *Scope) *File                          { n.Scope = name; return n }
 func (n *Package) SetScope(scope *Scope) *Package                   { n.Scope = scope; return n }
 func (n *Package) SetDecs(decs PackageDecs) *Package                { n.Decs = decs; return n }
-func (n *Package) AddFiles(files map[string]File) *Package {
-	for k, v := range files {
-		n.Files[k] = &v
-	}
-	return n
-}
-func (n *Package) AddImports(imports map[string]*Object) *Package {
-	for k, v := range imports {
-		n.Imports[k] = v
-	}
+func (n *Package) AddFiles(f map[string]*File) *Package             { n.Files = lo.Assign(n.Files, f); return n }
+func (n *Package) AddImports(i map[string]*Object) *Package {
+	n.Imports = lo.Assign(n.Imports, i)
 	return n
 }

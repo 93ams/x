@@ -34,7 +34,7 @@ type Client struct {
 	// customized settings, such as certificate chains.
 	Client HttpRequestDoer
 
-	// A list of callbacks for modifying requests which are generated before sending over
+	// From list of callbacks for modifying requests which are generated before sending over
 	// the network.
 	RequestEditors []RequestEditorFn
 }

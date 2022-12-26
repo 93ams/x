@@ -1,4 +1,4 @@
-package modify
+package interfaces
 
 import (
 	"github.com/samber/lo"
@@ -11,11 +11,11 @@ import (
 )
 
 var (
-	InterfaceCmd = cmd.New(
-		cmd.Use("interface"),
+	NewCmd = cmd.New(
+		cmd.Use("new"), cmd.Alias("n"),
 		cmd.Flags(
-			flags.StringP(&service.File, "file", "f", "", ""),
 			flags.StringP(&service.Pkg, "package", "p", "", ""),
+			flags.StringP(&service.Dest, "dest", "d", "", ""),
 			flags.StringP(&service.Name, "name", "n", "", ""),
 		),
 		cmd.Run(createInterface),
@@ -26,7 +26,7 @@ func createInterface(cmd *cobra.Command, args []string) {
 	s := service.FromCtx(cmd.Context())
 	lo.Must0(s.Create(cmd.Context(), model.CreateReq{
 		FilePath: model.FilePath{
-			Name: service.File,
+			Name: service.Dest,
 			Dir:  service.Dir,
 		},
 		File: &model.File{},

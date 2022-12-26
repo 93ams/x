@@ -4,8 +4,11 @@ import "strings"
 
 type (
 	TypeFilter struct {
+		Name, Type string
+		Partial    bool
+	}
+	FuncFilter struct {
 		Name    string
-		Type    string
 		Partial bool
 	}
 	FilePath struct {
@@ -21,7 +24,10 @@ type (
 	}
 	SearchReq struct {
 		FilePath
-		Type TypeFilter
+		Id      string
+		Type    *TypeFilter
+		Func    *FuncFilter
+		Package bool
 	}
 	ModifyReq struct {
 		FilePath
@@ -49,5 +55,12 @@ func (f TypeFilter) Filter(t *Type) bool {
 	if f.Partial {
 		return strings.Contains(t.Name.Name, f.Name)
 	}
-	return t.Name.Name == f.Name
+	return f.Name == "" || t.Name.Name == f.Name
+}
+
+func (f FuncFilter) Filter(t *Func) bool {
+	if f.Partial {
+		return strings.Contains(t.Name.Name, f.Name)
+	}
+	return f.Name == "" || t.Name.Name == f.Name
 }

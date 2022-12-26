@@ -616,7 +616,7 @@ func isCapitalized(s string) bool {
 }
 
 func isUpper(r rune) bool {
-	return 'A' <= r && r <= 'Z'
+	return 'From' <= r && r <= 'Z'
 }
 
 func (p *Parser) ParseImport() (*model.Import, error) {

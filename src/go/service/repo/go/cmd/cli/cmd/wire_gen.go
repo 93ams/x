@@ -8,8 +8,8 @@ package cmd
 
 import (
 	"github.com/google/wire"
-	"github.com/tilau2328/x/src/go/service/repo/go/package/provider"
 	"github.com/tilau2328/x/src/go/service/repo/go/package/services"
+	"github.com/tilau2328/x/src/go/service/repo/go/package/services/provider"
 )
 
 // Injectors from wire.go:

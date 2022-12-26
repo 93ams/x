@@ -3,6 +3,7 @@ package x
 import (
 	"os"
 	"path/filepath"
+	"sync"
 )
 
 func NewFile(path string, fn func(*os.File) error) error {
@@ -16,6 +17,29 @@ func NewFile(path string, fn func(*os.File) error) error {
 		defer f.Close()
 		return fn(f)
 	}
+}
+func ListFiles(path string, recursive bool) (ret []string, err error) {
+	items, err := os.ReadDir(path)
+	if err != nil {
+		return nil, err
+	}
+	lock := sync.Mutex{}
+	return ret, ParallelTry(func(t os.DirEntry) (err error) {
+		var values []string
+		if !t.IsDir() {
+			values = append(values, filepath.Join(path, t.Name()))
+		} else if !recursive {
+			return nil
+		} else if values, err = ListFiles(filepath.Join(path, t.Name()), recursive); err != nil {
+			return err
+		}
+		if len(values) > 0 {
+			lock.Lock()
+			ret = append(ret, values...)
+			lock.Unlock()
+		}
+		return nil
+	}, items)
 }
 func ReadFiles(fn func(*os.File) error, paths ...string) error {
 	for _, file := range paths {

@@ -1,4 +1,4 @@
-package modify
+package structs
 
 import (
 	"github.com/samber/lo"
@@ -10,22 +10,22 @@ import (
 )
 
 var (
-	StructCmd = cmd.New(
-		cmd.Use("struct"),
+	NewCmd = cmd.New(
+		cmd.Use("new"), cmd.Alias("n"),
 		cmd.Flags(
-			flags.StringP(&service.File, "file", "f", "", ""),
+			flags.StringP(&service.Dest, "file", "f", "", ""),
 			flags.StringP(&service.Pkg, "package", "p", "", ""),
 			flags.StringP(&service.Name, "name", "n", "", ""),
 		),
-		cmd.Run(createStruct),
+		cmd.Run(newStruct),
 	)
 )
 
-func createStruct(cmd *cobra.Command, _ []string) {
+func newStruct(cmd *cobra.Command, _ []string) {
 	s := service.FromCtx(cmd.Context())
 	lo.Must0(s.Create(cmd.Context(), model.CreateReq{
 		FilePath: model.FilePath{
-			Name: service.File,
+			Name: service.Dest,
 			Dir:  service.Dir,
 		},
 		File: nil,
